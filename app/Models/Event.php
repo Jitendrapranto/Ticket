@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+class Event extends Model
+{
+    protected $fillable = [
+        'category_id', 'organizer', 'title', 'slug', 'image', 'date', 'registration_deadline', 'location', 'price', 'description', 'status'
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
+        'registration_deadline' => 'datetime',
+        'price' => 'decimal:2',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($event) {
+            if (!$event->slug) {
+                $event->slug = Str::slug($event->title);
+            }
+        });
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(EventCategory::class, 'category_id');
+    }
+
+    public function ticketTypes()
+    {
+        return $this->hasMany(TicketType::class);
+    }
+}

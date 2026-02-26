@@ -1,0 +1,49 @@
+I want to the search bar will be top on the home page and the left side will be exist logo and the right side will be the login and register button. I want to use tailwind  for this design. Can you help me with the code?...follow the second image for the design and make it responsive for mobile devices as well.
+
+Here Hero banner and header overided each other and the search bar is not visible. I want to the search bar will be top on the home page and the left side will be exist logo and the right side will be the login and register button. I want to use tailwind  for this design. Can you help me with the code?...follow the image for the design and make it responsive for mobile devices as well.and the bottom search bar does not needed
+
+I want to the right side card will exactlY the overview of the left side card for the home page hero section...
+
+
+Here I dont want to the blur on left side and right side and it must be exist in one line and it will be move in the same manner
+
+I want to the remaining part like GalarY, About and contact hero section and footer background colour will be the same gradient colour
+
+
+I want to a professional and modern  super admin dashboard where the left side will be the 
+menu and the right side will be the content ....You follow 
+the overall website design and make required menu for the super admin dashboard and make it responsive for mobile devices as well. I want to use tailwind for this design. Can you help me with the code?
+You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+And must be separated two file adminsidebar and admindashboard....its a laravel blade project
+
+I want to super admin update the hero section  content of the events page inside the admin sidebar into events menu as a dropdown named Hero section and the super admin can update the content of the hero section of the events page from there and it will be reflected on the events page hero section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?..make sure You will create the seeder file for this hero section content and make the migration file for the database as well and make the model for this hero section content and make the controller for this hero section content and make the route for this hero section content and make the blade file for this hero section content in the admin dashboard and make the blade file for this hero section content in the events page...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I dont want to success message after updating the hero section ...I want to a professional popup when admin updated the section...
+
+
+I want to admin can crud events inside the events menu on admin dashboard and must be create Events categorY and assign the events into the category and also must be create the seeder file for this events and events category and make the migration file for the database as well and make the model for this events and events category and make the controller for this events and events category and make the route for this events and events category and make the blade file for this events and events category in the admin dashboard and make the blade file for this events and events category in the events page...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When clicked the categegorY on the event page it does not switch....fix it and the event card shape will be rectangular and the image will be on the top of the card and the content will be at the bottom of the card and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When admin create event there existed anY error must be notified to the admin in a professional way and also when admin update the event there existed anY error must be notified to the admin in a professional way and also when admin delete the event there existed anY error must be notified to the admin in a professional way...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to when admin upload the image then must be show the recomended size 5 mb and also showed the image height and width and also must be show the error if the image size is more than 5 mb...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to 12 events seeder file and 5 events category seeder file for the events page...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. and use pagination in the event page when 12 events are displayed. Can you help me with the code?
+
+Create a draft events menu on the admin dashboard where the super admin can create events and save it as a draft and when the super admin publish the event then it will be reflected on the events page...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+When admin create a draft event it does not included the draft event section ....fix it and also make sure when admin publish the draft event then it will be reflected on the events page and also make sure when admin delete the draft event then it will be deleted from the draft event section as well...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When clicked save as draft button it does not included the drfat event section....fix it
+
+I want to The GalarY page Hero section will be dYnamic from admin dashboard....at first You create a menu GalarY and then create a dropdown named Hero section and then the super admin can update the content of the hero section of the GalarY page from there and it will be reflected on the GalarY page hero section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?..make sure You will create the seeder file for this hero section content and make the migration file for the database as well and make the model for this hero section content and make the controller for this hero section content and make the route for this hero section content and make the blade file for this hero section content in the admin dashboard and make the blade file for this hero section content in the GalarY page...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design.
+
+I want to galarY images will be dYnamicallY updated from admin dashboard and also the galarY images will be categorized and the super admin can assign the images into the category and also make sure when admin delete the image then it will be deleted from the galarY page as well...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to make galarY image seeder file and categorY will be the same as event categorY ..so does not need to create categorY here..just link the event categorY...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
