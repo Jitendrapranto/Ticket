@@ -12,14 +12,28 @@ use App\Http\Controllers\Admin\GalleryHeroController;
 use App\Http\Controllers\Admin\GalleryController;
 
 Route::get('/', function () {
-    return view('home');
+    $featuredEvents = Event::with('category')->where('status', 'Live')->where('is_featured', true)->orderBy('sort_order', 'asc')->latest()->take(2)->get();
+    
+    $slideData = $featuredEvents->map(function($e) {
+        return [
+            'title' => $e->title,
+            'date' => strtoupper($e->date->format('d M, Y')),
+            'location' => strtoupper($e->location)
+        ];
+    });
+
+    $trendingEvents = Event::with('category')->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(4)->get();
+    $upcomingEvents = Event::with('category')->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(8)->get();
+    
+    return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData'));
 });
 
 Route::get('/events', function () {
     $hero = EventHero::first();
     $categories = EventCategory::withCount('events')->get();
-    $events = Event::with('category')->where('status', 'Live')->latest()->paginate(12);
-    return view('events', compact('hero', 'categories', 'events'));
+    $featuredEvents = Event::with('category')->where('status', 'Live')->where('is_featured', true)->orderBy('sort_order', 'asc')->latest()->take(3)->get();
+    $events = Event::with('category')->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->paginate(12);
+    return view('events', compact('hero', 'categories', 'events', 'featuredEvents'));
 })->name('events');
 
 Route::get('/gallery', function () {

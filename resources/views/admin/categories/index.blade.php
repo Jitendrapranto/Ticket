@@ -57,7 +57,7 @@
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-primary"></div>
                         <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-check-circle"></i></div>
                         <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black italic tracking-tight">Operation Successful</h4>
+                            <h4 class="text-sm font-black tracking-tight">Operation Successful</h4>
                             <p class="text-[11px] text-white/60 mt-0.5 leading-tight">{{ session('success') }}</p>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-red-500"></div>
                         <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center text-xl shadow-inner text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black italic tracking-tight uppercase tracking-tight">System Alert</h4>
+                            <h4 class="text-sm font-black tracking-tight uppercase tracking-tight">System Alert</h4>
                             <p class="text-[11px] text-red-200/60 mt-0.5 leading-tight">
                                 @if(session('error'))
                                     {{ session('error') }}
@@ -109,7 +109,7 @@
                                             <i class="{{ $category->icon ?? 'fas fa-tags' }}"></i>
                                         </div>
                                         <div>
-                                            <p class="font-black text-dark tracking-tight italic">{{ $category->name }}</p>
+                                            <p class="font-black text-dark tracking-tight">{{ $category->name }}</p>
                                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Event Category</p>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
                     </p>
                     <div class="flex items-center gap-2">
                         @if ($categories->onFirstPage())
-                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed italic">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed">
                                 <i class="fas fa-chevron-left text-[10px]"></i>
                             </span>
                         @else
@@ -170,7 +170,7 @@
                                 <i class="fas fa-chevron-right text-[10px]"></i>
                             </a>
                         @else
-                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed italic">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed">
                                 <i class="fas fa-chevron-right text-[10px]"></i>
                             </span>
                         @endif
@@ -208,7 +208,7 @@
 
                     <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-4">Are you sure?</h3>
                     <p class="text-slate-400 text-sm font-medium leading-relaxed mb-8">
-                        You are about to delete the <span class="text-dark font-bold italic" x-text="categoryName"></span> category. This action will remove the category permanently.
+                        You are about to delete the <span class="text-dark font-bold" x-text="categoryName"></span> category. This action will remove the category permanently.
                     </p>
 
                     <div class="flex items-center gap-4">

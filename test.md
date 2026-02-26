@@ -47,3 +47,13 @@ I want to galarY images will be dYnamicallY updated from admin dashboard and als
 
 
 I want to make galarY image seeder file and categorY will be the same as event categorY ..so does not need to create categorY here..just link the event categorY...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I dont want to italic text on this website...so make sure to remove the italic text from the website and also make sure to remove the italic text from the admin dashboard as well...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When admin add aevent admin can assign the event order and he can assign the event as a featured event and when the event is assigned as a featured event then it will be reflected on the events page as a featured event and also make sure when admin update the event order then it will be reflected on the events page as well...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+Here I want to add the book now button on the event card and the card size will be something larger than the current size....
+
+I want to the size of the event card will be larger than the current size and the event date is not look professional so I want to change the design of the event date..

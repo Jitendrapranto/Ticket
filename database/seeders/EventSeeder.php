@@ -26,7 +26,9 @@ class EventSeeder extends Seeder
                 'price' => 45.00,
                 'category_name' => 'Music',
                 'status' => 'Live',
-                'image' => 'https://images.unsplash.com/photo-1511192303578-4a7bb0838a48?w=1280&q=80'
+                'image' => 'https://images.unsplash.com/photo-1511192303578-4a7bb0838a48?w=1280&q=80',
+                'is_featured' => true,
+                'sort_order' => 1
             ],
             [
                 'title' => 'World Cup Qualifiers: Finals',
@@ -35,7 +37,9 @@ class EventSeeder extends Seeder
                 'price' => 85.00,
                 'category_name' => 'Sports',
                 'status' => 'Live',
-                'image' => 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1280&q=80'
+                'image' => 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1280&q=80',
+                'is_featured' => true,
+                'sort_order' => 2
             ],
             [
                 'title' => 'Indie Filmmakers Premiere',
@@ -44,7 +48,9 @@ class EventSeeder extends Seeder
                 'price' => 25.00,
                 'category_name' => 'Cinema',
                 'status' => 'Live',
-                'image' => 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1280&q=80'
+                'image' => 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1280&q=80',
+                'is_featured' => false,
+                'sort_order' => 3
             ],
             [
                 'title' => 'The Phantom of the Opera',
@@ -53,7 +59,9 @@ class EventSeeder extends Seeder
                 'price' => 120.00,
                 'category_name' => 'Theater',
                 'status' => 'Live',
-                'image' => 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=1280&q=80'
+                'image' => 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=1280&q=80',
+                'is_featured' => true,
+                'sort_order' => 0
             ],
             [
                 'title' => 'Met Gala: After Party',
@@ -62,7 +70,9 @@ class EventSeeder extends Seeder
                 'price' => 500.00,
                 'category_name' => 'Lifestyle',
                 'status' => 'Live',
-                'image' => 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1280&q=80'
+                'image' => 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1280&q=80',
+                'is_featured' => false,
+                'sort_order' => 10
             ],
             [
                 'title' => 'Rock Revolution 2026',
@@ -71,7 +81,9 @@ class EventSeeder extends Seeder
                 'price' => 95.00,
                 'category_name' => 'Music',
                 'status' => 'Live',
-                'image' => 'https://images.unsplash.com/photo-1459749411177-042180ce673f?w=1280&q=80'
+                'image' => 'https://images.unsplash.com/photo-1459749411177-042180ce673f?w=1280&q=80',
+                'is_featured' => false,
+                'sort_order' => 5
             ],
             [
                 'title' => 'Wimbledon Championship Day 1',

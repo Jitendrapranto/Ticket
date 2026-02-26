@@ -62,7 +62,7 @@
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-primary"></div>
                         <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-check-circle"></i></div>
                         <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black italic tracking-tight">Operation Successful</h4>
+                            <h4 class="text-sm font-black tracking-tight">Operation Successful</h4>
                             <p class="text-[11px] text-white/60 mt-0.5 leading-tight">{{ session('success') }}</p>
                         </div>
                     </div>
@@ -84,11 +84,11 @@
                             @forelse($events as $event)
                             <tr class="hover:bg-slate-50/50 transition-colors group">
                                 <td class="px-8 py-6">
-                                    <p class="font-black text-dark tracking-tight italic group-hover:text-primary transition-colors">{{ $event->title }}</p>
+                                    <p class="font-black text-dark tracking-tight group-hover:text-primary transition-colors">{{ $event->title }}</p>
                                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Draft ID: #{{ $event->id }}</p>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <span class="font-bold text-slate-400 italic text-sm">{{ $event->category->name }}</span>
+                                    <span class="font-bold text-slate-400 text-sm">{{ $event->category->name }}</span>
                                 </td>
                                 <td class="px-8 py-6">
                                     <div class="flex items-center gap-3">
@@ -139,7 +139,7 @@
                     </p>
                     <div class="flex items-center gap-2">
                         @if ($events->onFirstPage())
-                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed italic">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed">
                                 <i class="fas fa-chevron-left text-[10px]"></i>
                             </span>
                         @else
@@ -167,7 +167,7 @@
                                 <i class="fas fa-chevron-right text-[10px]"></i>
                             </a>
                         @else
-                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed italic">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-100 text-slate-300 cursor-not-allowed">
                                 <i class="fas fa-chevron-right text-[10px]"></i>
                             </span>
                         @endif
@@ -198,7 +198,7 @@
 
                     <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-4">Discard Draft?</h3>
                     <p class="text-slate-400 text-sm font-medium leading-relaxed mb-8">
-                        You are about to discard the draft <span class="text-dark font-bold italic" x-text="eventName"></span>. This action will permanently remove all progress for this event.
+                        You are about to discard the draft <span class="text-dark font-bold" x-text="eventName"></span>. This action will permanently remove all progress for this event.
                     </p>
 
                     <div class="flex items-center gap-4">

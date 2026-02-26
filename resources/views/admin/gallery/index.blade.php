@@ -35,14 +35,14 @@
     <div class="lg:ml-72 min-h-screen flex flex-col">
         <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
             <div>
-                <h2 class="font-outfit text-xl font-black text-dark tracking-tight italic">Gallery Hub</h2>
+                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Gallery Hub</h2>
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Manage Visual Assets</p>
             </div>
             <div class="flex items-center gap-4">
-                <span class="px-4 py-1.5 bg-primary/5 rounded-lg text-[10px] font-black text-primary tracking-widest uppercase italic">
+                <span class="px-4 py-1.5 bg-primary/5 rounded-lg text-[10px] font-black text-primary tracking-widest uppercase">
                     {{ $images->total() }} Dynamic Assets
                 </span>
-                <a href="{{ route('admin.gallery.images.create') }}" class="bg-primary text-white px-6 py-2.5 rounded-xl text-xs font-black tracking-widest hover:bg-dark transition-all uppercase shadow-lg shadow-primary/20 italic">
+                <a href="{{ route('admin.gallery.images.create') }}" class="bg-primary text-white px-6 py-2.5 rounded-xl text-xs font-black tracking-widest hover:bg-dark transition-all uppercase shadow-lg shadow-primary/20">
                     <i class="fas fa-upload mr-2"></i> Upload Image
                 </a>
             </div>
@@ -60,9 +60,9 @@
                      class="fixed top-8 right-8 z-[100] max-w-sm w-full font-plus">
                     <div class="bg-secondary rounded-[2rem] shadow-2xl p-6 flex items-center gap-6 relative overflow-hidden text-white border border-white/5">
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-primary"></div>
-                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl shadow-inner italic"><i class="fas fa-check-circle"></i></div>
+                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-check-circle"></i></div>
                         <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black italic tracking-tight uppercase">Registry Updated</h4>
+                            <h4 class="text-sm font-black tracking-tight uppercase">Registry Updated</h4>
                             <p class="text-[11px] text-white/60 mt-0.5 leading-tight">{{ session('success') }}</p>
                         </div>
                     </div>
@@ -75,14 +75,14 @@
                         <div class="aspect-square relative overflow-hidden bg-slate-100">
                             <img src="{{ str_starts_with($image->image_path, 'http') ? $image->image_path : asset('storage/' . $image->image_path) }}" alt="{{ $image->title }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-                                <span class="bg-primary/90 backdrop-blur-md px-4 py-1.5 rounded-lg text-white font-black text-[9px] tracking-widest uppercase italic">
+                                <span class="bg-primary/90 backdrop-blur-md px-4 py-1.5 rounded-lg text-white font-black text-[9px] tracking-widest uppercase">
                                     {{ $image->category->name }}
                                 </span>
                             </div>
                         </div>
                         <div class="p-8 flex items-center justify-between">
                             <div class="flex-1 min-w-0 mr-4">
-                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight italic truncate">{{ $image->title }}</h3>
+                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight truncate">{{ $image->title }}</h3>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Uploaded {{ $image->created_at->diffForHumans() }}</p>
                             </div>
                             <button @click="confirmDelete('{{ route('admin.gallery.images.destroy', $image) }}', '{{ $image->title }}')" 
@@ -93,12 +93,12 @@
                     </div>
                 @empty
                     <div class="col-span-full py-32 text-center bg-white rounded-[3rem] shadow-premium border border-slate-50">
-                        <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 mx-auto mb-8 animate-pulse italic">
+                        <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 mx-auto mb-8 animate-pulse">
                             <i class="fas fa-images text-4xl"></i>
                         </div>
-                        <h3 class="font-outfit text-2xl font-black text-dark tracking-tight italic">The Gallery is Quiet</h3>
+                        <h3 class="font-outfit text-2xl font-black text-dark tracking-tight">The Gallery is Quiet</h3>
                         <p class="text-slate-400 text-sm font-medium mt-3">Start by uploading some moments to showcase to the world.</p>
-                        <a href="{{ route('admin.gallery.images.create') }}" class="mt-10 inline-flex items-center gap-3 bg-primary text-white px-10 py-4 rounded-2xl font-black text-xs tracking-widest uppercase italic hover:bg-dark transition-all shadow-xl shadow-primary/20">
+                        <a href="{{ route('admin.gallery.images.create') }}" class="mt-10 inline-flex items-center gap-3 bg-primary text-white px-10 py-4 rounded-2xl font-black text-xs tracking-widest uppercase hover:bg-dark transition-all shadow-xl shadow-primary/20">
                             <i class="fas fa-plus"></i> Begin Exhibition
                         </a>
                     </div>
@@ -126,23 +126,23 @@
 
             <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden">
                 <div class="p-10 text-center">
-                    <div class="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-inner animate-bounce italic">
+                    <div class="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-inner animate-bounce">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
 
-                    <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-4 italic">De-register Asset?</h3>
+                    <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-4">De-register Asset?</h3>
                     <p class="text-slate-400 text-sm font-medium leading-relaxed mb-8">
-                        You are about to remove <span class="text-dark font-bold italic" x-text="imageTitle"></span> from the visual exhibition. This cannot be undone.
+                        You are about to remove <span class="text-dark font-bold" x-text="imageTitle"></span> from the visual exhibition. This cannot be undone.
                     </p>
 
                     <div class="flex items-center gap-4">
-                        <button @click="deleteModal = false" class="flex-1 py-4 rounded-2xl bg-slate-50 text-slate-500 font-black text-xs tracking-widest hover:bg-slate-100 transition-all uppercase italic">
+                        <button @click="deleteModal = false" class="flex-1 py-4 rounded-2xl bg-slate-50 text-slate-500 font-black text-xs tracking-widest hover:bg-slate-100 transition-all uppercase">
                             Cancel
                         </button>
                         <form :action="deleteUrl" method="POST" class="flex-1">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="w-full py-4 rounded-2xl bg-red-500 text-white font-black text-xs tracking-widest hover:bg-red-600 transition-all uppercase shadow-lg shadow-red-500/20 italic">
+                            <button type="submit" class="w-full py-4 rounded-2xl bg-red-500 text-white font-black text-xs tracking-widest hover:bg-red-600 transition-all uppercase shadow-lg shadow-red-500/20">
                                 Yes, Remove
                             </button>
                         </form>

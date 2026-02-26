@@ -8,13 +8,15 @@ use Illuminate\Support\Str;
 class Event extends Model
 {
     protected $fillable = [
-        'category_id', 'organizer', 'title', 'slug', 'image', 'date', 'registration_deadline', 'location', 'price', 'description', 'status'
+        'category_id', 'organizer', 'title', 'slug', 'image', 'date', 'registration_deadline', 'location', 'price', 'description', 'status', 'sort_order', 'is_featured'
     ];
 
     protected $casts = [
         'date' => 'datetime',
         'registration_deadline' => 'datetime',
         'price' => 'decimal:2',
+        'sort_order' => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     protected static function boot()

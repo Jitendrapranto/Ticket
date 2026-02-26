@@ -14,8 +14,8 @@
                 <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">CONTACT CENTER</span>
             </div>
             
-            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter italic">
-                Get In <br><span class="text-accent not-italic tracking-normal">Touch.</span>
+            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
+                Get In <br><span class="text-accent tracking-normal">Touch.</span>
             </h1>
             <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
                 Have a question or need assistance with your booking? Our dedicated support team is available 24/7 to ensure your experience is flawless.
@@ -102,7 +102,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-12 left-12 right-12">
                             <div class="glass p-10 rounded-[2.5rem]">
-                                <h4 class="text-white font-black text-2xl italic tracking-tighter mb-4">Dedicated Support Team</h4>
+                                <h4 class="text-white font-black text-2xl tracking-tighter mb-4">Dedicated Support Team</h4>
                                 <p class="text-white/60 font-medium">Our specialists are trained to handle every request with precision and care. You're in good hands.</p>
                             </div>
                         </div>

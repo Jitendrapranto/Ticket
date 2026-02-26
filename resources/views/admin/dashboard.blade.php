@@ -18,7 +18,7 @@
                     colors: {
                         primary: '#520C6B',     // Brand Purple
                         secondary: '#21032B',   // Deep Plum
-                        accent: '#2563EB',      // Vibrant Blue (Matches "Live Events" button)
+                        accent: '#FF7D52',      // Brand Orange
                         dark: '#0F172A',
                         'slate-custom': '#F8FAFC'
                     },
@@ -103,7 +103,7 @@
                         <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 transition-all group-hover:bg-blue-600 group-hover:text-white">
                             <i class="fas fa-chart-line text-xl"></i>
                         </div>
-                        <span class="px-3 py-1 bg-green-50 text-green-600 text-[10px] font-black rounded-full italic">+12%</span>
+                        <span class="px-3 py-1 bg-green-50 text-green-600 text-[10px] font-black rounded-full">+12%</span>
                     </div>
                     <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2">Total Revenue</p>
                     <h3 class="font-outfit text-3xl font-black text-dark tracking-tighter">$142,500.00</h3>
@@ -115,7 +115,7 @@
                         <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-primary transition-all group-hover:bg-primary group-hover:text-white">
                             <i class="fas fa-ticket-alt text-xl"></i>
                         </div>
-                        <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-full italic">LIVE</span>
+                        <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-full">LIVE</span>
                     </div>
                     <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2">Active Bookings</p>
                     <h3 class="font-outfit text-3xl font-black text-dark tracking-tighter">8,432</h3>
@@ -127,7 +127,7 @@
                         <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 transition-all group-hover:bg-orange-600 group-hover:text-white">
                             <i class="fas fa-calendar-check text-xl"></i>
                         </div>
-                        <span class="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-black rounded-full italic">ALL TIME</span>
+                        <span class="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-black rounded-full">ALL TIME</span>
                     </div>
                     <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2">Upcoming Events</p>
                     <h3 class="font-outfit text-3xl font-black text-dark tracking-tighter">154</h3>
@@ -139,7 +139,7 @@
                         <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 transition-all group-hover:bg-teal-600 group-hover:text-white">
                             <i class="fas fa-users-cog text-xl"></i>
                         </div>
-                        <span class="px-3 py-1 bg-red-50 text-red-600 text-[10px] font-black rounded-full italic">URGENT</span>
+                        <span class="px-3 py-1 bg-red-50 text-red-600 text-[10px] font-black rounded-full">URGENT</span>
                     </div>
                     <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2">Pending Inquiries</p>
                     <h3 class="font-outfit text-3xl font-black text-dark tracking-tighter">24</h3>
@@ -151,7 +151,7 @@
                 <!-- Recent Sales Table -->
                 <div class="lg:col-span-2 bg-white rounded-[3rem] shadow-premium border border-slate-50 overflow-hidden">
                     <div class="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
-                        <h3 class="font-outfit text-xl font-black text-dark tracking-tight italic">Recent Transactions</h3>
+                        <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Recent Transactions</h3>
                         <a href="#" class="text-[10px] font-black text-primary tracking-widest uppercase hover:underline">View All Activities</a>
                     </div>
                     <div class="overflow-x-auto">
@@ -168,7 +168,7 @@
                             <tbody class="divide-y divide-slate-50 font-medium text-sm">
                                 <tr>
                                     <td class="px-8 py-6 font-bold text-dark">Rock Revolution 2026</td>
-                                    <td class="px-8 py-6 text-slate-500 italic">rahim_khan@email.com</td>
+                                    <td class="px-8 py-6 text-slate-500">rahim_khan@email.com</td>
                                     <td class="px-8 py-6 font-black text-primary">$120.00</td>
                                     <td class="px-8 py-6">
                                         <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-lg">PAID</span>
@@ -177,7 +177,7 @@
                                 </tr>
                                 <tr>
                                     <td class="px-8 py-6 font-bold text-dark">Annual Iftar Meet</td>
-                                    <td class="px-8 py-6 text-slate-500 italic">sara_ahmed@email.com</td>
+                                    <td class="px-8 py-6 text-slate-500">sara_ahmed@email.com</td>
                                     <td class="px-8 py-6 font-black text-primary">$45.00</td>
                                     <td class="px-8 py-6">
                                         <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-lg">PAID</span>
@@ -186,7 +186,7 @@
                                 </tr>
                                 <tr>
                                     <td class="px-8 py-6 font-bold text-dark">Stadium Symphony</td>
-                                    <td class="px-8 py-6 text-slate-500 italic">tanvir_bd@email.com</td>
+                                    <td class="px-8 py-6 text-slate-500">tanvir_bd@email.com</td>
                                     <td class="px-8 py-6 font-black text-primary">$85.00</td>
                                     <td class="px-8 py-6">
                                         <span class="px-3 py-1 bg-orange-100 text-orange-700 text-[10px] font-black rounded-lg">PENDING</span>
@@ -202,7 +202,7 @@
                 <div class="bg-[#21032B] rounded-[3rem] p-10 text-white relative overflow-hidden flex flex-col justify-between">
                     <div class="relative z-10">
                         <span class="text-primary-light font-black tracking-[0.3em] text-[10px] uppercase mb-12 block">Live Monitoring</span>
-                        <h3 class="font-outfit text-4xl font-black italic tracking-tighter mb-10 leading-none">The <br><span class="text-accent not-italic tracking-normal">Pulse</span> of Events.</h3>
+                        <h3 class="font-outfit text-4xl font-black tracking-tighter mb-10 leading-none">The <br><span class="text-accent tracking-normal">Pulse</span> of Events.</h3>
                         
                         <div class="space-y-6">
                             <div class="flex items-center gap-4 bg-white/5 p-5 rounded-3xl border border-white/5">

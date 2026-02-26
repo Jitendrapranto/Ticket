@@ -69,8 +69,8 @@
                         <div class="flex items-center gap-6">
                             <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center text-xl shadow-inner text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
                             <div class="flex-1 text-left">
-                                <h4 class="text-sm font-black italic tracking-tight uppercase">Action Required</h4>
-                                <p class="text-[10px] text-red-200/60 mt-0.5 leading-tight font-bold italic tracking-widest">Verification failed</p>
+                                <h4 class="text-sm font-black tracking-tight uppercase">Action Required</h4>
+                                <p class="text-[10px] text-red-200/60 mt-0.5 leading-tight font-bold tracking-widest">Verification failed</p>
                             </div>
                         </div>
                         <div class="space-y-1 bg-black/20 p-4 rounded-xl">
@@ -96,7 +96,7 @@
                         <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
                             <i class="fas fa-info-circle"></i>
                         </div>
-                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight italic">Basic Information</h3>
+                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Basic Information</h3>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -173,14 +173,14 @@
                         <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
                             <i class="fas fa-image"></i>
                         </div>
-                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight italic">Media & Branding</h3>
+                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Media & Branding</h3>
                     </div>
 
                     <div class="space-y-6">
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="form-label">Event Banner</label>
-                                <span class="text-[10px] font-black italic text-primary uppercase tracking-widest">Recommended: 1280x720px • < 5MB</span>
+                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • < 5MB</span>
                             </div>
                             
                             <div class="flex gap-4">
@@ -235,7 +235,7 @@
                         <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight italic">Scheduling</h3>
+                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Scheduling</h3>
                     </div>
                     <p class="text-[10px] text-slate-400 font-bold mb-8 uppercase tracking-widest">Set the dates and times for your event and registration period.</p>
 
@@ -253,7 +253,38 @@
                                 <i class="fas fa-calendar absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors"></i>
                                 <input type="datetime-local" name="registration_deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
                             </div>
-                            <p class="text-[10px] text-slate-400 italic font-medium">When will ticket sales close for this event?</p>
+                            <p class="text-[10px] text-slate-400 font-medium">When will ticket sales close for this event?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience Settings -->
+                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
+                    <div class="flex items-center gap-4 mb-2">
+                        <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                            <i class="fas fa-sliders-h"></i>
+                        </div>
+                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Experience Settings</h3>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-bold mb-8 uppercase tracking-widest">Configure how this event appears in the gallery and listing views.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <label class="form-label">Presentation Order</label>
+                            <div class="relative group">
+                                <i class="fas fa-sort-numeric-down absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors"></i>
+                                <input type="number" name="sort_order" value="0" min="0" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-14 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 1">
+                            </div>
+                            <p class="text-[10px] text-slate-400 font-medium italic">Lower numbers appear first in the listing.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="form-label">Featured Experience</label>
+                            <label class="relative inline-flex items-center cursor-pointer group">
+                                <input type="checkbox" name="is_featured" value="1" class="sr-only peer">
+                                <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                                <span class="ms-4 text-xs font-bold text-slate-500 group-hover:text-dark transition-colors">Mark as Featured</span>
+                            </label>
+                            <p class="text-[10px] text-slate-400 font-medium">Featured events are highlighted in the hero or spotlight sections.</p>
                         </div>
                     </div>
                 </div>
@@ -266,7 +297,7 @@
                                 <i class="fas fa-ticket-alt"></i>
                             </div>
                             <div>
-                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight italic">Ticketing</h3>
+                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Ticketing</h3>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Add different ticket types for your event.</p>
                             </div>
                         </div>
@@ -309,7 +340,7 @@
                         </button>
                         <!-- Added hidden price for main event if needed by back-end schema, taking from first ticket -->
                         <input type="hidden" name="price" :value="tickets[0] ? tickets[0].price : 0">
-                        <button type="submit" name="status" value="Live" class="bg-primary-dark text-white px-12 py-4 rounded-2xl font-black text-xs tracking-[0.3em] shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all active:scale-95 uppercase flex items-center gap-3 italic">
+                        <button type="submit" name="status" value="Live" class="bg-primary-dark text-white px-12 py-4 rounded-2xl font-black text-xs tracking-[0.3em] shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all active:scale-95 uppercase flex items-center gap-3">
                              <i class="fas fa-paper-plane text-[10px]"></i> Launch Event
                         </button>
                     </div>

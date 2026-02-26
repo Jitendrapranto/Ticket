@@ -57,7 +57,7 @@
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-primary"></div>
                         <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-check-circle"></i></div>
                         <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black italic tracking-tight">Operation Successful</h4>
+                            <h4 class="text-sm font-black tracking-tight">Operation Successful</h4>
                             <p class="text-[11px] text-white/60 mt-0.5 leading-tight">{{ session('success') }}</p>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-red-500"></div>
                         <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center text-xl shadow-inner text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black italic tracking-tight">System Notification</h4>
+                            <h4 class="text-sm font-black tracking-tight">System Notification</h4>
                             <p class="text-[11px] text-red-200/60 mt-0.5 leading-tight">
                                 @if(session('error'))
                                     {{ session('error') }}
@@ -105,11 +105,11 @@
                             @foreach($events as $event)
                             <tr class="hover:bg-slate-50/50 transition-colors group">
                                 <td class="px-8 py-6">
-                                    <p class="font-black text-dark tracking-tight italic group-hover:text-primary transition-colors">{{ $event->title }}</p>
+                                    <p class="font-black text-dark tracking-tight group-hover:text-primary transition-colors">{{ $event->title }}</p>
                                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">EVP-{{ strtoupper($event->slug) }}</p>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <span class="font-bold text-primary italic text-sm">{{ $event->category->name }}</span>
+                                    <span class="font-bold text-primary text-sm">{{ $event->category->name }}</span>
                                 </td>
                                 <td class="px-8 py-6">
                                     <p class="text-xs font-black text-dark tracking-tight">{{ $event->date->format('M d, Y • h:i A') }}</p>
@@ -206,7 +206,7 @@
 
                     <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-4">Are you sure?</h3>
                     <p class="text-slate-400 text-sm font-medium leading-relaxed mb-8">
-                        You are about to delete <span class="text-dark font-bold italic" x-text="eventName"></span>. This action cannot be undone and will remove all associated ticket data.
+                        You are about to delete <span class="text-dark font-bold" x-text="eventName"></span>. This action cannot be undone and will remove all associated ticket data.
                     </p>
 
                     <div class="flex items-center gap-4">

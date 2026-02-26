@@ -51,8 +51,8 @@
                         <div class="flex items-center gap-6">
                             <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center text-xl shadow-inner text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
                             <div class="flex-1 text-left">
-                                <h4 class="text-sm font-black italic tracking-tight uppercase tracking-tight">System Alert</h4>
-                                <p class="text-[10px] text-red-200/60 mt-0.5 leading-tight font-bold italic tracking-widest uppercase">Data validation failed</p>
+                                <h4 class="text-sm font-black tracking-tight uppercase tracking-tight">System Alert</h4>
+                                <p class="text-[10px] text-red-200/60 mt-0.5 leading-tight font-bold tracking-widest uppercase">Data validation failed</p>
                             </div>
                         </div>
                         <div class="space-y-1 bg-black/20 p-4 rounded-xl">

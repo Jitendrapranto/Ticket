@@ -48,6 +48,8 @@ class EventController extends Controller
             'status' => 'required|in:Live,Expired,Draft',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'sort_order' => 'required|integer|min:0',
+            'is_featured' => 'nullable|boolean',
             'tickets' => 'nullable|array',
             'tickets.*.name' => 'required|string|max:255',
             'tickets.*.price' => 'required|numeric',
@@ -61,6 +63,8 @@ class EventController extends Controller
             if ($request->hasFile('image')) {
                 $data['image'] = $request->file('image')->store('events', 'public');
             }
+
+            $data['is_featured'] = $request->has('is_featured');
 
             $event = Event::create($data);
 
@@ -97,6 +101,8 @@ class EventController extends Controller
             'status' => 'required|in:Live,Expired,Draft',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'sort_order' => 'required|integer|min:0',
+            'is_featured' => 'nullable|boolean',
             'tickets' => 'nullable|array',
             'tickets.*.name' => 'required|string|max:255',
             'tickets.*.price' => 'required|numeric',
@@ -113,6 +119,8 @@ class EventController extends Controller
                 }
                 $data['image'] = $request->file('image')->store('events', 'public');
             }
+
+            $data['is_featured'] = $request->has('is_featured');
 
             $event->update($data);
 

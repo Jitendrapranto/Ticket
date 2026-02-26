@@ -164,7 +164,7 @@
 
                         <!-- Submit Button -->
                         <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
-                            <p class="text-[10px] font-bold text-slate-400 italic">Last updated: {{ $hero->updated_at ? $hero->updated_at->diffForHumans() : 'Never updated' }}</p>
+                            <p class="text-[10px] font-bold text-slate-400">Last updated: {{ $hero->updated_at ? $hero->updated_at->diffForHumans() : 'Never updated' }}</p>
                             <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 transition-all active:scale-95 uppercase">
                                 Update Hero Section
                             </button>
@@ -179,7 +179,7 @@
                         <div class="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 mb-6">
                             <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">{{ $hero->badge_text }}</span>
                         </div>
-                        <h1 class="font-outfit text-4xl font-black mb-4 italic tracking-tighter">{{ $hero->title }}</h1>
+                        <h1 class="font-outfit text-4xl font-black mb-4 tracking-tighter">{{ $hero->title }}</h1>
                         <p class="text-white/40 text-sm font-light leading-relaxed truncate">{{ $hero->subtitle }}</p>
                     </div>
                     <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px] pointer-events-none"></div>

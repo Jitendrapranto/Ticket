@@ -14,8 +14,8 @@
                 <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">OUR STORY</span>
             </div>
             
-            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter italic">
-                Redefining The <br><span class="text-accent not-italic tracking-normal">Experience.</span>
+            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
+                Redefining The <br><span class="text-accent tracking-normal">Experience.</span>
             </h1>
             <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
                 Ticket Kinun is more than a ticketing platform. We are the bridge between fans and their favorite memories, built with advanced technology and a passion for culture.
@@ -48,7 +48,7 @@
                     <div class="rounded-[3rem] overflow-hidden shadow-premium aspect-[4/5] relative group">
                         <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Concert scene" class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700">
                         <div class="absolute inset-x-8 bottom-8 glass p-8 rounded-[2rem]">
-                            <p class="text-dark font-black text-xl italic leading-tight">"The energy of the crowd is our greatest inspiration."</p>
+                            <p class="text-dark font-black text-xl leading-tight">"The energy of the crowd is our greatest inspiration."</p>
                         </div>
                     </div>
                     <!-- Decorative shapes -->
@@ -140,7 +140,7 @@
     <section class="py-40 relative bg-dark overflow-hidden">
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575861501-7ad05823123d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center opacity-10 grayscale scale-110"></div>
         <div class="max-w-5xl mx-auto px-6 text-center relative z-10 animate-fadeInUp">
-            <h2 class="font-outfit text-6xl md:text-8xl font-black text-white leading-[0.8] mb-12 tracking-tighter italic">Join The <br><span class="text-primary not-italic tracking-normal">Revolution.</span></h2>
+            <h2 class="font-outfit text-6xl md:text-8xl font-black text-white leading-[0.8] mb-12 tracking-tighter">Join The <br><span class="text-primary tracking-normal">Revolution.</span></h2>
             <p class="text-xl text-white/40 mb-16 max-w-2xl mx-auto font-light">Whether you're a fan searching for magic or a creator ready to build it, we have a place for you.</p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-6">
