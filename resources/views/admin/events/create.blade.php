@@ -31,8 +31,11 @@
     <div class="lg:ml-72 min-h-screen flex flex-col">
         <form action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data" x-data="{ 
             tickets: [{ name: 'General Admission', price: '25', quantity: '100' }],
+            artists: [],
             addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
-            removeTicket(index) { this.tickets.splice(index, 1) }
+            removeTicket(index) { this.tickets.splice(index, 1) },
+            addArtist() { this.artists.push({ name: '', role: '', image: '' }) },
+            removeArtist(index) { this.artists.splice(index, 1) }
         }">
             @csrf
             
@@ -121,17 +124,86 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="md:col-span-2 space-y-4">
-                            <label class="form-label">Venue / Location</label>
+                        <div class="md:col-span-1 space-y-4">
+                            <label class="form-label">Venue Name</label>
+                            <input type="text" name="venue_name" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Grand Ballroom">
+                        </div>
+                        <div class="md:col-span-1 space-y-4">
+                            <label class="form-label">City / Area</label>
                             <div class="relative group">
                                 <i class="fas fa-map-marker-alt absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors"></i>
-                                <input type="text" name="location" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-14 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Madison Square Garden">
+                                <input type="text" name="location" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-14 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Dhaka, Bangladesh">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:col-span-2">
+                            <div class="space-y-4">
+                                <label class="form-label">Language</label>
+                                <input type="text" name="language" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. English, Bangla">
+                            </div>
+                            <div class="space-y-4">
+                                <label class="form-label">Age Limit</label>
+                                <input type="text" name="age_limit" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 18+ Only">
+                            </div>
+                            <div class="space-y-4">
+                                <label class="form-label">Duration</label>
+                                <input type="text" name="duration" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 3 Hours">
                             </div>
                         </div>
                         <div class="md:col-span-2 space-y-4">
                             <label class="form-label">Event Description</label>
                             <textarea name="description" rows="5" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Provide a detailed overview of what attendees can expect..."></textarea>
                         </div>
+                        <div class="md:col-span-2 space-y-4">
+                            <label class="form-label">You Should Know</label>
+                            <textarea name="you_should_know" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Important instructions for attendees..."></textarea>
+                        </div>
+                        <div class="md:col-span-2 space-y-4">
+                            <label class="form-label">Terms & Conditions</label>
+                            <textarea name="terms_conditions" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Legal terms, refund policy, etc..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Artist Lineup -->
+                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Artist Lineup</h3>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Manage personalities performing at this event.</p>
+                            </div>
+                        </div>
+                        <button type="button" @click="addArtist()" class="bg-primary-dark text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-lg shadow-black/10">
+                            <i class="fas fa-plus"></i> Add Artist
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <template x-for="(artist, index) in artists" :key="index">
+                            <div class="grid grid-cols-12 gap-6 items-end group animate-fadeInUp">
+                                <div class="col-span-5 space-y-3">
+                                    <label class="form-label text-[10px]">Artist Name</label>
+                                    <input type="text" x-model="artist.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold opacity-80 focus:opacity-100 transition-all shadow-inner" placeholder="Artist Name">
+                                </div>
+                                <div class="col-span-3 space-y-3">
+                                    <label class="form-label text-[10px]">Role / Talent</label>
+                                    <input type="text" x-model="artist.role" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-black tracking-tighter shadow-inner" placeholder="e.g. Guest Comedian">
+                                </div>
+                                <div class="col-span-3 space-y-3">
+                                    <label class="form-label text-[10px]">Image URL (Optional)</label>
+                                    <input type="text" x-model="artist.image" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold shadow-inner" placeholder="https://...">
+                                </div>
+                                <div class="col-span-1 pb-1">
+                                    <button type="button" @click="removeArtist(index)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50 text-red-400 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                        <i class="fas fa-trash-alt text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                        <input type="hidden" name="artists_raw" :value="JSON.stringify(artists)">
                     </div>
                 </div>
 

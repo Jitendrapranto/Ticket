@@ -44,6 +44,12 @@ Route::get('/events', function () {
     return view('events', compact('hero', 'categories', 'events', 'featuredEvents'));
 })->name('events');
 
+Route::get('/events/{slug}', function ($slug) {
+    $event = Event::with(['category', 'ticketTypes'])->where('slug', $slug)->firstOrFail();
+    $relatedEvents = Event::with('category')->where('category_id', $event->category_id)->where('id', '!=', $event->id)->take(4)->get();
+    return view('events.show', compact('event', 'relatedEvents'));
+})->name('events.show');
+
 Route::get('/gallery', function () {
     $hero = GalleryHero::first();
     $dbImages = GalleryImage::with('category')->latest()->paginate(12);

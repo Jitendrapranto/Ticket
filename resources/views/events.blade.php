@@ -219,7 +219,7 @@
                         <div class="flex-1"></div>
 
                         <!-- Book Now Button -->
-                        <a href="#" class="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] bg-primary text-white font-black text-xs tracking-[0.2em] uppercase transition-all hover:bg-dark hover:shadow-2xl hover:shadow-primary/20 group/btn">
+                        <a href="{{ route('events.show', $event->slug) }}" class="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] bg-primary text-white font-black text-xs tracking-[0.2em] uppercase transition-all hover:bg-dark hover:shadow-2xl hover:shadow-primary/20 group/btn">
                             Book Your Seat <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                         </a>
                     </div>

@@ -44,9 +44,16 @@ class EventController extends Controller
             'date' => 'required|date',
             'registration_deadline' => 'required|date',
             'location' => 'required|string',
+            'venue_name' => 'nullable|string|max:255',
             'price' => 'required|numeric',
             'status' => 'required|in:Live,Expired,Draft',
             'description' => 'nullable|string',
+            'language' => 'nullable|string|max:255',
+            'age_limit' => 'nullable|string|max:255',
+            'duration' => 'nullable|string|max:255',
+            'you_should_know' => 'nullable|string',
+            'terms_conditions' => 'nullable|string',
+            'artists_raw' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'sort_order' => 'required|integer|min:0',
             'is_featured' => 'nullable|boolean',
@@ -57,7 +64,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request) {
-            $data = $request->except('tickets');
+            $data = $request->except(['tickets', 'artists_raw']);
             $data['slug'] = Str::slug($request->title);
 
             if ($request->hasFile('image')) {
@@ -65,6 +72,10 @@ class EventController extends Controller
             }
 
             $data['is_featured'] = $request->has('is_featured');
+            
+            if ($request->artists_raw) {
+                $data['artists'] = json_decode($request->artists_raw, true);
+            }
 
             $event = Event::create($data);
 
@@ -97,9 +108,16 @@ class EventController extends Controller
             'date' => 'required|date',
             'registration_deadline' => 'required|date',
             'location' => 'required|string',
+            'venue_name' => 'nullable|string|max:255',
             'price' => 'required|numeric',
             'status' => 'required|in:Live,Expired,Draft',
             'description' => 'nullable|string',
+            'language' => 'nullable|string|max:255',
+            'age_limit' => 'nullable|string|max:255',
+            'duration' => 'nullable|string|max:255',
+            'you_should_know' => 'nullable|string',
+            'terms_conditions' => 'nullable|string',
+            'artists_raw' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'sort_order' => 'required|integer|min:0',
             'is_featured' => 'nullable|boolean',
@@ -110,7 +128,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request, $event) {
-            $data = $request->except('tickets');
+            $data = $request->except(['tickets', 'artists_raw']);
             $data['slug'] = Str::slug($request->title);
 
             if ($request->hasFile('image')) {
@@ -121,6 +139,10 @@ class EventController extends Controller
             }
 
             $data['is_featured'] = $request->has('is_featured');
+            
+            if ($request->artists_raw) {
+                $data['artists'] = json_decode($request->artists_raw, true);
+            }
 
             $event->update($data);
 
