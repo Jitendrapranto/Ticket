@@ -64,6 +64,59 @@
             </div>
         </div>
 
+        <!-- About Page -->
+        <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Pages</span>
+        <div x-data="{ open: {{ request()->routeIs('admin.about.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-info-circle text-pink-400"></i> About
+                </div>
+                <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
+                <a href="{{ route('admin.about.story.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Our Story Section
+                </a>
+                <a href="{{ route('admin.about.statistics.index') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Statistics Section
+                </a>
+                <a href="{{ route('admin.about.advantages.index') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Advantages Section
+                </a>
+                <a href="{{ route('admin.about.cta.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Call To Action
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Contact</span>
+        <div x-data="{ open: {{ request()->routeIs('admin.contact.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-envelope text-sky-400"></i> Contact
+                </div>
+                <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
+                <a href="{{ route('admin.contact.hero.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Hero Section
+                </a>
+                <a href="{{ route('admin.contact.cards.index') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Manage Cards
+                </a>
+                <a href="{{ route('admin.contact.form.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Form Section
+                </a>
+                <a href="{{ route('admin.contact.support.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Support Section
+                </a>
+                <a href="{{ route('admin.contact.map.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
+                    Map Section
+                </a>
+            </div>
+        </div>
+
         <!-- Users -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Users & Staff</span>
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">

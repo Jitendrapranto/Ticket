@@ -5,11 +5,19 @@ use App\Models\EventHero;
 use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\GalleryHero;
+use App\Models\GalleryImage;
+use App\Models\AboutStatistic;
+use App\Models\AboutStory;
+use App\Models\AboutAdvantage;
 use App\Http\Controllers\Admin\EventHeroController;
 use App\Http\Controllers\Admin\EventCategoryController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\GalleryHeroController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\AboutStatisticController;
+use App\Http\Controllers\Admin\AboutStoryController;
+use App\Http\Controllers\Admin\AboutAdvantageController;
+use App\Http\Controllers\Admin\AboutCtaController;
 
 Route::get('/', function () {
     $featuredEvents = Event::with('category')->where('status', 'Live')->where('is_featured', true)->orderBy('sort_order', 'asc')->latest()->take(2)->get();
@@ -38,15 +46,25 @@ Route::get('/events', function () {
 
 Route::get('/gallery', function () {
     $hero = GalleryHero::first();
-    return view('gallery', compact('hero'));
+    $dbImages = GalleryImage::with('category')->latest()->paginate(12);
+    return view('gallery', compact('hero', 'dbImages'));
 })->name('gallery');
 
 Route::get('/about', function () {
-    return view('about');
+    $statistics = \App\Models\AboutStatistic::orderBy('sort_order', 'asc')->get();
+    $story = \App\Models\AboutStory::first();
+    $advantages = \App\Models\AboutAdvantage::orderBy('sort_order', 'asc')->get();
+    $cta = \App\Models\AboutCta::first();
+    return view('about', compact('statistics', 'story', 'advantages', 'cta'));
 })->name('about');
 
 Route::get('/contact', function () {
-    return view('contact');
+    $hero = \App\Models\ContactHero::first();
+    $cards = \App\Models\ContactCard::orderBy('sort_order', 'asc')->get();
+    $formContent = \App\Models\ContactFormContent::first();
+    $support = \App\Models\ContactSupport::first();
+    $map = \App\Models\ContactMap::first();
+    return view('contact', compact('hero', 'cards', 'formContent', 'support', 'map'));
 })->name('contact');
 
 Route::get('/admin/dashboard', function () {
@@ -70,4 +88,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('categories', EventCategoryController::class);
     Route::resource('events', EventController::class);
+    
+    Route::get('/about/story', [AboutStoryController::class, 'edit'])->name('about.story.edit');
+    Route::put('/about/story', [AboutStoryController::class, 'update'])->name('about.story.update');
+
+    Route::get('/about/cta', [AboutCtaController::class, 'edit'])->name('about.cta.edit');
+    Route::put('/about/cta', [AboutCtaController::class, 'update'])->name('about.cta.update');
+    
+    Route::resource('about/statistics', AboutStatisticController::class)->names('about.statistics');
+    Route::resource('about/advantages', AboutAdvantageController::class)->names('about.advantages');
+
+    Route::get('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'edit'])->name('contact.hero.edit');
+    Route::put('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'update'])->name('contact.hero.update');
+
+    Route::resource('contact/cards', \App\Http\Controllers\Admin\ContactCardController::class)->names('contact.cards');
+
+    Route::get('/contact/form', [\App\Http\Controllers\Admin\ContactFormContentController::class, 'edit'])->name('contact.form.edit');
+    Route::put('/contact/form', [\App\Http\Controllers\Admin\ContactFormContentController::class, 'update'])->name('contact.form.update');
+
+    Route::get('/contact/support', [\App\Http\Controllers\Admin\ContactSupportController::class, 'edit'])->name('contact.support.edit');
+    Route::put('/contact/support', [\App\Http\Controllers\Admin\ContactSupportController::class, 'update'])->name('contact.support.update');
+
+    Route::get('/contact/map', [\App\Http\Controllers\Admin\ContactMapController::class, 'edit'])->name('contact.map.edit');
+    Route::put('/contact/map', [\App\Http\Controllers\Admin\ContactMapController::class, 'update'])->name('contact.map.update');
 });

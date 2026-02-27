@@ -57,3 +57,18 @@ When admin add aevent admin can assign the event order and he can assign the eve
 Here I want to add the book now button on the event card and the card size will be something larger than the current size....
 
 I want to the size of the event card will be larger than the current size and the event date is not look professional so I want to change the design of the event date..
+
+
+I want to remove the border from the galar card and when clicked the card then it will be open in the screen actuall like modal and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website 
+
+I want to dYnamic this section from admin panel...at first You create a menu named About and then I want to create a dropdown named Statistics and then the super admin can crud the content of the statistics section  and when press delete icon then then a professional popup will show..make sure You also create the seeder file for Aboutstatistics section....
+
+
+I want to dYnamic this section from admin panel...make sure here need to professional popup when press delete and also make sure a toast message...
+
+
+I want to this section dYnamic from admin panel....make sure the button name and button url exist here....
+
+I wannt to dYnamic the contact page hero section of the Contact page and make main menu on the admin sidebar named Contact and then create a dropdown named Hero section and then the super admin can update the content of the hero section of the Contact page from there and it will be reflected on the Contact page hero section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?..make sure You will create the seeder file for this hero section content and make the migration file for the database as well and make the model for this hero section content and make the controller for this hero section content and make the route for this hero section content and make the blade file for this hero section content in the admin dashboard and make the blade file for this hero section content in the Contact page...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design.
+
+I want to DYnamic this section from admin panel ...

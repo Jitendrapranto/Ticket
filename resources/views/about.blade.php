@@ -1,152 +1,167 @@
 @extends('layouts.app')
 
-@section('title', 'About Us - Redefining the Event Experience | Ticket Kinun')
+@section('title', 'About Us - Reimagining the Fan Journey | Ticket Kinun')
 
 @section('content')
-    <!-- Hero Section -->
-    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#21032B] overflow-hidden min-h-[450px] flex items-center">
-        <!-- Abstract Background Glows -->
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
-
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <div class="inline-block px-4 py-1.5 rounded-full glass mb-6">
-                <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">OUR STORY</span>
-            </div>
-            
-            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
-                Redefining The <br><span class="text-accent tracking-normal">Experience.</span>
-            </h1>
-            <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-                Ticket Kinun is more than a ticketing platform. We are the bridge between fans and their favorite memories, built with advanced technology and a passion for culture.
-            </p>
-        </div>
-    </section>
-
-    <!-- Mission & Statistics -->
-    <section class="py-24 bg-white relative overflow-hidden">
+    <!-- Statistics Section -->
+    <section class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
-                <div class="animate-fadeInUp text-left">
-                    <span class="text-primary font-black tracking-[0.3em] text-[10px] uppercase mb-4 block">WHO WE ARE</span>
-                    <h2 class="font-outfit text-5xl font-black text-dark mb-8 tracking-tighter leading-tight">Elevating Every Event, One Ticket At A Time.</h2>
-                    <p class="text-slate-400 text-lg font-light leading-relaxed mb-8">
-                        Founded in 2024, Ticket Kinun set out with a simple goal: to eliminate the friction between discovery and excitement. We've built a digital-first ecosystem that prioritizes security, speed, and the sheer joy of the live experience.
-                    </p>
-                    <div class="grid grid-cols-2 gap-8">
-                        <div>
-                            <span class="block font-black text-4xl text-dark mb-1 tracking-tighter">2.5M+</span>
-                            <span class="text-slate-400 text-xs font-bold tracking-widest uppercase">Global Fans</span>
-                        </div>
-                        <div>
-                            <span class="block font-black text-4xl text-dark mb-1 tracking-tighter">15k+</span>
-                            <span class="text-slate-400 text-xs font-bold tracking-widest uppercase">Premier Events</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="relative animate-fadeInUp" style="animation-delay: 0.2s">
-                    <div class="rounded-[3rem] overflow-hidden shadow-premium aspect-[4/5] relative group">
-                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Concert scene" class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700">
-                        <div class="absolute inset-x-8 bottom-8 glass p-8 rounded-[2rem]">
-                            <p class="text-dark font-black text-xl leading-tight">"The energy of the crowd is our greatest inspiration."</p>
-                        </div>
-                    </div>
-                    <!-- Decorative shapes -->
-                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
 
-    <!-- Our Values - Bento Grid -->
-    <section class="py-32 bg-[#f8fafc]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-left mb-20 max-w-2xl px-4">
-                <span class="text-primary font-black tracking-widest text-[10px] uppercase mb-4 block">OUR CORE VALUES</span>
-                <h2 class="font-outfit text-5xl font-black text-dark leading-[1.1] tracking-tighter mb-4">Built On Trust, Driven By Passion</h2>
-            </div>
+                @forelse($statistics as $stat)
+                <div class="bg-white rounded-[2rem] py-10 px-6 text-center flex flex-col items-center justify-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1.5" style="background: {{ $stat->color }};"></div>
+                    <div class="w-14 h-14 rounded-[1rem] flex items-center justify-center text-white mb-6" style="background: {{ $stat->color }};">
+                        <i class="{{ $stat->icon }} text-2xl"></i>
+                    </div>
+                    <h3 class="text-[2.5rem] leading-none font-bold text-[#111827] mb-3">{{ $stat->value }}</h3>
+                    <p class="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">{{ $stat->label }}</p>
+                </div>
+                @empty
+                <!-- Fallback Static Content -->
+                <div class="bg-white rounded-[2rem] py-10 px-6 text-center flex flex-col items-center justify-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-[#3b82f6]"></div>
+                    <div class="w-14 h-14 bg-[#3b82f6] rounded-[1rem] flex items-center justify-center text-white mb-6">
+                        <i class="fas fa-globe text-2xl"></i>
+                    </div>
+                    <h3 class="text-[2.5rem] leading-none font-bold text-[#111827] mb-3">500+</h3>
+                    <p class="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">GLOBAL EVENTS</p>
+                </div>
+                
+                <div class="bg-white rounded-[2rem] py-10 px-6 text-center flex flex-col items-center justify-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-[#10b981]"></div>
+                    <div class="w-14 h-14 bg-[#10b981] rounded-[1rem] flex items-center justify-center text-white mb-6">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-[2.5rem] leading-none font-bold text-[#111827] mb-3">1M+</h3>
+                    <p class="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">HAPPY FANS</p>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 h-auto lg:h-[600px]">
-                <div class="md:col-span-4 bg-white p-12 rounded-[2.5rem] shadow-premium border border-slate-50 bento-card flex flex-col justify-between group">
-                    <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 mb-8">
+                <div class="bg-white rounded-[2rem] py-10 px-6 text-center flex flex-col items-center justify-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-[#f59e0b]"></div>
+                    <div class="w-14 h-14 bg-[#f59e0b] rounded-[1rem] flex items-center justify-center text-white mb-6">
+                        <i class="fas fa-award text-2xl"></i>
+                    </div>
+                    <h3 class="text-[2.5rem] leading-none font-bold text-[#111827] mb-3">25+</h3>
+                    <p class="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">INDUSTRY AWARDS</p>
+                </div>
+
+                <div class="bg-white rounded-[2rem] py-10 px-6 text-center flex flex-col items-center justify-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-[#6366f1]"></div>
+                    <div class="w-14 h-14 bg-[#6366f1] rounded-[1rem] flex items-center justify-center text-white mb-6">
                         <i class="fas fa-shield-alt text-2xl"></i>
                     </div>
-                    <div>
-                        <h3 class="font-black text-2xl text-dark mb-4 tracking-tight">Security First</h3>
-                        <p class="text-slate-400 font-medium leading-relaxed">
-                            Every transaction is encrypted with industry-leading technology to ensure your peace of mind.
-                        </p>
-                    </div>
+                    <h3 class="text-[2.5rem] leading-none font-bold text-[#111827] mb-3">100%</h3>
+                    <p class="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">SECURE SALES</p>
                 </div>
+                @endforelse
 
-                <div class="md:col-span-8 bg-dark p-12 rounded-[2.5rem] bento-card flex flex-col justify-between group overflow-hidden relative">
-                    <div class="relative z-10 w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-8">
-                        <i class="fas fa-bolt text-2xl"></i>
-                    </div>
-                    <div class="relative z-10 max-w-sm">
-                        <h3 class="font-black text-3xl text-white mb-4 tracking-tighter">Zero-Wait Philosophy</h3>
-                        <p class="text-white/40 font-medium leading-relaxed">
-                            Our platform is optimized for speed. From search to booking, we've eliminated every unnecessary click.
-                        </p>
-                    </div>
-                    <!-- Decorative Background Icon -->
-                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
-                        <i class="fas fa-tachometer-alt text-[150px] text-white/[0.03]"></i>
-                    </div>
-                </div>
-
-                <div class="md:col-span-7 bg-primary p-12 rounded-[2.5rem] bento-card text-white flex flex-col justify-between group">
-                    <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-8">
-                        <i class="fas fa-heart text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-3xl mb-4 tracking-tighter">Community Centered</h3>
-                        <p class="text-white/60 font-medium leading-relaxed">
-                            We listen to our fans. Every update we ship is inspired by the needs and desires of our global community.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="md:col-span-5 bg-white p-12 rounded-[2.5rem] shadow-premium border border-slate-50 bento-card flex flex-col justify-between group">
-                    <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500 mb-8">
-                        <i class="fas fa-seedling text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-2xl text-dark mb-4 tracking-tight">Constant Innovation</h3>
-                        <p class="text-slate-400 font-medium leading-relaxed">
-                            The tech world never stops, and neither do we. We're constantly exploring AI and web3 integrations.
-                        </p>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Partner Shoutout -->
+    <!-- Hero / Mission Section -->
     <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <span class="text-slate-300 font-black tracking-[0.4em] text-[9px] uppercase mb-12 block">TRUSTED BY GLOBAL LEADERS</span>
-            <div class="flex flex-wrap justify-center items-center gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-                <i class="fab fa-apple text-5xl"></i>
-                <i class="fab fa-spotify text-5xl"></i>
-                <i class="fab fa-nike text-5xl"></i>
-                <i class="fab fa-amazon text-5xl"></i>
-                <i class="fab fa-playstation text-5xl"></i>
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                <!-- Image -->
+                <div class="relative w-full">
+                    <div class="rounded-3xl overflow-hidden shadow-2xl relative">
+                        <!-- Bridge image -->
+                        <img src="{{ $story->image ?? 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' }}" alt="Our Story" class="w-full h-auto object-cover aspect-[4/3] brightness-75">
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="flex flex-col">
+                    <div class="mb-6">
+                        <span class="inline-block px-3 py-1 bg-slate-50 border border-slate-200 text-slate-500 text-[10px] font-bold tracking-widest uppercase rounded">
+                            {{ $story->badge_text ?? 'OUR STORY' }}
+                        </span>
+                    </div>
+                    
+                    <h2 class="font-outfit text-5xl md:text-[3.5rem] font-black text-[#1e293b] leading-[1.1] mb-2 tracking-tighter">
+                        {{ $story->title_main ?? 'Reimagining the' }} <br>
+                        <span class="text-slate-400">{{ $story->title_highlight ?? 'Fan Journey' }}</span>
+                    </h2>
+                    
+                    <div class="w-full max-w-[200px] h-[2px] bg-red-100 my-8 relative">
+                        <div class="absolute right-0 top-0 h-full w-16 bg-red-200"></div>
+                    </div>
+
+                    <p class="text-slate-600 text-[15px] leading-relaxed mb-6 font-medium">
+                        {{ $story->paragraph_1 ?? 'We founded Ticket Kinun with a simple mission: to bridge the gap between complex event logistics and the pure joy of the experience.' }}
+                    </p>
+                    <p class="text-slate-600 text-[15px] leading-relaxed mb-10 font-medium">
+                        {{ $story->paragraph_2 ?? 'Today, we empower thousands of organizers and millions of fans with a platform that prioritizes speed, security, and style above all else.' }}
+                    </p>
+
+                    <!-- Mini Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="rounded-2xl p-5 flex items-start gap-4" style="background: {{ $story->card_1_bg_color ?? '#f0f5ff' }}">
+                            <div class="w-8 h-8 rounded flex-shrink-0 flex items-center justify-center text-white mt-1 shadow-sm {{ $story->card_1_icon_color ?? 'bg-blue-500' }}">
+                                <i class="{{ $story->card_1_icon ?? 'fas fa-fire' }} text-xs"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-[#1e293b] text-[15px] mb-1">{{ $story->card_1_title ?? 'Passion' }}</h4>
+                                <p class="text-slate-500 text-xs leading-relaxed font-medium">{{ $story->card_1_description ?? 'What drives us to build the best experience.' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="rounded-2xl p-5 flex items-start gap-4" style="background: {{ $story->card_2_bg_color ?? '#fff0f2' }}">
+                            <div class="w-8 h-8 rounded flex-shrink-0 flex items-center justify-center text-white mt-1 shadow-sm {{ $story->card_2_icon_color ?? 'bg-rose-500' }}">
+                                <i class="{{ $story->card_2_icon ?? 'fas fa-heart' }} text-xs"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-[#1e293b] text-[15px] mb-1">{{ $story->card_2_title ?? 'Community' }}</h4>
+                                <p class="text-slate-500 text-xs leading-relaxed font-medium">{{ $story->card_2_description ?? 'More than just a platform, it is a movement.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Final CTA -->
-    <section class="py-40 relative bg-dark overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575861501-7ad05823123d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center opacity-10 grayscale scale-110"></div>
-        <div class="max-w-5xl mx-auto px-6 text-center relative z-10 animate-fadeInUp">
-            <h2 class="font-outfit text-6xl md:text-8xl font-black text-white leading-[0.8] mb-12 tracking-tighter">Join The <br><span class="text-primary tracking-normal">Revolution.</span></h2>
-            <p class="text-xl text-white/40 mb-16 max-w-2xl mx-auto font-light">Whether you're a fan searching for magic or a creator ready to build it, we have a place for you.</p>
-            
-            <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="{{ route('events') }}" class="bg-white text-dark px-16 py-6 rounded-3xl font-black text-lg hover:bg-primary hover:text-white transition-all transform hover:-rotate-2 hover:scale-105 shadow-2xl">DISCOVER EVENTS</a>
-                <a href="#" class="glass text-white px-16 py-6 rounded-3xl font-black text-lg hover:bg-white hover:text-dark transition-all">BE A PARTNER</a>
+    <!-- The Kinun Advantage Section -->
+    <section class="py-24 bg-[#f8fafc]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="font-outfit text-4xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-4">The Kinun Advantage</h2>
+                <p class="text-slate-500 text-[15px] font-medium">Built on a foundation of technology and a passion for live events.</p>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @forelse($advantages as $advantage)
+                <div class="rounded-[2rem] p-10 shadow-sm border hover:shadow-md transition-shadow {{ $advantage->border_class }}" style="background: {{ $advantage->card_bg_color }}">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white mb-8 shadow-sm" style="background: {{ $advantage->icon_bg_color }}">
+                        <i class="{{ $advantage->icon }}"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3 tracking-tight" style="color: {{ $advantage->title_color }}">{{ $advantage->title }}</h3>
+                    <p class="text-sm leading-relaxed font-medium" style="color: {{ $advantage->desc_color }}">
+                        {{ $advantage->description }}
+                    </p>
+                </div>
+                @empty
+                <!-- Fallback content if empty -->
+                <div class="col-span-1 md:col-span-3 text-center text-slate-400 py-10">
+                    Advantages are currently being updated. Please check back later!
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="font-outfit text-4xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-4">{{ $cta->title ?? 'Ready to partner?' }}</h2>
+            <p class="text-slate-500 text-[15px] mb-10 font-medium">{{ $cta->subtitle ?? 'Join our global network of organizers and bring your events to millions.' }}</p>
+            
+            <a href="{{ $cta->button_url ?? '#' }}" class="inline-flex items-center justify-center gap-3 bg-[#111827] text-white px-10 py-4 rounded-full font-bold text-sm tracking-wide hover:bg-[#1f2937] transition-all shadow-lg shadow-gray-900/30">
+                {{ $cta->button_text ?? 'CONTACT US TODAY' }}
+                <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
         </div>
     </section>
 @endsection
