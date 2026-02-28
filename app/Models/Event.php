@@ -39,4 +39,9 @@ class Event extends Model
     {
         return $this->hasMany(TicketType::class);
     }
+
+    public function formFields()
+    {
+        return $this->hasMany(EventFormField::class)->orderBy('sort_order');
+    }
 }

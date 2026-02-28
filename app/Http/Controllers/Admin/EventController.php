@@ -64,7 +64,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request) {
-            $data = $request->except(['tickets', 'artists_raw']);
+            $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
             $data['slug'] = Str::slug($request->title);
 
             if ($request->hasFile('image')) {
@@ -84,6 +84,9 @@ class EventController extends Controller
                     $event->ticketTypes()->create($ticket);
                 }
             }
+
+            // Save form fields
+            $this->saveFormFields($event, $request->form_fields_raw);
         });
 
         if ($request->status === 'Draft') {
@@ -96,6 +99,7 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $categories = EventCategory::all();
+        $event->load('formFields');
         return view('admin.events.edit', compact('event', 'categories'));
     }
 
@@ -128,7 +132,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request, $event) {
-            $data = $request->except(['tickets', 'artists_raw']);
+            $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
             $data['slug'] = Str::slug($request->title);
 
             if ($request->hasFile('image')) {
@@ -152,6 +156,9 @@ class EventController extends Controller
                     $event->ticketTypes()->create($ticket);
                 }
             }
+
+            // Save form fields
+            $this->saveFormFields($event, $request->form_fields_raw);
         });
 
         if ($request->status === 'Draft') {
@@ -168,5 +175,44 @@ class EventController extends Controller
         }
         $event->delete();
         return redirect()->back()->with('success', 'Event removed successfully!');
+    }
+
+    /**
+     * Save dynamic form fields for an event.
+     */
+    private function saveFormFields(Event $event, $formFieldsRaw)
+    {
+        $event->formFields()->delete();
+
+        // Always create the 4 default fields
+        $defaults = [
+            ['label' => 'Name', 'type' => 'text', 'is_required' => true, 'is_default' => true, 'sort_order' => 0],
+            ['label' => 'Email', 'type' => 'email', 'is_required' => true, 'is_default' => true, 'sort_order' => 1],
+            ['label' => 'Phone', 'type' => 'text', 'is_required' => true, 'is_default' => true, 'sort_order' => 2],
+            ['label' => 'Address', 'type' => 'textarea', 'is_required' => true, 'is_default' => true, 'sort_order' => 3],
+        ];
+
+        foreach ($defaults as $field) {
+            $event->formFields()->create($field);
+        }
+
+        // Save custom fields
+        if ($formFieldsRaw) {
+            $customFields = json_decode($formFieldsRaw, true);
+            if (is_array($customFields)) {
+                foreach ($customFields as $index => $field) {
+                    if (!empty($field['label']) && !empty($field['type'])) {
+                        $event->formFields()->create([
+                            'label' => $field['label'],
+                            'type' => $field['type'],
+                            'options' => isset($field['options']) && is_array($field['options']) ? $field['options'] : null,
+                            'is_required' => $field['is_required'] ?? false,
+                            'is_default' => false,
+                            'sort_order' => $index + 4,
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }

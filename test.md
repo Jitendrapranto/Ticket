@@ -77,3 +77,28 @@ I want to when clicked a event card then it will redirect the event details page
 
 
 I want to the left side image height and right side content height will be the same height....
+
+I want to here admin can add the event registration form where admin can add the form field dYnamicallY ....at first he can add the form field name and then select the form field tYpe....But here four field will exist bY default which is name,phone and address and these four fields will be required and admin can add more fields if he wants to...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. make sure here select tYpe must be a dropdown where admin can add multiple options....
+
+I want to this dYnamic form will be show where user clicked Book Now button from the event details page....I want to when user clicked Book Now button then this form will open in a new page....And make sure this page will be show the different person booking information is required like Guest , General admission , Vip .. I want to here for these onlY name and mobile number is required ...
+
+
+In the main form ...I want to  radio option for select the ticket tYpe..Like General then the others version ticket tYpe are shown not all tYpe showed ATtendee information section...OnlY others person information required in the Atendee Information section...
+
+
+I want to a checkout page when clicked the confirm button....
+
+
+I want to when a customer presses the Confirm and Pay button, then a professional signup form will appear...I want to here these fields will be required: Name, Email, Password, Confirm Password. And also make sure to add a checkbox for accepting the terms and conditions before the customer can proceed with the payment. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?I want to a ticket kinun  logo in this form and customer also can signup with google and facebook and also make sure to add a checkbox for accepting the terms and conditions before the customer can proceed with the signup. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+
+Here I want to a professional and modern profile dropdown menu when customer logged in and click on the profile icon on the top right corner of the website...The dropdown menu will have options like My Profile, My Bookings, and Logout. And also make sure to add a profile picture placeholder in the dropdown menu. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?.When user clicked mY profile then user can select profile picture and he can not uploaded the profile picture then a avatar will be shown....
+
+
+I want to a admin login form when admin will go to dashboard ...Here not need to registration form just login form and make a seeder file for the super admin user named superadmin and password will be "password"....
+
+On this Customer meu create a submenu named Segmentation and make sure all functionalit are works here like anY kind of filter action...
+
+
+I want to You careate a main menu name Finance and Commision and then create a dropdown named Commision settings and then the super admin can set the commision percentage from there and also make sure when super admin update the commision percentage then it will be reflected on the checkout page where customer will pay for the ticket...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?

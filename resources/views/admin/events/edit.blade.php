@@ -32,10 +32,15 @@
         <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" x-data="{ 
             tickets: {{ $event->ticketTypes->map(fn($t) => ['name' => $t->name, 'price' => $t->price, 'quantity' => $t->quantity])->toJson() }},
             artists: {{ json_encode($event->artists ?? []) }},
+            formFields: {{ json_encode($event->formFields->where('is_default', false)->map(fn($f) => ['label' => $f->label, 'type' => $f->type, 'options' => $f->options ?? [], 'is_required' => $f->is_required])->values()) }},
             addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
             removeTicket(index) { this.tickets.splice(index, 1) },
             addArtist() { this.artists.push({ name: '', role: '', image: '' }) },
-            removeArtist(index) { this.artists.splice(index, 1) }
+            removeArtist(index) { this.artists.splice(index, 1) },
+            addFormField() { this.formFields.push({ label: '', type: 'text', options: [], is_required: false }) },
+            removeFormField(index) { this.formFields.splice(index, 1) },
+            addOption(fieldIndex) { this.formFields[fieldIndex].options.push('') },
+            removeOption(fieldIndex, optIndex) { this.formFields[fieldIndex].options.splice(optIndex, 1) }
         }">
             @csrf
             @method('PUT')
@@ -400,6 +405,109 @@
                             </div>
                         </template>
                     </div>
+                </div>
+
+                <!-- Registration Form Builder -->
+                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Registration Form Builder</h3>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Configure dynamic fields for the booking form.</p>
+                            </div>
+                        </div>
+                        <button type="button" @click="addFormField()" class="bg-primary-dark text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-lg shadow-black/10">
+                            <i class="fas fa-plus"></i> Add Field
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Default Fields (Static) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 border-b border-dashed border-slate-100">
+                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                                <p class="text-[13px] font-bold text-dark italic">Name</p>
+                            </div>
+                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                                <p class="text-[13px] font-bold text-dark italic">Email</p>
+                            </div>
+                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                                <p class="text-[13px] font-bold text-dark italic">Phone</p>
+                            </div>
+                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                                <p class="text-[13px] font-bold text-dark italic">Address</p>
+                            </div>
+                        </div>
+
+                        <!-- Custom Dynamic Fields -->
+                        <div class="space-y-4">
+                            <template x-for="(field, index) in formFields" :key="index">
+                                <div class="bg-slate-50/30 border border-slate-100 rounded-2xl p-6 group animate-fadeInUp relative">
+                                    <button type="button" @click="removeFormField(index)" class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white border border-red-100 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                        <i class="fas fa-times text-[10px]"></i>
+                                    </button>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
+                                        <div class="space-y-2">
+                                            <label class="form-label text-[10px]">Field Name</label>
+                                            <input type="text" x-model="field.label" placeholder="e.g. Identity Card Number" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 outline-none text-[13px] font-bold focus:border-primary/30 transition-all">
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <label class="form-label text-[10px]">Field Type</label>
+                                            <select x-model="field.type" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 outline-none text-[13px] font-bold focus:border-primary/30 transition-all cursor-pointer">
+                                                <option value="text">Text Input</option>
+                                                <option value="email">Email Input</option>
+                                                <option value="number">Number Input</option>
+                                                <option value="select">Dropdown Menu</option>
+                                                <option value="textarea">Long Text / Textarea</option>
+                                                <option value="date">Date Picker</option>
+                                                <option value="checkbox">Single Checkbox</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <label class="form-label text-[10px]">Required?</label>
+                                            <div class="flex items-center h-[46px]">
+                                                <label class="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" x-model="field.is_required" class="sr-only peer">
+                                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Options for Dropdown -->
+                                        <div class="md:col-span-3 lg:col-span-1 space-y-2" x-show="field.type === 'select'">
+                                            <div class="flex items-center justify-between">
+                                                <label class="form-label text-[10px]">Options</label>
+                                                <button type="button" @click="addOption(index)" class="text-[9px] font-black text-primary uppercase">+ Add</button>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <template x-for="(opt, optIndex) in field.options" :key="optIndex">
+                                                    <div class="flex gap-2">
+                                                        <input type="text" x-model="field.options[optIndex]" placeholder="Option val" class="flex-1 bg-white border border-slate-100 rounded-lg py-1.5 px-3 outline-none text-[11px] font-bold">
+                                                        <button type="button" @click="removeOption(index, optIndex)" class="text-red-400"><i class="fas fa-trash-alt text-[9px]"></i></button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div x-show="formFields.length === 0" class="text-center py-12 bg-slate-50/50 rounded-[2rem] border-2 border-dashed border-slate-100">
+                            <i class="fas fa-wand-magic-sparkles text-2xl text-slate-200 mb-3 block"></i>
+                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Add custom fields to build your form</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="form_fields_raw" :value="JSON.stringify(formFields)">
                 </div>
 
                 <!-- Footer Actions -->

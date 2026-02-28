@@ -18,6 +18,23 @@ use App\Http\Controllers\Admin\AboutStatisticController;
 use App\Http\Controllers\Admin\AboutStoryController;
 use App\Http\Controllers\Admin\AboutAdvantageController;
 use App\Http\Controllers\Admin\AboutCtaController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup');
+Route::post('/signup', [AuthController::class, 'signup']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/my-bookings', function () {
+        $bookings = \App\Models\Booking::with(['event', 'attendees.ticketType'])->where('user_id', Auth::id())->latest()->get();
+        return view('auth.my-bookings', compact('bookings'));
+    })->name('bookings.index');
+});
 
 Route::get('/', function () {
     $featuredEvents = Event::with('category')->where('status', 'Live')->where('is_featured', true)->orderBy('sort_order', 'asc')->latest()->take(2)->get();
@@ -50,6 +67,11 @@ Route::get('/events/{slug}', function ($slug) {
     return view('events.show', compact('event', 'relatedEvents'));
 })->name('events.show');
 
+Route::get('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class, 'show'])->name('events.booking');
+Route::post('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class, 'process'])->name('events.booking.process');
+Route::get('/checkout/{booking_id}', [\App\Http\Controllers\BookingController::class, 'checkout'])->name('events.checkout');
+Route::post('/checkout/complete/{booking_id}', [\App\Http\Controllers\BookingController::class, 'complete'])->name('events.checkout.complete');
+
 Route::get('/gallery', function () {
     $hero = GalleryHero::first();
     $dbImages = GalleryImage::with('category')->latest()->paginate(12);
@@ -73,48 +95,64 @@ Route::get('/contact', function () {
     return view('contact', compact('hero', 'cards', 'formContent', 'support', 'map'));
 })->name('contact');
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->name('admin.dashboard');
-
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/events/hero', [EventHeroController::class, 'edit'])->name('events.hero');
-    Route::post('/events/hero', [EventHeroController::class, 'update'])->name('events.hero.update');
-    
-    Route::get('/events/drafts', [EventController::class, 'drafts'])->name('events.drafts');
-    Route::post('/events/{event}/publish', [EventController::class, 'publish'])->name('events.publish');
-    
-    Route::get('/gallery/hero', [GalleryHeroController::class, 'edit'])->name('gallery.hero');
-    Route::post('/gallery/hero', [GalleryHeroController::class, 'update'])->name('gallery.hero.update');
-    
-    Route::get('/gallery/images', [GalleryController::class, 'index'])->name('gallery.images.index');
-    Route::get('/gallery/images/create', [GalleryController::class, 'create'])->name('gallery.images.create');
-    Route::post('/gallery/images', [GalleryController::class, 'store'])->name('gallery.images.store');
-    Route::delete('/gallery/images/{image}', [GalleryController::class, 'destroy'])->name('gallery.images.destroy');
+    // Admin Guest Auth
+    Route::get('/login', [\App\Http\Controllers\Admin\AdminAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\Admin\AdminAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [\App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
 
-    Route::resource('categories', EventCategoryController::class);
-    Route::resource('events', EventController::class);
-    
-    Route::get('/about/story', [AboutStoryController::class, 'edit'])->name('about.story.edit');
-    Route::put('/about/story', [AboutStoryController::class, 'update'])->name('about.story.update');
+    // Protected Admin Routes
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
 
-    Route::get('/about/cta', [AboutCtaController::class, 'edit'])->name('about.cta.edit');
-    Route::put('/about/cta', [AboutCtaController::class, 'update'])->name('about.cta.update');
-    
-    Route::resource('about/statistics', AboutStatisticController::class)->names('about.statistics');
-    Route::resource('about/advantages', AboutAdvantageController::class)->names('about.advantages');
+        Route::get('/events/hero', [EventHeroController::class, 'edit'])->name('events.hero');
+        Route::post('/events/hero', [EventHeroController::class, 'update'])->name('events.hero.update');
+        
+        Route::get('/events/drafts', [EventController::class, 'drafts'])->name('events.drafts');
+        Route::post('/events/{event}/publish', [EventController::class, 'publish'])->name('events.publish');
+        
+        Route::get('/gallery/hero', [GalleryHeroController::class, 'edit'])->name('gallery.hero');
+        Route::post('/gallery/hero', [GalleryHeroController::class, 'update'])->name('gallery.hero.update');
+        
+        Route::get('/gallery/images', [GalleryController::class, 'index'])->name('gallery.images.index');
+        Route::get('/gallery/images/create', [GalleryController::class, 'create'])->name('gallery.images.create');
+        Route::post('/gallery/images', [GalleryController::class, 'store'])->name('gallery.images.store');
+        Route::delete('/gallery/images/{image}', [GalleryController::class, 'destroy'])->name('gallery.images.destroy');
 
-    Route::get('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'edit'])->name('contact.hero.edit');
-    Route::put('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'update'])->name('contact.hero.update');
+        Route::resource('categories', EventCategoryController::class);
+        Route::resource('events', EventController::class);
+        
+        Route::get('/about/story', [AboutStoryController::class, 'edit'])->name('about.story.edit');
+        Route::put('/about/story', [AboutStoryController::class, 'update'])->name('about.story.update');
 
-    Route::resource('contact/cards', \App\Http\Controllers\Admin\ContactCardController::class)->names('contact.cards');
+        Route::get('/about/cta', [AboutCtaController::class, 'edit'])->name('about.cta.edit');
+        Route::put('/about/cta', [AboutCtaController::class, 'update'])->name('about.cta.update');
+        
+        Route::resource('about/statistics', AboutStatisticController::class)->names('about.statistics');
+        Route::resource('about/advantages', AboutAdvantageController::class)->names('about.advantages');
 
-    Route::get('/contact/form', [\App\Http\Controllers\Admin\ContactFormContentController::class, 'edit'])->name('contact.form.edit');
-    Route::put('/contact/form', [\App\Http\Controllers\Admin\ContactFormContentController::class, 'update'])->name('contact.form.update');
+        Route::get('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'edit'])->name('contact.hero.edit');
+        Route::put('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'update'])->name('contact.hero.update');
 
-    Route::get('/contact/support', [\App\Http\Controllers\Admin\ContactSupportController::class, 'edit'])->name('contact.support.edit');
-    Route::put('/contact/support', [\App\Http\Controllers\Admin\ContactSupportController::class, 'update'])->name('contact.support.update');
+        Route::resource('contact/cards', \App\Http\Controllers\Admin\ContactCardController::class)->names('contact.cards');
 
-    Route::get('/contact/map', [\App\Http\Controllers\Admin\ContactMapController::class, 'edit'])->name('contact.map.edit');
-    Route::put('/contact/map', [\App\Http\Controllers\Admin\ContactMapController::class, 'update'])->name('contact.map.update');
+        Route::get('/contact/form', [\App\Http\Controllers\Admin\ContactFormContentController::class, 'edit'])->name('contact.form.edit');
+        Route::put('/contact/form', [\App\Http\Controllers\Admin\ContactFormContentController::class, 'update'])->name('contact.form.update');
+
+        Route::get('/contact/support', [\App\Http\Controllers\Admin\ContactSupportController::class, 'edit'])->name('contact.support.edit');
+        Route::put('/contact/support', [\App\Http\Controllers\Admin\ContactSupportController::class, 'update'])->name('contact.support.update');
+
+        Route::get('/contact/map', [\App\Http\Controllers\Admin\ContactMapController::class, 'edit'])->name('contact.map.edit');
+        Route::put('/contact/map', [\App\Http\Controllers\Admin\ContactMapController::class, 'update'])->name('contact.map.update');
+
+        Route::get('/customers/export', [\App\Http\Controllers\Admin\UserController::class, 'export'])->name('customers.export');
+        Route::get('/customers/segmentation', [\App\Http\Controllers\Admin\UserController::class, 'segmentation'])->name('customers.segmentation');
+        Route::get('/customers/segmentation/export', [\App\Http\Controllers\Admin\UserController::class, 'segmentationExport'])->name('customers.segmentation.export');
+        Route::get('/customers/segmentation/{id}/edit', [\App\Http\Controllers\Admin\UserController::class, 'segmentationEdit'])->name('customers.segmentation.edit');
+        Route::put('/customers/segmentation/{id}', [\App\Http\Controllers\Admin\UserController::class, 'segmentationUpdate'])->name('customers.segmentation.update');
+        Route::delete('/customers/segmentation/{id}', [\App\Http\Controllers\Admin\UserController::class, 'segmentationDelete'])->name('customers.segmentation.delete');
+        Route::resource('customers', \App\Http\Controllers\Admin\UserController::class)->names('customers')->except(['edit', 'update']);
+    });
 });

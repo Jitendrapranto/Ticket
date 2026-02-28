@@ -210,21 +210,40 @@
                             </button>
                         </div>
 
-                        <!-- Seat Availability -->
+                        <!-- Ticket Selection -->
                         @if($event->ticketTypes->where('quantity', '>', 0)->count() > 0)
                         <div class="pt-3 border-t border-slate-100">
-                            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Available Seats</h4>
+                            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Select Tickets</h4>
                             <div class="space-y-1.5">
                                 @foreach($event->ticketTypes as $tier)
                                     @if($tier->quantity > 0)
-                                    <div class="flex items-center justify-between bg-slate-50/80 rounded-lg px-3 py-1.5">
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas fa-ticket-alt text-primary text-[10px]"></i>
-                                            <span class="text-[13px] font-bold text-slate-600">{{ $tier->name }}</span>
-                                        </div>
-                                        <span class="text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-md">{{ $tier->quantity }} seats</span>
-                                    </div>
-                                    @endif
+                                    <div class="flex items-center justify-between bg-white border border-slate-100 rounded-xl px-4 py-3 ticket-row {{ $loop->first ? 'first-ticket' : '' }} shadow-sm hover:border-primary/20 transition-all" 
+                                         data-price="{{ $tier->price }}" 
+                                         data-tier-id="{{ $tier->id }}"
+                                         data-available="{{ $tier->quantity }}">
+                                         
+                                         <!-- 1. Ticket Type -->
+                                         <div class="flex-1 min-w-0">
+                                             <span class="text-[13px] font-black text-dark block truncate">{{ $tier->name }}</span>
+                                         </div>
+
+                                         <!-- 2. Price -->
+                                         <div class="flex-shrink-0 px-4">
+                                             <span class="text-[11px] font-black text-primary">৳{{ number_format($tier->price) }}</span>
+                                         </div>
+                                         
+                                         <!-- 3. Controls -->
+                                         <div class="flex items-center gap-3 flex-shrink-0 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+                                             <button type="button" class="w-7 h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary transition-all decrement-qty shadow-sm">
+                                                 <i class="fas fa-minus text-[8px]"></i>
+                                             </button>
+                                             <span class="text-sm font-black text-dark w-5 text-center qty-display">{{ $loop->first ? '1' : '0' }}</span>
+                                             <button type="button" class="w-7 h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary transition-all increment-qty shadow-sm">
+                                                 <i class="fas fa-plus text-[8px]"></i>
+                                             </button>
+                                         </div>
+                                     </div>
+                                     @endif
                                 @endforeach
                             </div>
                         </div>
@@ -243,10 +262,10 @@
                             <!-- Price and Book Button -->
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-xl font-black text-dark tracking-tighter">৳ {{ number_format($event->ticketTypes->min('price') ?? 0) }}</p>
+                                    <p class="text-xl font-black text-dark tracking-tighter">৳ <span id="totalDisplay">{{ number_format($event->ticketTypes->min('price') ?? 0) }}</span></p>
                                     <p class="text-[9px] font-black text-orange-500 mt-0.5 uppercase tracking-[0.15em]">Filling Fast</p>
                                 </div>
-                                <button class="px-6 py-3 bg-[#F1556C] hover:bg-[#E1445B] text-white rounded-lg font-black text-[13px] tracking-tight transition-all shadow-xl shadow-pink-100/50 active:scale-95">
+                                <button id="bookNowBtn" class="px-6 py-3 bg-[#F1556C] hover:bg-[#E1445B] text-white rounded-lg font-black text-[13px] tracking-tight transition-all shadow-xl shadow-pink-100/50 active:scale-95">
                                     Book Now
                                 </button>
                             </div>
@@ -290,6 +309,86 @@
         syncBannerHeight();
         const img = document.querySelector('#eventBanner img');
         if (img) img.addEventListener('load', syncBannerHeight);
+
+        // Ticket Selection Logic
+        const maxTickets = 4;
+        const ticketRows = document.querySelectorAll('.ticket-row');
+        const totalDisplay = document.getElementById('totalDisplay');
+
+        function updateTotal() {
+            let total = 0;
+            let totalQty = 0;
+            ticketRows.forEach(row => {
+                const qty = parseInt(row.querySelector('.qty-display').textContent);
+                const price = parseFloat(row.dataset.price);
+                total += qty * price;
+                totalQty += qty;
+            });
+            
+            // Format number for display
+            totalDisplay.textContent = total.toLocaleString();
+        }
+
+        ticketRows.forEach(row => {
+            const incrementBtn = row.querySelector('.increment-qty');
+            const decrementBtn = row.querySelector('.decrement-qty');
+            const qtyDisplay = row.querySelector('.qty-display');
+            const available = parseInt(row.dataset.available);
+
+            incrementBtn.addEventListener('click', () => {
+                let currentTotalQty = 0;
+                ticketRows.forEach(r => currentTotalQty += parseInt(r.querySelector('.qty-display').textContent));
+
+                if (currentTotalQty < maxTickets) {
+                    let qty = parseInt(qtyDisplay.textContent);
+                    if (qty < available) {
+                        qtyDisplay.textContent = qty + 1;
+                        updateTotal();
+                    } else {
+                        // Optional: Toast or small message instead of alert
+                        console.log('Tier limit reached');
+                    }
+                } else {
+                    alert('You can only purchase a maximum of 4 tickets in total.');
+                }
+            });
+
+            decrementBtn.addEventListener('click', () => {
+                let qty = parseInt(qtyDisplay.textContent);
+                const minQty = row.classList.contains('first-ticket') ? 1 : 0;
+                if (qty > minQty) {
+                    qtyDisplay.textContent = qty - 1;
+                    updateTotal();
+                }
+            });
+        });
+        
+        // Book Now Redirect
+        const bookNowBtn = document.getElementById('bookNowBtn');
+        if (bookNowBtn) {
+            bookNowBtn.addEventListener('click', () => {
+                let params = new URLSearchParams();
+                let hasTickets = false;
+                
+                ticketRows.forEach(row => {
+                    const qty = parseInt(row.querySelector('.qty-display').textContent);
+                    const tierId = row.dataset.tierId;
+                    if (qty > 0) {
+                        params.append(`tickets[${tierId}]`, qty);
+                        hasTickets = true;
+                    }
+                });
+
+                if (hasTickets) {
+                    window.location.href = `{{ route('events.booking', $event->slug) }}?${params.toString()}`;
+                } else {
+                    alert('Please select at least one ticket to proceed.');
+                }
+            });
+        }
+        
+        // Initial call to set total correctly based on quantities (0)
+        updateTotal();
     });
     window.addEventListener('resize', syncBannerHeight);
 </script>

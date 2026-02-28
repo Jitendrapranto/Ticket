@@ -78,14 +78,50 @@
                     <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
                 </button>
                 
-                <div class="flex items-center gap-3 pl-4 border-l border-slate-100 ml-2">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs font-black text-dark">Super Admin</p>
-                        <p class="text-[10px] font-bold text-primary">Master Control</p>
-                    </div>
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium">
-                        <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
-                            <i class="fas fa-user text-primary text-xs"></i>
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-100 ml-2" x-data="{ open: false }">
+                    <div class="relative">
+                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 group focus:outline-none">
+                            <div class="text-right hidden sm:block">
+                                <p class="text-xs font-black text-dark group-hover:text-primary transition-colors">Super Admin</p>
+                                <p class="text-[10px] font-bold text-primary italic uppercase tracking-tighter">Master Control</p>
+                            </div>
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium group-hover:scale-105 transition-transform">
+                                <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
+                                     <i class="fas fa-crown text-primary text-xs"></i>
+                                </div>
+                            </div>
+                        </button>
+
+                        <!-- Admin Action Dropdown -->
+                        <div x-show="open" 
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                            class="absolute right-0 mt-3 w-56 bg-white rounded-3xl shadow-2xl border border-slate-100 py-3 z-50 overflow-hidden"
+                            style="display: none;">
+                            
+                            <div class="px-6 py-4 border-b border-slate-50 mb-2">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated As</p>
+                                <p class="text-xs font-bold text-dark truncate">{{ Auth::user()->email }}</p>
+                            </div>
+
+                            <a href="/" target="_blank" class="flex items-center gap-4 px-6 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group">
+                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all text-xs"><i class="fas fa-external-link-alt"></i></div>
+                                <span class="text-[11px] font-black uppercase tracking-wider">Live Site</span>
+                            </a>
+
+                            <div class="mt-2 pt-2 border-t border-slate-50">
+                                <form action="{{ route('admin.logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-4 px-6 py-3 text-red-500 hover:bg-red-50 transition-all group">
+                                        <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all text-red-400 text-xs"><i class="fas fa-power-off"></i></div>
+                                        <span class="text-[11px] font-black uppercase tracking-wider">Logout Portal</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
