@@ -102,3 +102,28 @@ On this Customer meu create a submenu named Segmentation and make sure all funct
 
 
 I want to You careate a main menu name Finance and Commision and then create a dropdown named Commision settings and then the super admin can set the commision percentage from there and also make sure when super admin update the commision percentage then it will be reflected on the checkout page where customer will pay for the ticket...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to create a sales report for super admin where super admin can see the total sales, total commision earned, and also can see the sales report based on the date range...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code? Please follow the above design pattern and make sure to create the necessary migration files, models, controllers, routes, and blade files for each functionality mentioned above. Also, ensure that the design is responsive for mobile devices and follows the overall colour combination of the website.
+
+
+I want to create a organizer dashboard where the organizer can manage their events, view bookings, and also can see the sales report for their events. The organizer dashboard will have a similar design to the super admin dashboard but with limited functionalities. You must follow the overall colour combination of this website and make the organizer dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code? Please follow the above design pattern and make sure to create the necessary migration files, models, controllers, routes, and blade files for each functionality mentioned above. Also, ensure that the design is responsive for mobile devices and follows the overall colour combination of the website.and must be ensure the organizer added events will be exists on the super admin dashboard ...when admin approve the event then it will be reflected on the events page as well. super admin must be edit the added event of organizer and he must be ordering the organizer events..You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the event list will be the following image design and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the Sales report for organizer dashboard
+
+
+I want to make Customer as a main menu on organizer dashboard and then create a submenu named All Customers and Segmentation like the super admin dashboard and also make sure all functionalities are works here as well like filter action and also make sure when organizer click on the customer then it will show the customer details like name, email, phone number, and also can see the booking history of that customer...You must follow the overall colour combination of this website and make the organizer dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to event id auto generate but I want to customize the event code like 
+ABC-01-XYZ
+ABC-02-XYZ
+
+DEF-01-XYZ
+DEF-02-XYZ
+
+The first portion and third portion will be customize then auto increment one bY one and Organize name will not be auto fillable....

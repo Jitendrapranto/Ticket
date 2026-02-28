@@ -133,7 +133,7 @@
 
                 <div class="pt-6">
                     <button type="submit" class="w-full bg-[#F1556C] hover:bg-[#E1445B] text-white py-6 rounded-[2rem] font-black text-lg tracking-tight transition-all shadow-xl shadow-pink-100 active:scale-95 flex items-center justify-center gap-4">
-                        Confirm & Pay ৳{{ number_format($totalPrice) }}
+                        Confirm & Pay ৳{{ number_format($finalTotal) }}
                         <i class="fas fa-arrow-right text-xs"></i>
                     </button>
                     <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6">Secure Checkout • Instant E-Ticket generation</p>
@@ -178,23 +178,30 @@
                         </div>
 
                         <div class="pt-6 border-t border-slate-50">
-                            <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4">Summary</h4>
-                            <div class="space-y-3">
-                                @foreach($ticketsData as $ticket)
-                                <div class="flex justify-between items-center bg-slate-50 rounded-xl px-4 py-3">
-                                    <div>
-                                        <p class="text-sm font-bold text-dark">{{ $ticket['name'] }}</p>
-                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">{{ $ticket['quantity'] }} Tickets × ৳{{ number_format($ticket['price']) }}</p>
-                                    </div>
-                                    <span class="text-sm font-black text-primary">৳{{ number_format($ticket['price'] * $ticket['quantity']) }}</span>
+                            <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4">Pricing Summary</h4>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center px-1">
+                                    <span class="text-xs font-bold text-slate-500">Ticket Subtotal</span>
+                                    <span class="text-sm font-black text-dark tracking-tight">৳{{ number_format($totalPrice) }}</span>
                                 </div>
-                                @endforeach
+                                
+                                @if($commissionAmount > 0)
+                                <div class="flex justify-between items-center px-1">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-bold text-slate-500">Platform Fee</span>
+                                        @if($commissionSetting->revenue_model == 'percentage')
+                                        <span class="text-[8px] font-black text-primary/40 uppercase tracking-widest">({{ $commissionSetting->default_percentage }}% Admin Charge)</span>
+                                        @endif
+                                    </div>
+                                    <span class="text-sm font-black text-primary tracking-tight">+ ৳{{ number_format($commissionAmount) }}</span>
+                                </div>
+                                @endif
                             </div>
                         </div>
 
                         <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
-                            <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Total Payable</span>
-                            <span class="text-3xl font-outfit font-black text-dark tracking-tighter">৳{{ number_format($totalPrice) }}</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Final Total</span>
+                            <span class="text-3xl font-outfit font-black text-secondary tracking-tighter">৳{{ number_format($finalTotal) }}</span>
                         </div>
                     </div>
                 </div>

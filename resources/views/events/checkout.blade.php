@@ -48,13 +48,30 @@
                 </div>
 
                 <!-- Total Row -->
-                <div class="mt-10 pt-10 border-t border-slate-100 flex items-center justify-between">
-                    <div>
-                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Estimated Total</h4>
-                        <p class="text-[10px] text-slate-400 font-medium italic">Inclusive of all convenience fees</p>
+                <div class="mt-10 pt-10 border-t border-slate-100 space-y-4">
+                    <div class="flex items-center justify-between">
+                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Ticket Subtotal</span>
+                         <span class="text-sm font-black text-dark tracking-tight">৳{{ number_format($booking->subtotal_amount) }}</span>
                     </div>
-                    <div class="text-right">
-                        <span class="text-3xl font-outfit font-black text-dark tracking-tighter">৳{{ number_format($booking->total_amount) }}</span>
+                    @if($booking->commission_amount > 0)
+                    <div class="flex items-center justify-between">
+                         <div class="flex flex-col">
+                             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Platform Fee</span>
+                             @if($booking->commission_percentage > 0)
+                                <span class="text-[9px] font-black text-primary/40 uppercase tracking-widest">Calculated at {{ $booking->commission_percentage }}%</span>
+                             @endif
+                         </div>
+                         <span class="text-sm font-black text-primary tracking-tight">+ ৳{{ number_format($booking->commission_amount) }}</span>
+                    </div>
+                    @endif
+                    <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Amount Payable</h4>
+                            <p class="text-[10px] text-slate-400 font-medium italic italic">Inclusive of all administrative fees</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-outfit font-black text-dark tracking-tighter">৳{{ number_format($booking->total_amount) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>

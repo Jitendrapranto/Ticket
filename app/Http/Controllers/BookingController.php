@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventFormField;
+use App\Models\TicketType;
 use App\Models\Booking;
 use App\Models\BookingAttendee;
-use App\Models\TicketType;
+use App\Models\CommissionSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
@@ -48,7 +49,19 @@ class BookingController extends Controller
              return redirect()->back()->with('error', 'You can only book up to 4 tickets.');
         }
 
-        return view('events.booking', compact('event', 'ticketsData', 'totalPrice', 'totalQty'));
+        // Calculate Commission for preview
+        $commissionSetting = CommissionSetting::where('is_active', true)->first();
+        $commissionAmount = 0;
+        if ($commissionSetting) {
+            if ($commissionSetting->revenue_model == 'percentage') {
+                $commissionAmount = ($totalPrice * $commissionSetting->default_percentage) / 100;
+            } else {
+                $commissionAmount = $commissionSetting->fixed_amount;
+            }
+        }
+        $finalTotal = $totalPrice + $commissionAmount;
+
+        return view('events.booking', compact('event', 'ticketsData', 'totalPrice', 'totalQty', 'commissionAmount', 'commissionSetting', 'finalTotal'));
     }
 
     public function process(Request $request, $slug)
@@ -100,11 +113,30 @@ class BookingController extends Controller
                 throw new \Exception("Invalid ticket selection.");
             }
 
+            // Calculate Commission
+            $commissionSetting = CommissionSetting::first();
+            $commissionAmount = 0;
+            $commissionPercentage = 0;
+            
+            if ($commissionSetting && $commissionSetting->is_active) {
+                if ($commissionSetting->revenue_model == 'percentage') {
+                    $commissionPercentage = $commissionSetting->default_percentage;
+                    $commissionAmount = ($totalAmount * $commissionPercentage) / 100;
+                } else {
+                    $commissionAmount = $commissionSetting->fixed_amount;
+                }
+            }
+
+            $finalTotal = $totalAmount + $commissionAmount;
+
             $booking = Booking::create([
                 'event_id' => $event->id,
                 'user_id' => Auth::id(),
                 'booking_id' => 'TK-' . strtoupper(Str::random(10)),
-                'total_amount' => $totalAmount,
+                'subtotal_amount' => $totalAmount,
+                'commission_amount' => $commissionAmount,
+                'commission_percentage' => $commissionPercentage,
+                'total_amount' => $finalTotal,
                 'status' => 'pending',
                 'payment_status' => 'unpaid',
                 'form_data' => $formData

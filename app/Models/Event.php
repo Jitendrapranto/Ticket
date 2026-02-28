@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Event extends Model
 {
     protected $fillable = [
-        'category_id', 'organizer', 'title', 'slug', 'image', 'date', 'registration_deadline', 'location', 'venue_name', 'price', 'description', 'language', 'age_limit', 'duration', 'you_should_know', 'terms_conditions', 'artists', 'status', 'sort_order', 'is_featured'
+        'event_code', 'category_id', 'user_id', 'organizer', 'title', 'slug', 'image', 'date', 'registration_deadline', 'location', 'venue_name', 'price', 'description', 'language', 'age_limit', 'duration', 'you_should_know', 'terms_conditions', 'artists', 'status', 'is_approved', 'sort_order', 'is_featured'
     ];
 
     protected $casts = [
@@ -17,6 +17,7 @@ class Event extends Model
         'price' => 'decimal:2',
         'sort_order' => 'integer',
         'is_featured' => 'boolean',
+        'is_approved' => 'boolean',
         'artists' => 'array',
     ];
 
@@ -43,5 +44,15 @@ class Event extends Model
     public function formFields()
     {
         return $this->hasMany(EventFormField::class)->orderBy('sort_order');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function organizer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

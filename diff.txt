@@ -1,0 +1,25 @@
+﻿diff --git a/app/Http/Controllers/Admin/EventController.php b/app/Http/Controllers/Admin/EventController.php
+index 9b9898b..bab8aa7 100644
+--- a/app/Http/Controllers/Admin/EventController.php
++++ b/app/Http/Controllers/Admin/EventController.php
+@@ -29,6 +29,12 @@ public function publish(Event $event)
+         return redirect()->route('admin.events.index')->with('success', 'Event published and is now live!');
+     }
+ 
++    public function approve(Event $event)
++    {
++        $event->update(['is_approved' => true]);
++        return redirect()->back()->with('success', 'Event approved successfully!');
++    }
++
+     public function create()
+     {
+         $categories = EventCategory::all();
+@@ -66,6 +72,7 @@ public function store(Request $request)
+         \DB::transaction(function () use ($request) {
+             $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
+             $data['slug'] = Str::slug($request->title);
++            $data['is_approved'] = true;
+ 
+             if ($request->hasFile('image')) {
+                 $data['image'] = $request->file('image')->store('events', 'public');

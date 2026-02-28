@@ -37,7 +37,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', function () {
-    $featuredEvents = Event::with('category')->where('status', 'Live')->where('is_featured', true)->orderBy('sort_order', 'asc')->latest()->take(2)->get();
+    $featuredEvents = Event::with('category')
+        ->where('status', 'Live')
+        ->where('is_approved', true)
+        ->where('is_featured', true)
+        ->orderBy('sort_order', 'asc')
+        ->latest()->take(2)->get();
     
     $slideData = $featuredEvents->map(function($e) {
         return [
@@ -47,23 +52,46 @@ Route::get('/', function () {
         ];
     });
 
-    $trendingEvents = Event::with('category')->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(4)->get();
-    $upcomingEvents = Event::with('category')->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(8)->get();
+    $trendingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(4)->get();
+    $upcomingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(8)->get();
     
     return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData'));
 });
 
 Route::get('/events', function () {
     $hero = EventHero::first();
-    $categories = EventCategory::withCount('events')->get();
-    $featuredEvents = Event::with('category')->where('status', 'Live')->where('is_featured', true)->orderBy('sort_order', 'asc')->latest()->take(3)->get();
-    $events = Event::with('category')->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->paginate(12);
+    $categories = EventCategory::withCount(['events' => function($q) {
+        $q->where('status', 'Live')->where('is_approved', true);
+    }])->get();
+    
+    $featuredEvents = Event::with('category')
+        ->where('status', 'Live')
+        ->where('is_approved', true)
+        ->where('is_featured', true)
+        ->orderBy('sort_order', 'asc')
+        ->latest()->take(3)->get();
+        
+    $events = Event::with('category')
+        ->where('status', 'Live')
+        ->where('is_approved', true)
+        ->orderBy('sort_order', 'asc')
+        ->latest()->paginate(12);
+        
     return view('events', compact('hero', 'categories', 'events', 'featuredEvents'));
 })->name('events');
 
 Route::get('/events/{slug}', function ($slug) {
-    $event = Event::with(['category', 'ticketTypes'])->where('slug', $slug)->firstOrFail();
-    $relatedEvents = Event::with('category')->where('category_id', $event->category_id)->where('id', '!=', $event->id)->take(4)->get();
+    $event = Event::with(['category', 'ticketTypes'])
+        ->where('slug', $slug)
+        ->where('is_approved', true)
+        ->firstOrFail();
+        
+    $relatedEvents = Event::with('category')
+        ->where('category_id', $event->category_id)
+        ->where('is_approved', true)
+        ->where('id', '!=', $event->id)
+        ->take(4)->get();
+        
     return view('events.show', compact('event', 'relatedEvents'));
 })->name('events.show');
 
@@ -112,6 +140,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         Route::get('/events/drafts', [EventController::class, 'drafts'])->name('events.drafts');
         Route::post('/events/{event}/publish', [EventController::class, 'publish'])->name('events.publish');
+        Route::post('/events/{event}/approve', [EventController::class, 'approve'])->name('events.approve');
         
         Route::get('/gallery/hero', [GalleryHeroController::class, 'edit'])->name('gallery.hero');
         Route::post('/gallery/hero', [GalleryHeroController::class, 'update'])->name('gallery.hero.update');
@@ -123,6 +152,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('categories', EventCategoryController::class);
         Route::resource('events', EventController::class);
+
+
+        Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
         
         Route::get('/about/story', [AboutStoryController::class, 'edit'])->name('about.story.edit');
         Route::put('/about/story', [AboutStoryController::class, 'update'])->name('about.story.update');
@@ -154,5 +186,36 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/customers/segmentation/{id}', [\App\Http\Controllers\Admin\UserController::class, 'segmentationUpdate'])->name('customers.segmentation.update');
         Route::delete('/customers/segmentation/{id}', [\App\Http\Controllers\Admin\UserController::class, 'segmentationDelete'])->name('customers.segmentation.delete');
         Route::resource('customers', \App\Http\Controllers\Admin\UserController::class)->names('customers')->except(['edit', 'update']);
+
+        Route::get('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class, 'index'])->name('finance.commission.index');
+        Route::post('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class, 'update'])->name('finance.commission.update');
+        Route::get('/finance/reports/sales', [\App\Http\Controllers\Admin\ReportController::class, 'sales'])->name('finance.reports.sales');
+        Route::get('/finance/reports/sales/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportSales'])->name('finance.reports.sales.export');
+    });
+});
+
+Route::prefix('organizer')->name('organizer.')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Organizer\AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\Organizer\AuthController::class, 'login']);
+    Route::get('/register', [\App\Http\Controllers\Organizer\AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [\App\Http\Controllers\Organizer\AuthController::class, 'register']);
+    Route::post('/logout', [\App\Http\Controllers\Organizer\AuthController::class, 'logout'])->name('logout');
+
+    Route::middleware(['organizer'])->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Organizer\DashboardController::class, 'index'])->name('dashboard');
+        
+        Route::resource('events', \App\Http\Controllers\Organizer\EventController::class);
+        Route::get('/get-next-code', [\App\Http\Controllers\Organizer\EventController::class, 'getNextCode'])->name('events.get-next-code');
+        
+        // Customer Management
+        Route::get('/customers', [\App\Http\Controllers\Organizer\UserController::class, 'index'])->name('customers.index');
+        Route::get('/customers/export', [\App\Http\Controllers\Organizer\UserController::class, 'export'])->name('customers.export');
+        Route::get('/customers/segmentation', [\App\Http\Controllers\Organizer\UserController::class, 'segmentation'])->name('customers.segmentation');
+        Route::get('/customers/segmentation/export', [\App\Http\Controllers\Organizer\UserController::class, 'segmentationExport'])->name('customers.segmentation.export');
+        Route::get('/customers/{id}', [\App\Http\Controllers\Organizer\UserController::class, 'show'])->name('customers.show');
+
+        Route::get('/reports/sales', [\App\Http\Controllers\Organizer\ReportController::class, 'sales'])->name('reports.sales');
+        Route::get('/reports/sales/export', [\App\Http\Controllers\Organizer\ReportController::class, 'exportSales'])->name('reports.sales.export');
+        Route::get('/bookings/{event_id}', [\App\Http\Controllers\Organizer\EventController::class, 'bookings'])->name('events.bookings');
     });
 });
