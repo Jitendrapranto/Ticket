@@ -41,9 +41,7 @@
                 </a>
             </div>
         </div>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-ticket-alt text-emerald-400"></i> Ticket Types
-        </a>
+
 
         <!-- Gallery Management -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Gallery Space</span>
@@ -119,9 +117,7 @@
 
         <!-- Users -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Users & Staff</span>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-user-shield text-cyan-400"></i> Moderators
-        </a>
+       
         <div x-data="{ open: false }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
                 <div class="flex items-center gap-4">

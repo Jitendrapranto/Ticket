@@ -127,3 +127,6 @@ DEF-01-XYZ
 DEF-02-XYZ
 
 The first portion and third portion will be customize then auto increment one bY one and Organize name will not be auto fillable....
+
+
+When pressed Download a ticket button from the booking history then it will download the ticket in pdf format and also make sure the ticket will be designed professionally and also make sure to include the event details, customer details, and a unique QR code for each ticket.Must be ensure each ticket number is unique and This ticket number must be included in database.. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
