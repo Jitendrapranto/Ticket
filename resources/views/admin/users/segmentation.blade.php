@@ -18,7 +18,7 @@
                     colors: {
                         primary: '#520C6B',
                         secondary: '#21032B',
-                        accent: '#FF7D52',
+                        accent: '#2563EB',
                         dark: '#0F172A',
                         'brand-green': '#10B981',
                         'brand-red': '#EF4444',
@@ -129,7 +129,7 @@
                             <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
                             <input type="text" name="search" id="segSearch" value="{{ request('search') }}" 
                                 @input.debounce.500ms="$refs.filterForm.submit()"
-                                placeholder="Attendee name or contact mobile..." 
+                                placeholder="Search by name, email, or phone number..." 
                                 class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-14 pr-8 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all outline-none">
                         </div>
                     </div>
@@ -184,24 +184,63 @@
                                 <td class="px-12 py-8">
                                     <div class="flex items-center gap-5">
                                         <div class="relative">
+                                            @php
+                                                $customerPhoto = null;
+                                                // Check form_data for uploaded file fields (photo)
+                                                if ($attendee->booking->form_data && $attendee->booking->event && $attendee->booking->event->formFields) {
+                                                    $fileFields = $attendee->booking->event->formFields->where('type', 'file');
+                                                    foreach ($fileFields as $ff) {
+                                                        $val = $attendee->booking->form_data[$ff->id] ?? null;
+                                                        if ($val && \Storage::disk('public')->exists($val)) {
+                                                            $ext = strtolower(pathinfo($val, PATHINFO_EXTENSION));
+                                                            if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
+                                                                $customerPhoto = asset('storage/' . $val);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                // Also fall back to user profile picture
+                                                if (!$customerPhoto && $attendee->booking->user && $attendee->booking->user->profile_picture) {
+                                                    $customerPhoto = asset('storage/' . $attendee->booking->user->profile_picture);
+                                                }
+                                            @endphp
                                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-white shadow-soft flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
-                                                @if($attendee->booking->user && $attendee->booking->user->profile_picture)
-                                                    <img src="{{ asset('storage/' . $attendee->booking->user->profile_picture) }}" class="w-full h-full object-cover">
+                                                @if($customerPhoto)
+                                                    <img src="{{ $customerPhoto }}" class="w-full h-full object-cover" alt="Customer Photo">
                                                 @else
-                                                    <span class="text-base font-black text-slate-400 uppercase">{{ substr($attendee->name ?: 'U', 0, 1) }}</span>
+                                                    @php
+                                                        $initials = substr($attendee->name && $attendee->name !== 'Self' ? $attendee->name : ($attendee->booking->user->name ?? 'U'), 0, 1);
+                                                    @endphp
+                                                    <span class="text-base font-black text-slate-400 uppercase">{{ $initials }}</span>
                                                 @endif
                                             </div>
                                             <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-white border border-slate-100 flex items-center justify-center shadow-sm">
-                                                <i class="fas fa-check-circle text-[9px] text-brand-green"></i>
+                                                @if($customerPhoto)
+                                                    <i class="fas fa-camera text-[8px] text-accent"></i>
+                                                @else
+                                                    <i class="fas fa-check-circle text-[9px] text-brand-green"></i>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="space-y-1">
                                             <p class="text-[15px] font-black text-dark tracking-tight leading-none group-hover:text-primary transition-colors">
-                                                {{ $attendee->name ?: 'Unnamed Attendee' }}
+                                                @php
+                                                    $finalName = $attendee->name;
+                                                    if ((!$finalName || $finalName === 'Self') && $attendee->booking->user) {
+                                                        $finalName = $attendee->booking->user->name;
+                                                    }
+                                                @endphp
+                                                {{ $finalName ?: 'Guest Attendee' }}
                                             </p>
-                                            <div class="flex items-center gap-2 mt-1">
+                                            @if($attendee->booking->user)
+                                            <div class="flex items-center gap-2 mt-0.5">
+                                                <div class="px-2 py-0.5 rounded bg-accent/5 text-[9px] font-black text-accent uppercase tracking-widest">Email</div>
+                                                <span class="text-[11px] font-bold text-slate-500">{{ $attendee->booking->user->email }}</span>
+                                            </div>
+                                            @endif
+                                            <div class="flex items-center gap-2">
                                                 <div class="px-2 py-0.5 rounded bg-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest">Mobile</div>
-                                                <span class="text-xs font-bold text-slate-500">{{ $attendee->mobile ?: 'N/A' }}</span>
+                                                <span class="text-[11px] font-bold text-slate-500">{{ $attendee->mobile ?: 'N/A' }}</span>
                                             </div>
                                         </div>
                                     </div>

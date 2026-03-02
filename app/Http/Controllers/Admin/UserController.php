@@ -94,7 +94,7 @@ class UserController extends Controller
         $events = \App\Models\Event::orderBy('title')->get();
         $ticketTypes = \App\Models\TicketType::orderBy('name')->get();
 
-        $query = \App\Models\BookingAttendee::with(['booking.event', 'booking.user', 'ticketType']);
+        $query = \App\Models\BookingAttendee::with(['booking.event.formFields', 'booking.user', 'ticketType']);
 
         if ($request->filled('event_id')) {
             $query->whereHas('booking', function($q) use ($request) {
@@ -110,7 +110,11 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
-                  ->orWhere('mobile', 'like', "%$search%");
+                  ->orWhere('mobile', 'like', "%$search%")
+                  ->orWhereHas('booking.user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%$search%")
+                         ->orWhere('email', 'like', "%$search%");
+                  });
             });
         }
 
@@ -120,47 +124,77 @@ class UserController extends Controller
     }
 
     public function segmentationExport(Request $request)
-    {
-        $query = \App\Models\BookingAttendee::with(['booking.event', 'booking.user', 'ticketType']);
+{
+    $query = \App\Models\BookingAttendee::with(['booking.event.formFields', 'booking.user', 'ticketType']);
 
-        if ($request->filled('event_id')) {
-            $query->whereHas('booking', function($q) use ($request) {
-                $q->where('event_id', $request->event_id);
-            });
-        }
-
-        if ($request->filled('ticket_type_id')) {
-            $query->where('ticket_type_id', $request->ticket_type_id);
-        }
-
-        $attendees = $query->get();
-        $fileName = 'attendees_segmentation_' . date('Y-m-d') . '.csv';
-        
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-        ];
-
-        $callback = function() use ($attendees) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['ID', 'Event', 'Attendee Name', 'Mobile', 'Ticket Type', 'Price', 'Status']);
-
-            foreach ($attendees as $item) {
-                fputcsv($file, [
-                    $item->id, 
-                    $item->booking->event->title ?? 'N/A', 
-                    $item->name, 
-                    $item->mobile, 
-                    $item->ticketType->name ?? 'N/A',
-                    $item->ticketType->price ?? '0.00',
-                    $item->booking->status
-                ]);
-            }
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+    if ($request->filled('event_id')) {
+        $query->whereHas('booking', function($q) use ($request) {
+            $q->where('event_id', $request->event_id);
+        });
     }
+
+    if ($request->filled('ticket_type_id')) {
+        $query->where('ticket_type_id', $request->ticket_type_id);
+    }
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('mobile', 'like', "%$search%")
+              ->orWhereHas('booking.user', function($uq) use ($search) {
+                  $uq->where('name', 'like', "%$search%")
+                     ->orWhere('email', 'like', "%$search%");
+              });
+        });
+    }
+
+    $attendees = $query->get();
+    $fileName = 'attendees_segmentation_' . date('Y-m-d') . '.csv';
+    
+    $headers = [
+        "Content-type" => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+    ];
+
+    $callback = function() use ($attendees) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, ['ID', 'Event', 'Attendee Name', 'Email', 'Mobile', 'Ticket Type', 'Status', 'Picture URL']);
+
+        foreach ($attendees as $item) {
+            $customerPhoto = '';
+            if ($item->booking->form_data && $item->booking->event && $item->booking->event->formFields) {
+                $fileFields = $item->booking->event->formFields->where('type', 'file');
+                foreach ($fileFields as $ff) {
+                    $val = $item->booking->form_data[$ff->id] ?? null;
+                    if ($val && \Storage::disk('public')->exists($val)) {
+                        $ext = strtolower(pathinfo($val, PATHINFO_EXTENSION));
+                        if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
+                            $customerPhoto = url('storage/' . $val);
+                        }
+                    }
+                }
+            }
+            if (!$customerPhoto && $item->booking->user && $item->booking->user->profile_picture) {
+                $customerPhoto = url('storage/' . $item->booking->user->profile_picture);
+            }
+
+            fputcsv($file, [
+                $item->id, 
+                $item->booking->event->title ?? 'N/A', 
+                $item->name ?: ($item->booking->user->name ?? 'N/A'), 
+                $item->booking->user->email ?? 'N/A',
+                $item->mobile ?: 'N/A', 
+                $item->ticketType->name ?? 'N/A',
+                $item->booking->status,
+                $customerPhoto
+            ]);
+        }
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
 
     public function segmentationEdit($id)
     {

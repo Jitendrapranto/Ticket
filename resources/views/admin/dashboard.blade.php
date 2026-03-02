@@ -18,7 +18,7 @@
                     colors: {
                         primary: '#520C6B',     // Brand Purple
                         secondary: '#21032B',   // Deep Plum
-                        accent: '#FF7D52',      // Brand Orange
+                        accent: '#2563EB',      // Vibrant Blue (From website)
                         dark: '#0F172A',
                         'slate-custom': '#F8FAFC'
                     },
@@ -28,7 +28,7 @@
                         plus: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)',
+                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.25)',
                     }
                 }
             }

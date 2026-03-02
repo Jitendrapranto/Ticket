@@ -1,4 +1,4 @@
-<aside id="admin-sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#1B2B46] text-white transition-transform duration-300 transform -translate-x-full lg:translate-x-0 z-50 overflow-y-auto no-scrollbar shadow-2xl">
+<aside id="admin-sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#21032B] text-white transition-transform duration-300 transform -translate-x-full lg:translate-x-0 z-50 overflow-y-auto no-scrollbar shadow-2xl border-r border-white/5">
     <!-- Sidebar Header -->
     <div class="p-8 border-b border-white/5">
         <a href="/" class="flex flex-col items-center gap-4">
@@ -13,8 +13,8 @@
     <nav class="p-6 space-y-2">
         <!-- Overview -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block">Core</span>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 bg-white/10 rounded-2xl text-white text-sm font-bold transition-all border border-white/10">
-            <i class="fas fa-th-large text-sky-400"></i> Dashboard
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('admin.dashboard') ? 'bg-primary border-primary/20 shadow-premium' : 'bg-white/5 border-white/5' }} rounded-2xl text-white text-sm font-bold transition-all border">
+            <i class="fas fa-th-large {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-primary' }}"></i> Dashboard
         </a>
 
         <!-- Marketplace -->
@@ -22,7 +22,7 @@
         <div x-data="{ open: false }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-calendar-alt text-amber-400"></i> Events
+                    <i class="fas fa-calendar-alt text-accent"></i> Events
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
@@ -42,13 +42,12 @@
             </div>
         </div>
 
-
         <!-- Gallery Management -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Gallery Space</span>
         <div x-data="{ open: false }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-images text-pink-400"></i> Gallery
+                    <i class="fas fa-images text-accent"></i> Gallery
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
@@ -67,7 +66,7 @@
         <div x-data="{ open: {{ request()->routeIs('admin.about.*') ? 'true' : 'false' }} }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-info-circle text-pink-400"></i> About
+                    <i class="fas fa-info-circle text-accent"></i> About
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
@@ -92,7 +91,7 @@
         <div x-data="{ open: {{ request()->routeIs('admin.contact.*') ? 'true' : 'false' }} }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-envelope text-sky-400"></i> Contact
+                    <i class="fas fa-envelope text-accent"></i> Contact
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
@@ -121,7 +120,7 @@
         <div x-data="{ open: false }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-users text-indigo-400"></i> Customers
+                    <i class="fas fa-users text-accent"></i> Customers
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
@@ -140,15 +139,15 @@
         <div x-data="{ open: {{ request()->routeIs('admin.finance.*') ? 'true' : 'false' }} }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-hand-holding-usd text-emerald-400"></i> Commission
+                    <i class="fas fa-hand-holding-usd text-accent"></i> Commission
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
-                <a href="{{ route('admin.finance.commission.index') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.finance.commission.index') ? 'text-white bg-white/5 rounded-lg' : 'text-white/60' }} hover:text-white text-sm font-bold transition-all">
+                <a href="{{ route('admin.finance.commission.index') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.finance.commission.index') ? 'text-white bg-white/5 rounded-lg border border-white/10 shadow-lg' : 'text-white/60' }} hover:text-white text-sm font-bold transition-all">
                     Commission Settings
                 </a>
-                <a href="{{ route('admin.finance.reports.sales') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.finance.reports.sales') ? 'text-white bg-white/5 rounded-lg' : 'text-white/60' }} hover:text-white text-sm font-bold transition-all">
+                <a href="{{ route('admin.finance.reports.sales') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.finance.reports.sales') ? 'text-white bg-white/5 rounded-lg border border-white/10 shadow-lg' : 'text-white/60' }} hover:text-white text-sm font-bold transition-all">
                     Sales Reports
                 </a>
             </div>
@@ -156,13 +155,13 @@
 
         <!-- Payouts -->
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-wallet text-violet-400"></i> Payouts
+            <i class="fas fa-wallet text-accent"></i> Payouts
         </a>
 
         <!-- Settings -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">System</span>
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-cog text-slate-400 group-hover:rotate-90 transition-transform duration-500"></i> Site Settings
+            <i class="fas fa-cog text-accent group-hover:rotate-90 transition-transform duration-500"></i> Site Settings
         </a>
     </nav>
 

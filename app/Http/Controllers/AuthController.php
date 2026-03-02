@@ -24,6 +24,18 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
+            
+            $user = Auth::user();
+            if ($user->role === 'scanner') {
+                return redirect()->route('scanner.dashboard');
+            }
+            if ($user->role === 'organizer') {
+                return redirect()->route('organizer.dashboard');
+            }
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
             return redirect()->intended('/');
         }
 

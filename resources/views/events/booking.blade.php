@@ -15,7 +15,7 @@
                 <p class="text-slate-500 font-medium">Please provide the attendee information to complete your booking.</p>
             </div>
 
-            <form action="{{ route('events.booking.process', $event->slug) }}" method="POST" class="space-y-10">
+            <form action="{{ route('events.booking.process', $event->slug) }}" method="POST" enctype="multipart/form-data" class="space-y-10">
                 @csrf
                 
                 <!-- 1. Attendee Information Header & Choice -->
@@ -119,6 +119,22 @@
                                             <input type="checkbox" name="form_data[{{ $field->id }}]" {{ $field->is_required ? 'required' : '' }} 
                                                 class="w-6 h-6 rounded-lg bg-white/5 border-white/10 text-primary focus:ring-primary/50">
                                             <span class="text-sm font-medium text-white/80">Agree to provide {{ strtolower($field->label) }}</span>
+                                        </div>
+                                    @elseif($field->type === 'file')
+                                        <div class="relative">
+                                            <label class="flex items-center gap-4 w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 cursor-pointer hover:bg-white/10 hover:border-primary/50 transition-all group">
+                                                <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:bg-primary/40 transition-all">
+                                                    <i class="fas fa-cloud-upload-alt text-primary text-sm"></i>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <span class="text-sm font-bold text-white/80 block" id="file-label-{{ $field->id }}">Choose a file...</span>
+                                                    <span class="text-[10px] text-white/40 font-medium">PDF, JPG, PNG — Max 5MB</span>
+                                                </div>
+                                                <input type="file" name="form_data_files[{{ $field->id }}]" {{ $field->is_required ? 'required' : '' }}
+                                                    class="hidden"
+                                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                                    onchange="document.getElementById('file-label-{{ $field->id }}').textContent = this.files[0] ? this.files[0].name : 'Choose a file...'">
+                                            </label>
                                         </div>
                                     @else
                                         <input type="{{ $field->type }}" name="form_data[{{ $field->id }}]" {{ $field->is_required ? 'required' : '' }} 

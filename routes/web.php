@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
         $bookings = \App\Models\Booking::with(['event', 'attendees.ticketType'])->where('user_id', Auth::id())->latest()->get();
         return view('auth.my-bookings', compact('bookings'));
     })->name('bookings.index');
+    Route::get('/bookings/{booking_id}/download', [\App\Http\Controllers\TicketController::class, 'download'])->name('bookings.download');
 });
 
 Route::get('/', function () {
@@ -217,5 +218,19 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
         Route::get('/reports/sales', [\App\Http\Controllers\Organizer\ReportController::class, 'sales'])->name('reports.sales');
         Route::get('/reports/sales/export', [\App\Http\Controllers\Organizer\ReportController::class, 'exportSales'])->name('reports.sales.export');
         Route::get('/bookings/{event_id}', [\App\Http\Controllers\Organizer\EventController::class, 'bookings'])->name('events.bookings');
+
+        // Scanner Management
+        Route::resource('scanners', \App\Http\Controllers\Organizer\ScannerController::class);
+    });
+});
+
+Route::prefix('scanner')->name('scanner.')->group(function () {
+    Route::middleware(['auth', 'scanner'])->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Scanner\ScannerController::class, 'dashboard'])->name('dashboard');
+        
+        Route::get('/scan', [\App\Http\Controllers\Scanner\ScannerController::class, 'showScan'])->name('scan');
+        Route::post('/scan/process', [\App\Http\Controllers\Scanner\ScannerController::class, 'processScan'])->name('scan.process');
+        
+        Route::get('/manual-checkin', [\App\Http\Controllers\Scanner\ScannerController::class, 'showManualCheckin'])->name('manual-checkin');
     });
 });

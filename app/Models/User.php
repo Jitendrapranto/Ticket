@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'avatar',
         'role',
+        'organizer_id',
     ];
 
     /**
@@ -51,5 +52,15 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function organizer()
+    {
+        return $this->belongsTo(User::class, 'organizer_id');
+    }
+
+    public function scanners()
+    {
+        return $this->hasMany(User::class, 'organizer_id');
     }
 }

@@ -25,6 +25,9 @@
         <a href="{{ route('organizer.events.create') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.events.create') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10">
             <i class="fas fa-plus text-emerald-400"></i> Create Event
         </a>
+        <a href="{{ route('organizer.scanners.index') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.scanners.*') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10 mt-1">
+            <i class="fas fa-qrcode text-violet-400"></i> Scanners
+        </a>
 
         <!-- Customer CRM -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Audience</span>

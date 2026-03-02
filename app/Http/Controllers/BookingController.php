@@ -83,6 +83,16 @@ class BookingController extends Controller
         $attendeesData = $request->get('attendees', []);
         $formData = $request->get('form_data', []);
 
+        // Handle file uploads from 'file' type form fields
+        if ($request->hasFile('form_data_files')) {
+            foreach ($request->file('form_data_files') as $fieldId => $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('form_uploads', 'public');
+                    $formData[$fieldId] = $path;
+                }
+            }
+        }
+
         DB::beginTransaction();
         try {
             $totalAmount = 0;
@@ -153,8 +163,8 @@ class BookingController extends Controller
 
                     if ($tierId == $mainTicketId && $i == 1) {
                          // Default to Form Data Name/Email if it's the main person
-                         $name = $formData[$idOfNameField] ?? 'Self'; 
-                         $mobile = $formData[$idOfPhoneField] ?? '';
+                         $name = $formData[$idOfNameField] ?? Auth::user()->name; 
+                         $mobile = $formData[$idOfPhoneField] ?? Auth::user()->mobile ?? '';
                     } else {
                         $name = $attendeesData[$tierId][$i]['name'] ?? '';
                         $mobile = $attendeesData[$tierId][$i]['mobile'] ?? '';
@@ -162,6 +172,7 @@ class BookingController extends Controller
 
                     BookingAttendee::create([
                         'booking_id' => $booking->id,
+                        'ticket_number' => 'TKT-' . strtoupper(Str::random(12)),
                         'ticket_type_id' => $tierId,
                         'name' => $name,
                         'mobile' => $mobile

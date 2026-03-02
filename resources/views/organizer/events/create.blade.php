@@ -471,6 +471,7 @@
                                                 <option value="textarea">Long Text / Textarea</option>
                                                 <option value="date">Date Picker</option>
                                                 <option value="checkbox">Single Checkbox</option>
+                                                <option value="file">File Upload</option>
                                             </select>
                                         </div>
 

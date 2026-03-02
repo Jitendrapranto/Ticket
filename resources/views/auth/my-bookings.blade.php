@@ -104,9 +104,9 @@
                                 </div>
                                 <div class="flex gap-3">
                                     @if($booking->status === 'confirmed' || $booking->payment_status === 'paid')
-                                        <button class="bg-primary text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/10 hover:shadow-primary/20 hover:-translate-y-1 transition-all">
+                                        <a href="{{ route('bookings.download', $booking->booking_id) }}" class="bg-primary text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/10 hover:shadow-primary/20 hover:-translate-y-1 transition-all">
                                             Download E-Ticket
-                                        </button>
+                                        </a>
                                     @else
                                         <a href="{{ route('events.checkout', $booking->booking_id) }}" class="bg-[#F1556C] text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-pink-100 hover:shadow-pink-200 hover:-translate-y-1 transition-all">
                                             Complete Payment

@@ -130,3 +130,25 @@ The first portion and third portion will be customize then auto increment one bY
 
 
 When pressed Download a ticket button from the booking history then it will download the ticket in pdf format and also make sure the ticket will be designed professionally and also make sure to include the event details, customer details, and a unique QR code for each ticket.Must be ensure each ticket number is unique and This ticket number must be included in database.. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the top side of the ticket will be exist the event banner and the bottom side of the ticket will be exist the event details, customer details, and a unique QR code for each ticket. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the everY ticket will be unique banner actuallY I want to here This event banner not default and here qr code damaged not looks professional....
+
+
+On event details form of super admin I want to add a field tYpe name "file"...
+
+
+On superadmin inside Customer then the submenu segmentation I want to here exist customer photo will show if exist when user book a event then if user upload his photo on the booking registration form then this photo will be shown in the segmentation section of the customer menu and also make sure to add a search bar in the segmentation section where super admin can search the customer bY name, email, or phone number...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to ticket information details section will be exist regestration form information not acount information when downloaded....
+
+I want to on organizer dashboard organizer create a scanner role...when he create a scanner then need to scanner dashboard where neeed to the first menu is Dashboard where the scanner can see the total events on that daY and also can see the total purchased tickets for that daY and Scaaned tickets and also can see the pending tickets and also can see the total sales for that daY...
+And the second menu named as Scan and then create a submenu named qr code scan is Scanning where the scanner can scan the QR code of the ticket and also can see the details of the ticket like event details and customer details and also can see the status of the ticket whether it is valid or invalid or already scanned...
+And then create another submenu named as Manual check-in where the scanner can manually check-in the customer by entering the ticket number and also can see the details of the ticket like event details and customer details and also can see the status of the ticket whether it is valid or invalid or already checked-in...You must follow the overall colour combination of this website and make the organizer dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I think here live events not updated on scanner dashboard
