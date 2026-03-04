@@ -339,9 +339,8 @@
     @if($pastEvents->count() > 0)
     <section class="py-24 bg-[#E4EDF7] overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-12">
-                <span class="text-primary font-black tracking-[0.3em] text-[10px] uppercase mb-3 block">LEGACY</span>
-                <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">
+            <div class="mb-12 text-center">
+                <h2 class="font-outfit text-4xl font-black mb-2 tracking-tighter" style="color: #500C69;">
                     Past Signature Events
                 </h2>
                 <p class="text-slate-400 font-medium tracking-wide">
@@ -409,7 +408,7 @@
     @endif
 
     <!-- Coming Soon Section -->
-    <section class="py-24 bg-[#F1F5F9]">
+    {{-- <section class="py-24 bg-[#F1F5F9]">
         <div class="max-w-7xl mx-auto px-6">
             <div class="mb-16 px-4">
                 <span class="text-primary font-black tracking-[0.3em] text-[10px] uppercase mb-4 block">GET READY</span>
@@ -442,97 +441,193 @@
                 @endforeach
             </div>
         </div>
-    </section>
+    </section> --}}
 
-    <!-- Features Section - Bento Layout -->
+    <!-- Features Section -->
     <section class="py-24 bg-[#E4EDF7]">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-20 max-w-2xl px-4">
-                <span class="text-primary font-black tracking-widest text-[10px] uppercase mb-4 block">PLATFORM SUPERPOWERS</span>
-                <h2 class="font-outfit text-5xl font-black text-dark leading-[1.1] tracking-tighter mb-4">Everything Optimized For Your Experience</h2>
+            <div class="mb-14 text-left">
+                <h2 class="font-outfit text-4xl font-black text-[#500C69] tracking-tighter mb-2">Everything Optimized For Your Experience</h2>
+                <p class="text-slate-400 font-medium">Powerful tools and support, designed around you.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
-                <!-- Main Feature -->
-                <div class="md:col-span-8 bg-white p-12 rounded-[3rem] shadow-premium border border-slate-50 flex flex-col justify-between group bento-card relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h3 class="font-black text-4xl text-dark mb-6 leading-tight">Digital-First <br>Smart Ticketing</h3>
-                        <p class="text-slate-400 text-lg max-w-sm font-light">Skip the lines with our proprietary zero-wait entry technology. Your phone is your key to the world of events.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @forelse($platformFeatures as $feature)
+                <div class="rounded-3xl p-8 flex flex-col gap-6 border hover:shadow-lg transition-all duration-300"
+                     style="background-color: {{ $feature->card_bg }}; border-color: {{ $feature->border_color }};">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md"
+                         style="background-color: {{ $feature->icon_bg }};">
+                        <i class="{{ $feature->icon }} text-white text-xl"></i>
                     </div>
-                    <div class="relative z-10 flex items-center gap-6">
-                        <button class="bg-dark text-white px-10 py-4 rounded-2xl font-bold text-sm shadow-xl shadow-dark/10">LEARN MORE</button>
+                    <div>
+                        <h3 class="font-black text-dark text-xl mb-2">{{ $feature->title }}</h3>
+                        <p class="text-slate-500 text-sm font-medium leading-relaxed">{{ $feature->description }}</p>
                     </div>
-                    <!-- Decorative Icon -->
-                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-primary/5 rounded-full flex items-center justify-center translate-y-1/4 translate-x-1/4 group-hover:scale-110 transition-transform duration-700">
-                        <i class="fas fa-mobile-alt text-[150px] text-primary/10"></i>
-                    </div>
+                    <span class="font-black text-[10px] tracking-[0.2em] uppercase mt-auto"
+                          style="color: {{ $feature->accent_color }};">{{ $feature->action_label }} →</span>
                 </div>
-
-                <!-- Secondary Features Stack -->
-                <div class="md:col-span-4 grid grid-rows-2 gap-6">
-                    <div class="bg-primary p-10 rounded-[3rem] text-white bento-card flex flex-col justify-between relative overflow-hidden group">
-                        <i class="fas fa-shield-alt text-4xl opacity-20"></i>
-                        <div>
-                            <h4 class="font-black text-2xl mb-2">Total Security</h4>
-                            <p class="text-white/60 text-sm font-medium">Encrypted transactions & anti-fraud tech.</p>
-                        </div>
-                        <div class="absolute top-0 right-0 p-8 transform translate-x-1/2 -translate-y-1/2 group-hover:translate-x-1/4 group-hover:-translate-y-1/4 transition-transform duration-500">
-                             <div class="w-32 h-32 border-4 border-white/10 rounded-full"></div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-10 rounded-[3rem] border border-slate-50 shadow-premium bento-card flex flex-col justify-between group">
-                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-accent">
-                            <i class="fas fa-headset"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-black text-2xl text-dark mb-2">VIP Support</h4>
-                            <p class="text-slate-400 text-sm font-medium">Dedicated assistance 24/7/365.</p>
-                        </div>
-                    </div>
-                </div>
+                @empty
+                <div class="col-span-3 text-center py-12 text-slate-400 font-semibold">No features configured yet.</div>
+                @endforelse
             </div>
         </div>
     </section>
 
-    <!-- Enhanced Gallery Mosaic -->
-    <section class="py-32 bg-[#F1F5F9]">
+    <!-- Enhanced Gallery Section -->
+    @php
+        $galleryList = $homepageGalleryImages ?? collect();
+        $gSection   = $gallerySection ?? null;
+        $gTitle     = $gSection->title       ?? 'Moments That Stick Forever';
+        $gDesc      = $gSection->description ?? 'Browse through thousands of captured memories from our global community of event lovers.';
+        $gBtnText   = $gSection->button_text ?? 'OPEN GALLERY';
+        $gBtnUrl    = $gSection->button_url  ?? '/gallery';
+
+        // Build image list for lightbox
+        $lightboxImages = $galleryList->count() ? $galleryList->map(fn($img) => [
+            'src'     => $img->image_url,
+            'caption' => $img->title ?? '',
+        ])->values()->toArray() : [
+            ['src' => 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1400&q=90', 'caption' => 'Neon World Tour Final'],
+            ['src' => 'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=900&q=90',  'caption' => 'Light Trails'],
+            ['src' => 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=900&q=90',  'caption' => 'Festival Energy'],
+            ['src' => 'https://images.unsplash.com/photo-1472653425572-ca97664ff3AD?auto=format&fit=crop&w=1400&q=90','caption' => 'Experience The Unseen'],
+        ];
+    @endphp
+
+    <section class="py-32 bg-[#F1F5F9]"
+             x-data="{
+                 lightbox: false,
+                 current: 0,
+                 images: {{ json_encode($lightboxImages) }},
+                 open(index) { this.current = index; this.lightbox = true; document.body.style.overflow = 'hidden'; },
+                 close() { this.lightbox = false; document.body.style.overflow = ''; },
+                 prev() { this.current = (this.current - 1 + this.images.length) % this.images.length; },
+                 next() { this.current = (this.current + 1) % this.images.length; },
+             }"
+             @keydown.escape.window="close()"
+             @keydown.arrow-left.window="lightbox && prev()"
+             @keydown.arrow-right.window="lightbox && next()">
+
         <div class="max-w-7xl mx-auto px-6">
              <div class="flex flex-col md:flex-row items-end justify-between mb-20">
                 <div class="max-w-xl">
-                    <h2 class="font-outfit text-5xl font-black text-dark mb-6 tracking-tighter leading-none">Moments That <br>Stick Forever</h2>
-                    <p class="text-slate-400 text-lg font-light leading-relaxed">Browse through thousands of captured memories from our global community of event lovers.</p>
+                    <h2 class="font-outfit text-5xl font-black text-primary mb-6 tracking-tighter leading-none">{{ $gTitle }}</h2>
+                    <p class="text-slate-400 text-lg font-light leading-relaxed">{{ $gDesc }}</p>
                 </div>
                 <div class="mt-8 md:mt-0">
-                    <a href="#" class="px-12 py-5 bg-dark text-white rounded-2xl font-black text-sm hover:bg-primary transition-all shadow-xl shadow-dark/10">OPEN GALLERY</a>
+                    <a href="{{ $gBtnUrl }}" class="px-12 py-5 bg-dark text-white rounded-2xl font-black text-sm hover:bg-primary transition-all shadow-xl shadow-dark/10">{{ $gBtnText }}</a>
                 </div>
              </div>
 
+             @if($galleryList->count())
              <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Large Vertical -->
-                <div class="col-span-2 row-span-2 rounded-[3.5rem] overflow-hidden group relative h-[700px]">
-                    <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="absolute bottom-12 left-12 transform translate-y-10 group-hover:translate-y-0 transition-transform duration-700 opacity-0 group-hover:opacity-100">
-                        <span class="text-primary font-bold text-xs tracking-widest uppercase mb-4 block">CONCERT / 2024</span>
-                        <h4 class="text-white font-black text-3xl leading-tight">Neon World Tour Final</h4>
+                @foreach($galleryList as $index => $gImg)
+                @php
+                    // Auto-assign grid sizes: first image gets 2x2, rest are 1x1 or 2x1
+                    if($index === 0) { $colClass = 'col-span-2'; $rowClass = 'row-span-2'; $heightClass = 'h-[700px]'; $roundClass = 'rounded-[3.5rem]'; }
+                    elseif($index === 3 || $index === 4) { $colClass = 'col-span-1'; $rowClass = ''; $heightClass = 'h-[340px]'; $roundClass = 'rounded-[2.5rem]'; }
+                    else { $colClass = 'col-span-1'; $rowClass = ''; $heightClass = 'h-[340px]'; $roundClass = 'rounded-[2.5rem]'; }
+                @endphp
+                <div class="{{ $colClass }} {{ $rowClass }} {{ $roundClass }} overflow-hidden group relative {{ $heightClass }} cursor-zoom-in"
+                     @click="open({{ $index }})">
+                    <img src="{{ $gImg->image_url }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" loading="lazy" alt="{{ $gImg->title ?? '' }}">
+                    <!-- Hover overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-between p-8">
+                        @if($gImg->title)
+                        <h4 class="text-white font-black text-xl leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{{ $gImg->title }}</h4>
+                        @endif
+                        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center translate-y-4 group-hover:translate-y-0 transition-transform duration-500 shrink-0 ml-auto">
+                            <i class="fas fa-expand text-white text-sm"></i>
+                        </div>
                     </div>
                 </div>
-
-                <div class="rounded-[2.5rem] overflow-hidden h-[340px] group relative">
-                    <img src="https://images.unsplash.com/photo-1467810563316-b5476525c0f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-dark/20 group-hover:bg-primary/20 transition-colors"></div>
-                </div>
-                <div class="rounded-[2.5rem] overflow-hidden h-[340px] group relative">
-                    <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
-                </div>
-                <!-- Wide -->
-                <div class="col-span-2 rounded-[2.5rem] overflow-hidden h-[340px] group relative">
-                    <img src="https://images.unsplash.com/photo-1472653425572-ca97664ff3AD?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000">
-                    <div class="absolute inset-x-12 bottom-0 top-0 flex flex-col justify-center">
-                         <span class="text-white font-black text-2xl tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-20px] group-hover:translate-x-0 transition-transform duration-700 italic">Experience The Unseen</span>
-                    </div>
-                </div>
+                @endforeach
              </div>
+             @else
+             {{-- fallback static gallery --}}
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                @php $fallbacks = [
+                    ['src'=>'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1000&q=80','caption'=>'Neon World Tour Final','cls'=>'col-span-2 row-span-2 rounded-[3.5rem] h-[700px]'],
+                    ['src'=>'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=600&q=80','caption'=>'Light Trails','cls'=>'col-span-1 rounded-[2.5rem] h-[340px]'],
+                    ['src'=>'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=600&q=80','caption'=>'Festival Energy','cls'=>'col-span-1 rounded-[2.5rem] h-[340px]'],
+                    ['src'=>'https://images.unsplash.com/photo-1472653425572-ca97664ff3AD?auto=format&fit=crop&w=1200&q=80','caption'=>'Experience The Unseen','cls'=>'col-span-2 rounded-[2.5rem] h-[340px]'],
+                ]; @endphp
+                @foreach($fallbacks as $fi => $fb)
+                <div class="{{ $fb['cls'] }} overflow-hidden group relative cursor-zoom-in" @click="open({{ $fi }})">
+                    <img src="{{ $fb['src'] }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" alt="{{ $fb['caption'] }}">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-between p-8">
+                        <h4 class="text-white font-black text-xl leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{{ $fb['caption'] }}</h4>
+                        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shrink-0 ml-2">
+                            <i class="fas fa-expand text-white text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+             </div>
+             @endif
+        </div>
+
+        <!-- ===== LIGHTBOX ===== -->
+        <div x-show="lightbox" x-cloak
+             class="fixed inset-0 z-[9999] flex items-center justify-center"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-end="opacity-0">
+
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/95 backdrop-blur-lg" @click="close()"></div>
+
+            <!-- Close button -->
+            <button @click="close()"
+                    class="absolute top-5 right-5 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl flex items-center justify-center text-white transition-all hover:scale-110">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+
+            <!-- Counter -->
+            <div class="absolute top-5 left-1/2 -translate-x-1/2 z-10 bg-white/10 text-white text-xs font-black tracking-widest px-4 py-2 rounded-full">
+                <span x-text="current + 1"></span> / <span x-text="images.length"></span>
+            </div>
+
+            <!-- Prev arrow -->
+            <button @click.stop="prev()"
+                    class="absolute left-4 md:left-8 z-10 w-12 h-12 md:w-14 md:h-14 bg-white/10 hover:bg-primary rounded-2xl flex items-center justify-center text-white transition-all hover:scale-110 group">
+                <i class="fas fa-chevron-left text-lg"></i>
+            </button>
+
+            <!-- Image container -->
+            <div class="relative z-10 w-full max-w-5xl mx-4 md:mx-20 flex flex-col items-center gap-4">
+                <template x-for="(img, idx) in images" :key="idx">
+                    <div x-show="current === idx"
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         class="w-full flex flex-col items-center gap-4">
+                        <img :src="img.src" :alt="img.caption"
+                             class="max-h-[75vh] w-full object-contain rounded-3xl shadow-2xl shadow-black/50 select-none">
+                        <p x-show="img.caption" x-text="img.caption"
+                           class="text-white/80 font-black text-sm tracking-widest text-center px-4"></p>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Next arrow -->
+            <button @click.stop="next()"
+                    class="absolute right-4 md:right-8 z-10 w-12 h-12 md:w-14 md:h-14 bg-white/10 hover:bg-primary rounded-2xl flex items-center justify-center text-white transition-all hover:scale-110">
+                <i class="fas fa-chevron-right text-lg"></i>
+            </button>
+
+            <!-- Thumbnail strip -->
+            <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-4 max-w-full overflow-x-auto no-scrollbar">
+                <template x-for="(img, idx) in images" :key="idx">
+                    <button @click.stop="current = idx"
+                            class="shrink-0 w-14 h-10 md:w-16 md:h-11 rounded-xl overflow-hidden transition-all duration-300 border-2"
+                            :class="current === idx ? 'border-primary scale-110 shadow-lg shadow-primary/30' : 'border-transparent opacity-50 hover:opacity-80'">
+                        <img :src="img.src" :alt="img.caption" class="w-full h-full object-cover">
+                    </button>
+                </template>
+            </div>
         </div>
     </section>
 
@@ -542,12 +637,12 @@
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575861501-7ad05823123d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')] bg-cover bg-fixed bg-center opacity-20"></div>
 
         <div class="max-w-5xl mx-auto px-6 text-center relative z-10 animate-fadeInUp">
-            <h2 class="font-outfit text-6xl md:text-8xl font-black text-white leading-[0.8] mb-12 tracking-tighter">Your Journey <br><span class="text-primary tracking-normal">Starts Now.</span></h2>
-            <p class="text-xl text-white/40 mb-16 max-w-2xl mx-auto font-light">Join over 2.5 million event enthusiasts discovering the most exclusive experiences every day.</p>
+            <h2 class="font-outfit text-6xl md:text-8xl font-black text-[#FFE700] leading-[0.8] mb-12 tracking-tighter">Your Journey</h2>
+            <p class="text-xl text-white mb-16 max-w-2xl mx-auto font-light">Join over 2.5 million event enthusiasts discovering the most exclusive experiences every day.</p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="#" class="bg-white text-dark px-16 py-6 rounded-3xl font-black text-lg hover:bg-primary hover:text-white transition-all hover:scale-110 hover:-rotate-2">EXPLORE ALL</a>
-                <a href="#" class="glass text-white px-16 py-6 rounded-3xl font-black text-lg hover:border-white transition-all">BE A PARTNER</a>
+               
+                <a href="{{ route('organizer.register') }}" class="px-16 py-6 rounded-3xl font-black text-2xl transition-all hover:scale-105 hover:shadow-2xl" style="background-color: #FFE700; color: #21032B;">Join as a Organizer</a>
             </div>
         </div>
 

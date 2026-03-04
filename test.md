@@ -165,3 +165,26 @@ I want to here will be show three card in a row and second row will be three car
 I want to whenever clicked on the card it will redirect to the event details page....
 
 I want to here the past event will be shown in the past event section and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to this section dYnamic from super admin...BasicallY i want to crud operation here...wwhen press delete Icon it will show a professional popup and also make sure to add a toast message after the crud operation...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to this section dYnamic from super admin...BasicallY i want to crud operation here...wwhen press delete Icon it will show a professional popup and also make sure to add a toast message after the crud operation...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to DYnamicallY updated header and footer from super admin dashboard and also make sure to add a professional popup when update the header and footer content and also make sure to add a toast message after updating the header and footer content...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When clicked the Image then it will open in the full screen and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to this section will be dynamic from super admin dashboard and also make sure to add a professional popup when update the content of this section and also make sure to add a toast message after updating the content of this section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to when clicked join as a organizer then it will open a professional signup form where will exist these fields:Name , Institution name, Email, Phone number, Present Address , Password, Confirm Password and also make sure to add a checkbox for accepting the terms and conditions before the organizer can proceed with the signup. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+This search bar does not works on event page.here does not search the event bY name and categorY name....fix it 
+
+Here the header search bar does not work 
+
+On event page, I want to here add a search bar where search by event name and category name and also make it responsive for mobile devices as well. 
+
+When download tickets then it downloaded but pdf file is empty and also make sure to add a professional design for the ticket pdf which includes event details, customer details, and a unique QR code for each ticket. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?

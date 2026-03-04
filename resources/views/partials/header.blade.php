@@ -1,24 +1,45 @@
 <!-- Header -->
+@php
+    $h = $siteHeader ?? null;
+    $logoSrc = $h && $h->logo_path
+        ? (str_starts_with($h->logo_path, 'site/') ? asset('storage/'.$h->logo_path) : asset($h->logo_path))
+        : asset('Blue_Simple_Technology_Logo.png');
+    $searchPlaceholder = $h->search_placeholder ?? 'Search for Movies, Events, Plays, Sports and Activities';
+    $loginText  = $h->login_text ?? 'Login';
+    $signupText = $h->signup_text ?? 'Sign Up';
+    $navLinks   = $h->nav_links ?? [
+        ['label'=>'HOME','url'=>'/'],
+        ['label'=>'EVENTS','url'=>'/events'],
+        ['label'=>'GALLERY','url'=>'/gallery'],
+        ['label'=>'ABOUT','url'=>'/about'],
+        ['label'=>'CONTACT','url'=>'/contact'],
+    ];
+@endphp
 <header class="fixed top-0 left-0 w-full z-30 bg-white border-b border-slate-100 transition-all duration-300">
     <!-- Top Row: Logo, Search, Actions -->
     <div class="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between gap-8">
         <!-- Logo -->
         <a href="/" class="flex-shrink-0">
-            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun Logo" class="h-14 md:h-16 w-auto object-contain">
+            <img src="{{ $logoSrc }}" alt="Ticket Kinun Logo" class="h-14 md:h-16 w-auto object-contain">
         </a>
 
         <!-- Search Bar -->
-        <div class="flex-1 max-w-2xl relative hidden md:block">
+        <form action="{{ route('events') }}" method="GET" class="flex-1 max-w-2xl relative hidden md:block">
             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" placeholder="Search for Movies, Events, Plays, Sports and Activities" class="w-full bg-slate-50 border border-slate-200 pl-12 pr-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
-        </div>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ $searchPlaceholder }}" class="w-full bg-slate-50 border border-slate-200 pl-12 pr-10 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
+            @if(request('search'))
+                <a href="{{ url()->current() }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                    <i class="fas fa-times text-xs"></i>
+                </a>
+            @endif
+        </form>
 
         <!-- Actions & Mobile Menu Btn -->
         <div class="flex items-center gap-4 md:gap-8">
             <div class="hidden md:flex items-center gap-6">
                 @guest
-                    <a href="{{ route('login') }}" class="text-slate-600 hover:text-dark font-semibold text-[13px] tracking-wide">Login</a>
-                    <a href="{{ route('signup') }}" class="bg-[#520C6B] text-white px-6 py-2 rounded-lg font-bold text-[13px] tracking-wide hover:shadow-lg hover:-translate-y-0.5 transition-all uppercase">Sign Up</a>
+                    <a href="{{ route('login') }}" class="text-slate-600 hover:text-dark font-semibold text-[13px] tracking-wide">{{ $loginText }}</a>
+                    <a href="{{ route('signup') }}" class="bg-[#520C6B] text-white px-6 py-2 rounded-lg font-bold text-[13px] tracking-wide hover:shadow-lg hover:-translate-y-0.5 transition-all uppercase">{{ $signupText }}</a>
                 @else
                     <div class="flex items-center gap-6" x-data="{ open: false }">
                         <!-- Profile Trigger -->
@@ -81,7 +102,7 @@
             </div>
 
             <!-- Mobile Search Icon -->
-            <button class="md:hidden text-slate-600 hover:text-primary transition-colors">
+            <button id="mobile-search-btn" class="md:hidden text-slate-600 hover:text-primary transition-colors" type="button">
                 <i class="fas fa-search text-xl"></i>
             </button>
 
@@ -147,13 +168,39 @@
         <div class="max-w-7xl mx-auto px-6 h-12 flex items-center">
             <nav>
                 <ul class="flex items-center gap-8">
-                    <li><a href="{{ url('/') }}" class="text-slate-600 hover:text-primary font-bold text-[12px] tracking-wider {{ request()->is('/') ? 'text-primary' : '' }}">HOME</a></li>
-                    <li><a href="{{ route('events') }}" class="text-slate-600 hover:text-primary font-bold text-[12px] tracking-wider {{ request()->is('events') ? 'text-primary' : '' }}">EVENTS</a></li>
-                    <li><a href="{{ route('gallery') }}" class="text-slate-600 hover:text-primary font-bold text-[12px] tracking-wider {{ request()->is('gallery') ? 'text-primary' : '' }}">GALLERY</a></li>
-                    <li><a href="{{ route('about') }}" class="text-slate-600 hover:text-primary font-bold text-[12px] tracking-wider {{ request()->is('about') ? 'text-primary' : '' }}">ABOUT</a></li>
-                    <li><a href="{{ route('contact') }}" class="text-slate-600 hover:text-primary font-bold text-[12px] tracking-wider {{ request()->is('contact') ? 'text-primary' : '' }}">CONTACT</a></li>
+                    @foreach($navLinks as $navLink)
+                        <li><a href="{{ $navLink['url'] }}" class="text-slate-600 hover:text-primary font-bold text-[12px] tracking-wider {{ request()->is(ltrim($navLink['url'], '/')) || (($navLink['url'] === '/') && request()->is('/')) ? 'text-primary' : '' }}">{{ $navLink['label'] }}</a></li>
+                    @endforeach
                 </ul>
             </nav>
         </div>
     </div>
+
+    <!-- Mobile Search Bar (toggled by mobile search icon) -->
+    <div id="mobile-search-bar" class="md:hidden bg-white border-t border-slate-100 px-4 py-3 hidden">
+        <form action="{{ route('events') }}" method="GET" class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ $searchPlaceholder }}" class="w-full bg-slate-50 border border-slate-200 pl-12 pr-10 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" autofocus>
+            @if(request('search'))
+                <a href="{{ url()->current() }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                    <i class="fas fa-times text-xs"></i>
+                </a>
+            @endif
+        </form>
+    </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileSearchBtn = document.getElementById('mobile-search-btn');
+        const mobileSearchBar = document.getElementById('mobile-search-bar');
+        if (mobileSearchBtn && mobileSearchBar) {
+            mobileSearchBtn.addEventListener('click', function() {
+                mobileSearchBar.classList.toggle('hidden');
+                if (!mobileSearchBar.classList.contains('hidden')) {
+                    mobileSearchBar.querySelector('input[name="search"]').focus();
+                }
+            });
+        }
+    });
+</script>

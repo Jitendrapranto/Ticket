@@ -42,6 +42,25 @@
             </div>
         </div>
 
+        <!-- Home Page Management -->
+        <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Home Page</span>
+        <div x-data="{ open: {{ request()->routeIs('admin.home.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-home text-accent"></i> Home
+                </div>
+                <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
+                <a href="{{ route('admin.home.features.index') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.home.features.*') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-bold transition-all">
+                    Platform Features
+                </a>
+                <a href="{{ route('admin.home.cta.edit') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.home.cta.*') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-bold transition-all">
+                    CTA Section
+                </a>
+            </div>
+        </div>
+
         <!-- Gallery Management -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Gallery Space</span>
         <div x-data="{ open: false }">
@@ -71,6 +90,9 @@
                 <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
+                <a href="{{ route('admin.about.hero.edit') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.about.hero.*') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-bold transition-all">
+                    Hero Section
+                </a>
                 <a href="{{ route('admin.about.story.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-bold transition-all">
                     Our Story Section
                 </a>
@@ -160,9 +182,22 @@
 
         <!-- Settings -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">System</span>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-cog text-accent group-hover:rotate-90 transition-transform duration-500"></i> Site Settings
-        </a>
+        <div x-data="{ open: {{ request()->routeIs('admin.site.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-cog text-accent"></i> Site Settings
+                </div>
+                <i class="fas fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
+                <a href="{{ route('admin.site.header.edit') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.site.header.*') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-bold transition-all">
+                    Header
+                </a>
+                <a href="{{ route('admin.site.footer.edit') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.site.footer.*') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-bold transition-all">
+                    Footer
+                </a>
+            </div>
+        </div>
     </nav>
 
     <!-- Sidebar Footer -->

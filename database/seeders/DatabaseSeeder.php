@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             ContactFormContentSeeder::class,
             ContactSupportSeeder::class,
             ContactMapSeeder::class,
+            SiteHeaderSeeder::class,
+            SiteFooterSeeder::class,
         ]);
 
         \App\Models\User::updateOrCreate(

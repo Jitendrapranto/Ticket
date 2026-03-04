@@ -3,6 +3,22 @@
 @section('title', 'About Us - Reimagining the Fan Journey | Ticket Kinun')
 
 @section('content')
+    <!-- Hero Section -->
+    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#21032B] overflow-hidden min-h-[450px] flex items-center">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
+                {{ $hero->title_main ?? 'The Story' }}<br>
+                <span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Behind Kinun.' }}</span>
+            </h1>
+            <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+                {{ $hero->subtitle ?? 'We are a passionate team dedicated to transforming the way the world experiences live events.' }}
+            </p>
+        </div>
+    </section>
+
     <!-- Statistics Section -->
     <section class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-6">
@@ -74,10 +90,10 @@
 
                 <!-- Content -->
                 <div class="flex flex-col">
-                    <div class="mb-6">
-                        <span class="inline-block px-3 py-1 bg-slate-50 border border-slate-200 text-slate-500 text-[10px] font-bold tracking-widest uppercase rounded">
-                            {{ $story->badge_text ?? 'OUR STORY' }}
-                        </span>
+                    <div class="mb-6 text-left">
+                        <h3 class="font-outfit font-black text-2xl tracking-tight" style="color: #520C6B;">
+                            {{ $story->badge_text ?? 'Our Story' }}
+                        </h3>
                     </div>
                     
                     <h2 class="font-outfit text-5xl md:text-[3.5rem] font-black text-[#1e293b] leading-[1.1] mb-2 tracking-tighter">

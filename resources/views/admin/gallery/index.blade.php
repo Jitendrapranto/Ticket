@@ -40,6 +40,16 @@
         this.deleteUrl = url;
         this.imageTitle = title;
         this.deleteModal = true;
+    },
+    homepageModal: false,
+    homepageUrl: '',
+    homepageTitle: '',
+    homepageAction: '',
+    confirmHomepage(url, title, currentlyOnHomepage) {
+        this.homepageUrl = url;
+        this.homepageTitle = title;
+        this.homepageAction = currentlyOnHomepage ? 'remove from' : 'add to';
+        this.homepageModal = true;
     }
 }">
     @include('admin.sidebar')
@@ -91,16 +101,30 @@
                                     {{ $image->category->name }}
                                 </span>
                             </div>
+                            @if($image->show_on_homepage)
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-green-500 text-white px-3 py-1.5 rounded-xl text-[9px] font-black tracking-widest uppercase shadow-lg shadow-green-500/30 flex items-center gap-1.5">
+                                    <i class="fas fa-home text-[8px]"></i> ON HOMEPAGE
+                                </span>
+                            </div>
+                            @endif
                         </div>
                         <div class="p-8 flex items-center justify-between">
                             <div class="flex-1 min-w-0 mr-4">
                                 <h3 class="font-outfit text-lg font-black text-dark tracking-tight truncate">{{ $image->title }}</h3>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Uploaded {{ $image->created_at->diffForHumans() }}</p>
                             </div>
-                            <button @click="confirmDelete('{{ route('admin.gallery.images.destroy', $image) }}', '{{ $image->title }}')"
+                            <div class="flex items-center gap-2">
+                                <button @click="confirmHomepage('{{ route('admin.gallery.images.toggle-homepage', $image) }}', '{{ $image->title }}', {{ $image->show_on_homepage ? 'true' : 'false' }})"
+                                        class="w-12 h-12 flex items-center justify-center rounded-2xl {{ $image->show_on_homepage ? 'bg-green-50 text-green-500 hover:bg-green-500' : 'bg-blue-50 text-blue-500 hover:bg-blue-500' }} hover:text-white transition-all shadow-sm"
+                                        title="{{ $image->show_on_homepage ? 'Remove from Homepage' : 'Add to Homepage' }}">
+                                    <i class="fas {{ $image->show_on_homepage ? 'fa-home' : 'fa-plus-circle' }} text-sm"></i>
+                                </button>
+                                <button @click="confirmDelete('{{ route('admin.gallery.images.destroy', $image) }}', '{{ $image->title }}')"
                                     class="w-12 h-12 flex items-center justify-center rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                                <i class="fas fa-trash-alt text-sm"></i>
-                            </button>
+                                    <i class="fas fa-trash-alt text-sm"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @empty
@@ -156,6 +180,53 @@
                             @method('DELETE')
                             <button type="submit" class="w-full py-4 rounded-2xl bg-red-500 text-white font-black text-xs tracking-widest hover:bg-red-600 transition-all uppercase shadow-lg shadow-red-500/20">
                                 Yes, Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Homepage Toggle Confirmation Modal -->
+        <div x-show="homepageModal"
+             x-cloak
+             class="fixed inset-0 z-[150] flex items-center justify-center px-4 overflow-hidden"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+
+            <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm" @click="homepageModal = false"></div>
+
+            <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-90"
+                 x-transition:enter-end="opacity-100 scale-100">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8"
+                         :class="homepageAction === 'add to' ? 'bg-blue-50 text-blue-500' : 'bg-amber-50 text-amber-500'">
+                        <i class="fas" :class="homepageAction === 'add to' ? 'fa-home' : 'fa-eye-slash'"></i>
+                    </div>
+
+                    <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-4">
+                        <span x-text="homepageAction === 'add to' ? 'Add to Homepage?' : 'Remove from Homepage?'"></span>
+                    </h3>
+                    <p class="text-slate-400 text-sm font-medium leading-relaxed mb-8">
+                        You are about to <span class="text-dark font-bold" x-text="homepageAction"></span> the homepage gallery:
+                        <span class="text-primary font-bold" x-text="homepageTitle"></span>
+                    </p>
+
+                    <div class="flex items-center gap-4">
+                        <button @click="homepageModal = false" class="flex-1 py-4 rounded-2xl bg-slate-50 text-slate-500 font-black text-xs tracking-widest hover:bg-slate-100 transition-all uppercase">
+                            Cancel
+                        </button>
+                        <form :action="homepageUrl" method="POST" class="flex-1">
+                            @csrf
+                            <button type="submit" class="w-full py-4 rounded-2xl font-black text-xs tracking-widest transition-all uppercase shadow-lg"
+                                    :class="homepageAction === 'add to' ? 'bg-primary text-white hover:bg-secondary shadow-primary/20' : 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-500/20'">
+                                <span x-text="homepageAction === 'add to' ? 'Yes, Add' : 'Yes, Remove'"></span>
                             </button>
                         </form>
                     </div>

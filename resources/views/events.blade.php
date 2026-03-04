@@ -5,13 +5,14 @@
 @section('content')
 <div x-data="{
     activeCategory: 'all',
-    searchQuery: '',
-    matchEvent(categorySlug, title, location) {
+    searchQuery: '{{ $search ?? '' }}',
+    matchEvent(categorySlug, title, location, categoryName) {
         const matchesCategory = this.activeCategory === 'all' || categorySlug === this.activeCategory;
         const searchLower = this.searchQuery.toLowerCase();
         const matchesSearch = this.searchQuery === '' ||
                              title.toLowerCase().includes(searchLower) ||
-                             location.toLowerCase().includes(searchLower);
+                             location.toLowerCase().includes(searchLower) ||
+                             categoryName.toLowerCase().includes(searchLower);
         return matchesCategory && matchesSearch;
     }
 }">
@@ -38,17 +39,51 @@
                 </p>
             @endif
 
-            <!-- Search Bar -->
-            <div class="max-w-2xl mx-auto relative group">
-                <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-slate-400 group-focus-within:text-white transition-colors"></i>
-                </div>
-                <input type="text" x-model="searchQuery"
-                    placeholder="{{ $hero->search_placeholder ?? 'Search events, venues, or cities...' }}"
-                    class="w-full bg-white/10 border border-white/10 rounded-2xl py-6 pl-14 pr-8 text-white placeholder:text-slate-400 outline-none focus:bg-white/20 focus:border-white/30 transition-all text-lg font-light shadow-2xl">
+            <!-- Professional Search Bar -->
+            <div class="mt-12 max-w-5xl mx-auto px-4 md:px-0 animate-fadeInUp" style="animation-delay: 0.2s;">
+                <form action="{{ route('events') }}" method="GET" class="relative group">
+                    <!-- Dynamic Glow Background -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2.5rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-focus-within:duration-200"></div>
+                    
+                    <div class="relative flex flex-col md:flex-row items-stretch bg-[#1a0b2e]/60 backdrop-blur-2xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-1.5 md:p-2 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 group-focus-within:border-white/20 group-focus-within:shadow-[0_20px_80px_rgba(82,12,107,0.3)]">
+                        
+                        <!-- Search Query Input -->
+                        <div class="flex-1 flex items-center px-6 py-4 md:py-0 transition-colors">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 mr-4">
+                                <i class="fas fa-search text-white/50 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-0.5">Searching for</label>
+                                <input type="text" name="search" value="{{ $search ?? '' }}" 
+                                    placeholder="{{ $hero->search_placeholder ?? 'Search artists, venues, categories or location...' }}" 
+                                    class="w-full bg-transparent border-none focus:ring-0 text-white placeholder:text-white/50 font-bold text-base px-0 leading-tight"
+                                    @input="searchQuery = $event.target.value">
+                            </div>
+                        </div>
 
-                <!-- Floating Glow -->
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-0 group-focus-within:opacity-20 transition duration-500"></div>
+                        <!-- Action Button -->
+                        <div class="p-1">
+                            <button type="submit" class="w-full md:w-auto h-full bg-gradient-to-r from-primary to-accent text-white px-10 py-5 md:py-0 rounded-[1.5rem] md:rounded-[2.2rem] font-black text-xs tracking-[0.2em] uppercase hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 relative overflow-hidden group/btn">
+                                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+                                <span class="relative z-10">Find Tickets</span>
+                                <i class="fas fa-arrow-right relative z-10 text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Refined Quick Tags -->
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+                    <span class="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] flex items-center gap-2">
+                        <span class="w-8 h-px bg-white/10"></span> Popular
+                    </span>
+                    @foreach($categories->take(4) as $popCat)
+                        <button @click="activeCategory = '{{ $popCat->slug }}'; $nextTick(() => { document.querySelector('.event-grid-section')?.scrollIntoView({ behavior: 'smooth' }) })" 
+                                class="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/5 text-white/40 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:border-white/20 hover:text-white hover:-translate-y-0.5 transition-all duration-300">
+                            {{ $popCat->name }}
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
@@ -151,21 +186,18 @@
     @endif --}}
 
     <!-- Events Grid -->
-    <section class="py-16 bg-[#F8FAFC]">
+    <section class="py-16 bg-[#F8FAFC] event-grid-section">
         <div class="max-w-7xl mx-auto px-2">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 @forelse($events as $event)
-                @php
-                    $catSlug = $event->category ? $event->category->slug : 'none';
-                    $escapedTitle = str_replace("'", "\\'", $event->title);
-                    $escapedLocation = str_replace("'", "\\'", $event->location);
-                @endphp
-                <div class="event-card group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-slate-100 overflow-hidden"
+                @php $catSlug = $event->category ? $event->category->slug : 'none'; @endphp
+                <div class="event-card group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-slate-100 overflow-hidden cursor-pointer"
                      style="border-color: #EDDDDD;"
-                     x-show="matchEvent('{{ $catSlug }}', '{{ $escapedTitle }}', '{{ $escapedLocation }}')"
+                     x-show="matchEvent({{ json_encode($catSlug) }}, {{ json_encode($event->title) }}, {{ json_encode($event->location ?? '') }}, {{ json_encode($event->category ? $event->category->name : '') }})"
                      x-transition:enter="transition ease-out duration-300"
                      x-transition:enter-start="opacity-0 scale-95"
-                     x-transition:enter-end="opacity-100 scale-100">
+                     x-transition:enter-end="opacity-100 scale-100"
+                     onclick="window.location.href='{{ route('events.show', $event->slug) }}'">
 
                     <!-- Image Section (Full Cover) -->
                     <div class="relative aspect-[16/9] bg-slate-100 shrink-0 overflow-hidden">

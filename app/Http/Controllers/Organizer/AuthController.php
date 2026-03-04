@@ -47,8 +47,15 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'institution_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:20',
+            'present_address' => 'required|string|max:500',
             'password' => 'required|string|min:8|confirmed',
+            'terms' => 'required|accepted',
+        ], [
+            'terms.required' => 'You must accept the Terms and Conditions to proceed.',
+            'terms.accepted' => 'You must accept the Terms and Conditions to proceed.',
         ]);
 
         if ($validator->fails()) {
@@ -57,7 +64,10 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'institution_name' => $request->institution_name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'present_address' => $request->present_address,
             'password' => Hash::make($request->password),
             'role' => 'organizer',
         ]);

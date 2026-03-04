@@ -142,6 +142,49 @@
                             </div>
                         </div>
 
+                        <!-- Show on Homepage Toggle -->
+                        <div class="bg-white rounded-[3rem] p-10 shadow-premium border border-slate-50"
+                             x-data="{ enabled: {{ old('show_on_homepage') ? 'true' : 'false' }} }">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-outfit text-sm font-black text-dark tracking-tight uppercase">Add on Homepage</h3>
+                                        <p class="text-[10px] text-slate-400 font-medium mt-0.5">Display this image in the homepage gallery section</p>
+                                    </div>
+                                </div>
+                                <button type="button" @click="enabled = !enabled" class="relative w-14 h-7 rounded-full transition-all duration-300 focus:outline-none"
+                                        :class="enabled ? 'bg-primary shadow-lg shadow-primary/30' : 'bg-slate-200'">
+                                    <span class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300"
+                                          :class="enabled ? 'translate-x-7' : 'translate-x-0'"></span>
+                                </button>
+                                <input type="hidden" name="show_on_homepage" :value="enabled ? '1' : '0'">
+                            </div>
+
+                            <!-- Sort Order (visible when enabled) -->
+                            <div x-show="enabled" x-collapse class="mt-6 pt-6 border-t border-slate-100">
+                                <div class="space-y-3 px-2">
+                                    <label class="text-[10px] font-black text-slate-400 tracking-[0.25em] uppercase ml-1 flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                                        Display Order
+                                    </label>
+                                    <div class="relative group">
+                                        <div class="absolute left-6 top-1/2 -translate-y-1/2 text-primary/30 group-focus-within:text-primary transition-all duration-300">
+                                            <i class="fas fa-sort-numeric-up text-xs"></i>
+                                        </div>
+                                        <input type="number"
+                                               name="homepage_sort_order"
+                                               value="{{ old('homepage_sort_order', 0) }}"
+                                               min="0"
+                                               class="w-full bg-white border border-slate-200/60 rounded-[1.5rem] py-5 pl-14 pr-8 outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-dark font-bold text-sm shadow-sm hover:border-slate-300"
+                                               placeholder="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="bg-dark rounded-[3rem] p-10 text-white relative overflow-hidden group border border-white/5 shadow-2xl">
                             <i class="fas fa-quote-left text-6xl text-white/5 absolute -top-4 -left-4"></i>
                             <h4 class="font-outfit text-xl font-bold mb-4 relative z-10">Curator's Note</h4>

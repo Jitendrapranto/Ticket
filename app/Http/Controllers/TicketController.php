@@ -30,7 +30,7 @@ class TicketController extends Controller
             }
         }
 
-        // Generate QR Code as a base64 PNG image (GD is now enabled)
+        // Generate QR Code for each attendee (unique per ticket)
         $qrOptions = new QROptions([
             'outputType'   => QRCode::OUTPUT_IMAGE_PNG,
             'eccLevel'     => QRCode::ECC_H,
@@ -38,7 +38,17 @@ class TicketController extends Controller
             'imageBase64'  => true,
             'addQuietzone' => true,
         ]);
-        $qrcode = (new QRCode($qrOptions))->render($booking->booking_id);
+        $qrGenerator = new QRCode($qrOptions);
+
+        // Main booking QR code
+        $qrcode = $qrGenerator->render($booking->booking_id);
+
+        // Per-attendee QR codes
+        $attendeeQRCodes = [];
+        foreach ($booking->attendees as $attendee) {
+            $qrData = $attendee->ticket_number ?? $booking->booking_id;
+            $attendeeQRCodes[$attendee->id] = $qrGenerator->render($qrData);
+        }
 
         // Prepare Event Banner Image as Base64 for PDF
         $eventImage = null;
@@ -79,9 +89,10 @@ class TicketController extends Controller
 
         // Generate PDF (A4)
         $pdf = Pdf::loadView('tickets.ticket', [
-            'booking'    => $booking,
-            'qrcode'     => $qrcode,
-            'eventImage' => $eventImage,
+            'booking'        => $booking,
+            'qrcode'         => $qrcode,
+            'eventImage'     => $eventImage,
+            'attendeeQRCodes' => $attendeeQRCodes,
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download('Ticket-' . $booking->booking_id . '.pdf');

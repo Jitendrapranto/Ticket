@@ -18,6 +18,14 @@ use App\Http\Controllers\Admin\AboutStatisticController;
 use App\Http\Controllers\Admin\AboutStoryController;
 use App\Http\Controllers\Admin\AboutAdvantageController;
 use App\Http\Controllers\Admin\AboutCtaController;
+use App\Http\Controllers\Admin\AboutHeroController;
+use App\Http\Controllers\Admin\PlatformFeatureController;
+use App\Models\PlatformFeature;
+use App\Http\Controllers\Admin\HomeMosaicController;
+use App\Models\HomeGallerySection;
+use App\Models\HomeMosaicImage;
+use App\Http\Controllers\Admin\HomeCtaController;
+use App\Models\HomeCtaSection;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 
@@ -57,11 +65,15 @@ Route::get('/', function () {
     $trendingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(4)->get();
     $upcomingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(6)->get();
     $pastEvents = Event::with('category')->where('is_approved', true)->where('date', '<', now())->orderBy('date', 'desc')->take(12)->get();
-    
-    return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData', 'pastEvents'));
+    $platformFeatures = PlatformFeature::active()->orderBy('sort_order')->get();
+    $gallerySection   = HomeGallerySection::first();
+    $homepageGalleryImages = GalleryImage::with('category')->homepage()->orderBy('homepage_sort_order')->latest()->get();
+    $ctaSection       = HomeCtaSection::first();
+
+    return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData', 'pastEvents', 'platformFeatures', 'gallerySection', 'homepageGalleryImages', 'ctaSection'));
 });
 
-Route::get('/events', function () {
+Route::get('/events', function (\Illuminate\Http\Request $request) {
     $hero = EventHero::first();
     $categories = EventCategory::withCount(['events' => function($q) {
         $q->where('status', 'Live')->where('is_approved', true);
@@ -73,14 +85,29 @@ Route::get('/events', function () {
         ->where('is_featured', true)
         ->orderBy('sort_order', 'asc')
         ->latest()->take(3)->get();
-        
-    $events = Event::with('category')
+
+    $eventsQuery = Event::with('category')
         ->where('status', 'Live')
-        ->where('is_approved', true)
-        ->orderBy('sort_order', 'asc')
-        ->latest()->paginate(12);
+        ->where('is_approved', true);
+
+    // Server-side search logic
+    $search = $request->input('search');
+
+    if ($search) {
+        $eventsQuery->where(function ($q) use ($search) {
+            $q->where('title', 'like', '%' . $search . '%')
+              ->orWhere('location', 'like', '%' . $search . '%')
+              ->orWhereHas('category', function ($cq) use ($search) {
+                  $cq->where('name', 'like', '%' . $search . '%');
+              });
+        });
+    }
+
+    $events = $eventsQuery->orderBy('sort_order', 'asc')
+        ->latest()->paginate(12)
+        ->appends(['search' => $search]);
         
-    return view('events', compact('hero', 'categories', 'events', 'featuredEvents'));
+    return view('events', compact('hero', 'categories', 'events', 'featuredEvents', 'search'));
 })->name('events');
 
 Route::get('/events/{slug}', function ($slug) {
@@ -110,11 +137,12 @@ Route::get('/gallery', function () {
 })->name('gallery');
 
 Route::get('/about', function () {
+    $hero       = \App\Models\AboutHero::first();
     $statistics = \App\Models\AboutStatistic::orderBy('sort_order', 'asc')->get();
     $story = \App\Models\AboutStory::first();
     $advantages = \App\Models\AboutAdvantage::orderBy('sort_order', 'asc')->get();
     $cta = \App\Models\AboutCta::first();
-    return view('about', compact('statistics', 'story', 'advantages', 'cta'));
+    return view('about', compact('hero', 'statistics', 'story', 'advantages', 'cta'));
 })->name('about');
 
 Route::get('/contact', function () {
@@ -152,6 +180,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/gallery/images/create', [GalleryController::class, 'create'])->name('gallery.images.create');
         Route::post('/gallery/images', [GalleryController::class, 'store'])->name('gallery.images.store');
         Route::delete('/gallery/images/{image}', [GalleryController::class, 'destroy'])->name('gallery.images.destroy');
+        Route::post('/gallery/images/{image}/toggle-homepage', [GalleryController::class, 'toggleHomepage'])->name('gallery.images.toggle-homepage');
 
         Route::resource('categories', EventCategoryController::class);
         Route::resource('events', EventController::class);
@@ -162,11 +191,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/about/story', [AboutStoryController::class, 'edit'])->name('about.story.edit');
         Route::put('/about/story', [AboutStoryController::class, 'update'])->name('about.story.update');
 
+        Route::get('/about/hero', [AboutHeroController::class, 'edit'])->name('about.hero.edit');
+        Route::put('/about/hero', [AboutHeroController::class, 'update'])->name('about.hero.update');
+
         Route::get('/about/cta', [AboutCtaController::class, 'edit'])->name('about.cta.edit');
         Route::put('/about/cta', [AboutCtaController::class, 'update'])->name('about.cta.update');
         
         Route::resource('about/statistics', AboutStatisticController::class)->names('about.statistics');
         Route::resource('about/advantages', AboutAdvantageController::class)->names('about.advantages');
+
+        Route::resource('home/features', PlatformFeatureController::class)->names('home.features');
+
+        Route::get('/home/mosaic', [HomeMosaicController::class, 'index'])->name('home.mosaic.index');
+        Route::put('/home/mosaic/section', [HomeMosaicController::class, 'updateSection'])->name('home.mosaic.update-section');
+        Route::post('/home/mosaic/images', [HomeMosaicController::class, 'storeImage'])->name('home.mosaic.store-image');
+        Route::delete('/home/mosaic/images/{image}', [HomeMosaicController::class, 'destroyImage'])->name('home.mosaic.destroy-image');
+        Route::get('/home/cta', [HomeCtaController::class, 'edit'])->name('home.cta.edit');
+        Route::put('/home/cta', [HomeCtaController::class, 'update'])->name('home.cta.update');
 
         Route::get('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'edit'])->name('contact.hero.edit');
         Route::put('/contact/hero', [\App\Http\Controllers\Admin\ContactHeroController::class, 'update'])->name('contact.hero.update');
@@ -194,6 +235,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class, 'update'])->name('finance.commission.update');
         Route::get('/finance/reports/sales', [\App\Http\Controllers\Admin\ReportController::class, 'sales'])->name('finance.reports.sales');
         Route::get('/finance/reports/sales/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportSales'])->name('finance.reports.sales.export');
+
+        // Site Header & Footer
+        Route::get('/site/header', [\App\Http\Controllers\Admin\SiteHeaderController::class, 'edit'])->name('site.header.edit');
+        Route::put('/site/header', [\App\Http\Controllers\Admin\SiteHeaderController::class, 'update'])->name('site.header.update');
+        Route::get('/site/footer', [\App\Http\Controllers\Admin\SiteFooterController::class, 'edit'])->name('site.footer.edit');
+        Route::put('/site/footer', [\App\Http\Controllers\Admin\SiteFooterController::class, 'update'])->name('site.footer.update');
     });
 });
 

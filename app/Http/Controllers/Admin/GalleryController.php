@@ -36,6 +36,8 @@ class GalleryController extends Controller
             'title' => $request->title,
             'category_id' => $request->category_id,
             'image_path' => $imagePath,
+            'show_on_homepage' => $request->input('show_on_homepage', 0) ? true : false,
+            'homepage_sort_order' => $request->input('homepage_sort_order', 0),
         ]);
 
         return redirect()->route('admin.gallery.images.index')->with('success', 'Image added to gallery successfully!');
@@ -49,5 +51,14 @@ class GalleryController extends Controller
         $image->delete();
 
         return back()->with('success', 'Image removed from gallery!');
+    }
+
+    public function toggleHomepage(GalleryImage $image)
+    {
+        $image->show_on_homepage = !$image->show_on_homepage;
+        $image->save();
+
+        $status = $image->show_on_homepage ? 'added to' : 'removed from';
+        return back()->with('success', "Image \"{$image->title}\" has been {$status} the homepage gallery!");
     }
 }
