@@ -8,42 +8,37 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="relative flex flex-col lg:flex-row items-stretch gap-6 h-auto lg:h-[480px]">
 
-                <!-- Main Slider Container -->
-                <div class="flex-1 relative group rounded-[2.5rem] overflow-hidden shadow-premium border border-slate-50 bg-white">
+                <!-- Left Side: Featured Event Banner Only -->
+                <div class="flex-1 relative group rounded-[2.5rem] overflow-hidden shadow-premium border border-slate-50">
                     <div id="hero-slider" class="flex h-full transition-transform duration-700 ease-in-out">
                         @forelse($featuredEvents as $event)
-                        <div class="min-w-full h-full relative bg-dark overflow-hidden">
+                        <div class="min-w-full h-full relative overflow-hidden">
                             @if($event->image)
-                                <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover opacity-50">
+                                <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             @else
-                                <div class="w-full h-full bg-primary/10"></div>
-                            @endif
-                            <div class="absolute inset-0 flex flex-col justify-center px-12 md:px-20">
-                                <span class="bg-accent/20 text-accent px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase w-fit mb-6">FEATURED EXPERIENCE</span>
-                                <h2 class="text-white font-outfit text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">{{ $event->title }}</h2>
-                                <div class="flex flex-wrap gap-4 mb-10">
-                                    <div class="flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
-                                        <i class="fas fa-calendar-alt text-accent"></i> {{ $event->date->format('d M, Y') }}
-                                    </div>
-                                    <div class="flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
-                                        <i class="fas fa-map-marker-alt text-primary"></i> {{ $event->location }}
-                                    </div>
+                                <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/30 flex items-center justify-center">
+                                    <i class="fas fa-calendar-star text-6xl text-primary/30"></i>
                                 </div>
-                                <a href="{{ route('events') }}" class="bg-white text-dark px-10 py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-primary hover:text-white transition-all w-fit uppercase flex items-center gap-3">
-                                    Book Your Seat <i class="fas fa-arrow-right text-[8px]"></i>
-                                </a>
+                            @endif
+                            
+                            <!-- Featured Tag -->
+                            <div class="absolute top-6 left-6 z-10">
+                                <span class="bg-primary text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg flex items-center gap-2">
+                                    <i class="fas fa-star text-[8px]"></i> FEATURED
+                                </span>
                             </div>
+
+                            <!-- Subtle Gradient Overlay at Bottom -->
+                            <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent"></div>
                         </div>
                         @empty
-                        <!-- Fallback Slide -->
-                        <div class="min-w-full h-full relative flex items-center bg-white overflow-hidden">
+                        <!-- Fallback when no featured events -->
+                        <div class="min-w-full h-full relative flex items-center bg-gradient-to-br from-primary/10 to-secondary/20 overflow-hidden">
                             <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/islamic-exercise.png')]"></div>
-                            <div class="relative z-10 w-full px-12 md:px-20 text-center flex flex-col items-center">
-                                <h1 class="font-outfit text-5xl md:text-7xl font-black text-dark tracking-tighter leading-none mb-8">
-                                    <span class="text-accent">Ticket Kinun</span> <br>
-                                    <span class="text-primary">Official 2026</span>
-                                </h1>
-                                <a href="{{ route('events') }}" class="bg-dark text-white px-10 py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-primary transition-all w-fit uppercase">Explore Events</a>
+                            <div class="relative z-10 w-full text-center flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-calendar-star text-6xl text-primary/30 mb-6"></i>
+                                <h3 class="font-outfit text-2xl font-black text-dark/60">No Featured Events</h3>
+                                <p class="text-slate-400 text-sm mt-2">Check back soon for exciting events!</p>
                             </div>
                         </div>
                         @endforelse
@@ -60,60 +55,73 @@
 
                     <!-- Indicators -->
                     <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                        @foreach($featuredEvents as $index => $event)
-                        <div class="hero-dot w-8 h-1 {{ $index === 0 ? 'bg-primary' : 'bg-slate-200' }} rounded-full transition-all cursor-pointer"></div>
+                        @foreach($featuredEvents as $index => $evt)
+                        <div class="hero-dot w-8 h-1 {{ $index === 0 ? 'bg-white' : 'bg-white/40' }} rounded-full transition-all cursor-pointer hover:bg-white"></div>
                         @endforeach
                     </div>
                     @endif
                 </div>
 
-                <!-- Secondary Card: CTA -->
-                <div class="lg:w-[380px] bg-dark rounded-[2.5rem] p-10 flex flex-col justify-between relative overflow-hidden group shadow-premium animate-fadeInUp" style="animation-delay: 0.2s">
+                <!-- Right Side: Event Details Card -->
+                <div class="lg:w-[380px] bg-white rounded-[2.5rem] p-10 flex flex-col justify-between relative overflow-hidden group shadow-premium border border-slate-100 animate-fadeInUp" style="animation-delay: 0.2s">
                     <div class="relative z-10 h-full flex flex-col">
-                        <span class="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-4 block">Quick Overview</span>
+                        <span class="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-6 block">Quick Overview</span>
+                        
                         @if($featuredEvents->count() > 0)
                         <div id="overview-card" class="flex-1 flex flex-col">
-                            <h2 id="overview-title" class="font-outfit text-3xl md:text-4xl font-black text-white leading-tight mb-8 tracking-tight transition-all duration-500">
+                            <h2 id="overview-title" class="font-outfit text-3xl md:text-4xl font-black text-dark leading-tight mb-8 tracking-tight transition-all duration-500">
                                 {{ $featuredEvents[0]->title }}
                             </h2>
 
-                            <div class="space-y-4 mb-10 text-left">
+                            <div class="space-y-5 mb-10 text-left">
                                 <div class="flex items-center gap-4 group/item">
-                                    <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover/item:border-primary/30 transition-all">
-                                        <i class="fas fa-calendar-alt text-xs text-primary"></i>
+                                    <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary/20 transition-all">
+                                        <i class="fas fa-calendar-alt text-sm text-primary"></i>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Date</span>
-                                        <span id="overview-date" class="text-xs font-bold text-slate-200 tracking-wide">{{ strtoupper($featuredEvents[0]->date->format('d M, Y')) }}</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">Date</span>
+                                        <span id="overview-date" class="text-sm font-bold text-dark tracking-wide">{{ strtoupper($featuredEvents[0]->date->format('d M, Y')) }}</span>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center gap-4 group/item">
-                                    <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover/item:border-accent/30 transition-all">
-                                        <i class="fas fa-map-marker-alt text-xs text-accent"></i>
+                                    <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center group-hover/item:bg-accent/20 transition-all">
+                                        <i class="fas fa-map-marker-alt text-sm text-accent"></i>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Location</span>
-                                        <span id="overview-location" class="text-xs font-bold text-slate-200 tracking-wide">{{ strtoupper($featuredEvents[0]->location) }}</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">Location</span>
+                                        <span id="overview-location" class="text-sm font-bold text-dark tracking-wide">{{ strtoupper($featuredEvents[0]->location) }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @else
-                        <h2 class="font-outfit text-3xl font-black text-white mb-8 tracking-tight">Stay tuned for <span class="text-primary">new thrills.</span></h2>
-                        @endif
-
-                        <a href="{{ route('events') }}" class="group/btn relative inline-flex items-center gap-3 bg-white/5 border border-white/10 backdrop-blur w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary hover:border-primary transition-all overflow-hidden justify-center text-white mt-auto">
+                        
+                        <!-- Book Your Seat Button -->
+                        <a href="{{ route('events.show', $featuredEvents[0]->slug) }}" id="overview-book-btn" data-slug="{{ $featuredEvents[0]->slug }}" class="group/btn relative inline-flex items-center gap-3 bg-dark w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-premium">
                             <span class="relative z-10 flex items-center gap-3">
-                                Explore All Events
-                                <i class="fas fa-angles-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
+                                Book Your Seat
+                                <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                             </span>
                         </a>
+                        @else
+                        <div class="flex-1 flex flex-col items-center justify-center text-center">
+                            <i class="fas fa-calendar-xmark text-4xl text-slate-200 mb-4"></i>
+                            <h2 class="font-outfit text-2xl font-black text-dark mb-3 tracking-tight">No Events Yet</h2>
+                            <p class="text-slate-400 text-sm mb-8">Stay tuned for upcoming featured events.</p>
+                        </div>
+                        
+                        <a href="{{ route('events') }}" class="group/btn relative inline-flex items-center gap-3 bg-dark w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-premium">
+                            <span class="relative z-10 flex items-center gap-3">
+                                Explore All Events
+                                <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
+                            </span>
+                        </a>
+                        @endif
                     </div>
 
-                    <!-- Decorative Element -->
-                    <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
-                    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] pointer-events-none"></div>
+                    <!-- Decorative Elements -->
+                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-16 -top-16 w-48 h-48 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
                 </div>
             </div>
         </div>
@@ -121,125 +129,155 @@
 
 
 
-    <!-- Trending Now - App-Style Layout -->
-    <section id="trending" class="py-24 bg-[#E4EDF7]">
+    <!-- Featured Events Carousel Section -->
+    <section id="trending" class="py-24 bg-[#E4EDF7] overflow-hidden">
+        <!-- Header aligned with main container -->
+        <div class="max-w-7xl mx-auto px-6 mb-12">
+            <div>
+                <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">Featured <span class="text-primary">Events</span></h2>
+                <p class="text-slate-400 font-medium tracking-wide">The hottest tickets in town, updated every minute.</p>
+            </div>
+        </div>
+
+        <!-- Carousel Container - Full width with proper inner alignment -->
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-end justify-between mb-16 px-4">
-                <div>
-                    <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">Trending <span>Events</span></h2>
-                    <p class="text-slate-400 font-medium tracking-wide">The hottest tickets in town, updated every minute.</p>
-                </div>
-                <div class="flex gap-3">
-                    <button class="w-12 h-12 rounded-2xl border border-slate-100 flex items-center justify-center hover:bg-dark hover:text-white transition-all"><i class="fas fa-chevron-left text-xs"></i></button>
-                    <button class="w-12 h-12 rounded-2xl border border-slate-100 flex items-center justify-center hover:bg-dark hover:text-white transition-all"><i class="fas fa-chevron-right text-xs"></i></button>
+            <div class="overflow-hidden">
+                <div id="featured-carousel" class="flex transition-transform duration-500 ease-out gap-6">
+                    @forelse($featuredEvents as $index => $event)
+                    <a href="{{ route('events.show', $event->slug) }}" class="featured-card shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group bg-white rounded-[2rem] p-5 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col border border-slate-100">
+                        <!-- Image Section -->
+                        <div class="relative h-52 rounded-[1.5rem] overflow-hidden bg-slate-100 shrink-0">
+                            @if($event->image)
+                                <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center text-slate-200">
+                                    <i class="fas fa-image text-4xl"></i>
+                                </div>
+                            @endif
+
+                            <!-- Overlays -->
+                            <div class="absolute inset-x-4 top-4 flex justify-between items-start">
+                                <span class="px-4 py-2 bg-primary rounded-xl text-[10px] font-black text-white tracking-wider uppercase shadow-lg">
+                                    {{ $event->category ? $event->category->name : 'Featured' }}
+                                </span>
+                                <span class="px-4 py-2 bg-emerald-500 rounded-xl text-[10px] font-black text-white tracking-wider flex items-center gap-2 shadow-lg">
+                                    <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                                    Live Now
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Details Section -->
+                        <div class="mt-5 flex flex-col flex-1 px-1">
+                            <h3 class="font-outfit text-xl font-black text-dark mb-5 leading-tight group-hover:text-primary transition-colors line-clamp-1">
+                                {{ $event->title }}
+                            </h3>
+
+                            <div class="flex items-start gap-4 mb-5">
+                                <!-- Date Card -->
+                                <div class="shrink-0 w-14 h-18 bg-primary rounded-xl flex flex-col items-center justify-center text-white shadow-md shadow-primary/20 overflow-hidden">
+                                    <span class="text-xl font-black leading-none">{{ $event->date->format('d') }}</span>
+                                    <span class="text-[9px] font-bold uppercase tracking-wider text-white/80">{{ $event->date->format('M') }}</span>
+                                    <span class="text-[8px] font-medium text-white/60">{{ $event->date->format('Y') }}</span>
+                                </div>
+
+                                <!-- Info List -->
+                                <div class="flex flex-col gap-2 pt-1 overflow-hidden flex-1">
+                                    <div class="flex items-start gap-2 text-slate-600 leading-tight">
+                                        <i class="fas fa-map-marker-alt text-xs mt-0.5 text-red-500"></i>
+                                        <span class="text-xs font-semibold line-clamp-1">{{ $event->location }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-slate-500">
+                                        <i class="fas fa-tag text-xs text-emerald-500"></i>
+                                        <span class="text-xs font-semibold">Starts from <span class="text-dark font-black">৳ {{ number_format($event->price, 0) }}</span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Spacer -->
+                            <div class="flex-1 min-h-2"></div>
+
+                            <span class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-secondary text-white font-black text-[10px] tracking-[0.15em] uppercase transition-all group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-translate-y-1">
+                                Book Your Seat <i class="fas fa-arrow-right text-[9px]"></i>
+                            </span>
+                        </div>
+                    </a>
+                    @empty
+                    <div class="w-full py-20 text-center">
+                        <i class="fas fa-calendar-xmark text-5xl text-slate-200 mb-4"></i>
+                        <p class="text-slate-400 font-bold uppercase tracking-widest">No featured events at the moment.</p>
+                    </div>
+                    @endforelse
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                @forelse($trendingEvents as $event)
-                <div class="group bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-slate-50">
+            <!-- Mobile Navigation Dots -->
+            <div class="flex md:hidden justify-center gap-2 mt-8">
+                @for($i = 0; $i < min(ceil($featuredEvents->count()), 3); $i++)
+                <button class="featured-dot w-3 h-3 rounded-full {{ $i === 0 ? 'bg-primary' : 'bg-slate-300' }} transition-all"></button>
+                @endfor
+            </div>
+
+            <!-- View All Link -->
+            <div class="flex justify-center mt-10">
+                <a href="{{ route('events') }}" class="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-2xl text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all shadow-md border border-slate-100">
+                    View All Events <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Events Section -->
+    <section class="py-24 bg-[#F1F5F9]" x-data="{ activeCategory: 'all' }">
+        <div class="max-w-7xl mx-auto px-6">
+            <!-- Header with Filters -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+                <div>
+                    <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">All <span class="text-primary">Events</span></h2>
+                    <p class="text-slate-400 font-medium tracking-wide">Explore our full library of experiences across every category.</p>
+                </div>
+                <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                    <button @click="activeCategory = 'all'" 
+                            :class="activeCategory === 'all' ? 'bg-dark text-white border-dark shadow-lg' : 'bg-white text-slate-500 border-slate-200 hover:border-dark hover:text-dark'"
+                            class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
+                        ALL
+                    </button>
+                    @foreach(\App\Models\EventCategory::all() as $category)
+                    <button @click="activeCategory = '{{ strtolower($category->name) }}'" 
+                            :class="activeCategory === '{{ strtolower($category->name) }}' ? 'bg-dark text-white border-dark shadow-lg' : 'bg-white text-slate-500 border-slate-200 hover:border-dark hover:text-dark'"
+                            class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
+                        {{ strtoupper($category->name) }}
+                    </button>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Events Grid - 3 cards per row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                @forelse($upcomingEvents as $event)
+                <a href="{{ route('events.show', $event->slug) }}" 
+                   x-show="activeCategory === 'all' || activeCategory === '{{ $event->category ? strtolower($event->category->name) : 'general' }}'"
+                   x-transition:enter="transition ease-out duration-300"
+                   x-transition:enter-start="opacity-0 transform scale-95"
+                   x-transition:enter-end="opacity-100 transform scale-100"
+                   class="group bg-white rounded-[2rem] p-5 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col border border-slate-100">
                     <!-- Image Section -->
-                    <div class="relative h-64 rounded-[1.5rem] overflow-hidden bg-slate-100 shrink-0">
+                    <div class="relative h-52 rounded-[1.5rem] overflow-hidden bg-slate-100 shrink-0">
                         @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         @else
-                            <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200">
+                            <div class="w-full h-full bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center text-slate-200">
                                 <i class="fas fa-image text-4xl"></i>
                             </div>
                         @endif
 
                         <!-- Overlays -->
                         <div class="absolute inset-x-4 top-4 flex justify-between items-start">
-                            <span class="px-3 py-1.5 bg-black/30 backdrop-blur-md rounded-lg text-[10px] font-bold text-white tracking-tight uppercase">
-                                {{ $event->category ? $event->category->name : 'TRENDING' }}
-                            </span>
-                            <span class="px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-lg text-[10px] font-bold text-white tracking-tight flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                                Live Now
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Details Section -->
-                    <div class="mt-6 flex flex-col flex-1 px-1">
-                        <h3 class="font-outfit text-xl font-black text-dark mb-5 leading-tight group-hover:text-primary transition-colors line-clamp-1">
-                            {{ $event->title }}
-                        </h3>
-
-                        <div class="flex items-start gap-4 mb-6">
-                            <!-- Date Card -->
-                            <div class="shrink-0 w-14 h-14 bg-dark rounded-2xl flex flex-col items-center justify-center text-white shadow-lg shadow-dark/10">
-                                <span class="text-xl font-black leading-none">{{ $event->date->format('d') }}</span>
-                                <span class="text-[9px] font-bold uppercase tracking-wider text-white/60">{{ $event->date->format('M') }}</span>
-                            </div>
-
-                            <!-- Info List -->
-                            <div class="flex flex-col gap-2 pt-1 overflow-hidden">
-                                <div class="flex items-start gap-2 text-slate-500 leading-tight">
-                                    <i class="fas fa-map-marker-alt text-[10px] mt-1 text-green-500"></i>
-                                    <span class="text-[12px] font-bold truncate uppercase tracking-tighter">{{ $event->location }}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-slate-400">
-                                    <i class="fas fa-tag text-[10px] text-lime-500 rotate-90"></i>
-                                    <span class="text-[11px] font-medium">Starts from <span class="text-dark font-black tracking-tighter">৳ {{ number_format($event->price, 0) }}</span></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Spacer for flex grow -->
-                        <div class="flex-1 min-h-[10px]"></div>
-
-                        <a href="#" class="w-full flex items-center justify-center py-4 rounded-2xl bg-slate-50 border border-slate-100 text-dark font-black text-[10px] tracking-[0.3em] uppercase transition-all hover:bg-dark hover:text-white hover:border-dark group-hover:translate-y-[-4px]">
-                            BOOK SITE
-                        </a>
-                    </div>
-                </div>
-                @empty
-                <div class="col-span-full py-20 text-center">
-                    <p class="text-slate-400 font-bold uppercase tracking-widest">No trending events at the moment.</p>
-                </div>
-                @endforelse
-            </div>
-        </div>
-    </section>
-
-    <!-- All Events Section -->
-    <section class="py-24 bg-[#F1F5F9]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-10 mb-20 px-4">
-                <div class="max-w-md">
-                    <h2 class="font-outfit text-5xl font-black text-dark mb-4 tracking-tighter">All <span>Events</span></h2>
-                    <p class="text-slate-400 font-medium tracking-wide">Explore our full library of experiences across every category.</p>
-                </div>
-                <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
-                    @foreach(['All', 'Movies', 'Music', 'Sports', 'Theater', 'Workshops'] as $cat)
-                        <button class="px-8 py-3 glass rounded-full font-black text-xs tracking-widest transition-all {{ $loop->first ? 'bg-dark text-white border-dark shadow-lg shadow-dark/10' : 'text-slate-400 hover:text-dark hover:border-slate-200' }}">
-                            {{ strtoupper($cat) }}
-                        </button>
-                    @endforeach
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-20">
-                @forelse($upcomingEvents as $event)
-                <div class="group bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-slate-50">
-                    <!-- Image Section -->
-                    <div class="relative h-56 rounded-[1.5rem] overflow-hidden bg-slate-100 shrink-0">
-                        @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        @else
-                            <div class="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
-                                <i class="fas fa-image text-3xl"></i>
-                            </div>
-                        @endif
-
-                        <!-- Overlays -->
-                        <div class="absolute inset-x-4 top-4 flex justify-between items-start">
-                            <span class="px-2.5 py-1 bg-black/30 backdrop-blur-md rounded-lg text-[9px] font-bold text-white tracking-tight">
+                            <span class="px-4 py-2 bg-primary rounded-xl text-[10px] font-black text-white tracking-wider uppercase shadow-lg">
                                 {{ $event->category ? $event->category->name : 'General' }}
                             </span>
-                            <span class="px-2.5 py-1 bg-black/40 backdrop-blur-md rounded-lg text-[9px] font-bold text-white tracking-tight flex items-center gap-1.5">
-                                <span class="w-1 h-1 bg-green-500 rounded-full animate-pulse"></span>
+                            <span class="px-4 py-2 bg-emerald-500 rounded-xl text-[10px] font-black text-white tracking-wider flex items-center gap-2 shadow-lg">
+                                <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                                 Live Now
                             </span>
                         </div>
@@ -247,98 +285,128 @@
 
                     <!-- Details Section -->
                     <div class="mt-5 flex flex-col flex-1 px-1">
-                        <h4 class="font-outfit text-[16px] font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors line-clamp-1">
+                        <h3 class="font-outfit text-xl font-black text-dark mb-5 leading-tight group-hover:text-primary transition-colors line-clamp-1">
                             {{ $event->title }}
-                        </h4>
+                        </h3>
 
-                        <div class="flex items-start gap-3">
+                        <div class="flex items-start gap-4 mb-5">
                             <!-- Date Card -->
-                            <div class="shrink-0 w-12 h-12 bg-dark rounded-xl flex flex-col items-center justify-center text-white shadow-lg shadow-dark/10">
-                                <span class="text-lg font-black leading-none">{{ $event->date->format('d') }}</span>
-                                <span class="text-[8px] font-bold uppercase tracking-wider text-white/50">{{ $event->date->format('M') }}</span>
+                            <div class="shrink-0 w-14 h-18 bg-primary rounded-xl flex flex-col items-center justify-center text-white shadow-md shadow-primary/20 overflow-hidden">
+                                <span class="text-xl font-black leading-none">{{ $event->date->format('d') }}</span>
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-white/80">{{ $event->date->format('M') }}</span>
+                                <span class="text-[8px] font-medium text-white/60">{{ $event->date->format('Y') }}</span>
                             </div>
 
                             <!-- Info List -->
-                            <div class="flex flex-col gap-1.5 pt-0.5">
-                                <div class="flex items-start gap-2 text-slate-500 leading-tight">
-                                    <i class="fas fa-map-marker-alt text-[9px] mt-0.5 text-green-500"></i>
-                                    <span class="text-[11px] font-bold line-clamp-1 uppercase tracking-tighter">{{ $event->location }}</span>
+                            <div class="flex flex-col gap-2 pt-1 overflow-hidden flex-1">
+                                <div class="flex items-start gap-2 text-slate-600 leading-tight">
+                                    <i class="fas fa-map-marker-alt text-xs mt-0.5 text-red-500"></i>
+                                    <span class="text-xs font-semibold line-clamp-1">{{ $event->location }}</span>
                                 </div>
-                                <div class="flex items-center gap-2 text-slate-400">
-                                    <i class="fas fa-tag text-[9px] text-lime-500 rotate-90"></i>
-                                    <span class="text-[10px] font-medium">Price starts from <span class="text-dark font-black tracking-tighter">৳ {{ number_format($event->price, 0) }}</span></span>
+                                <div class="flex items-center gap-2 text-slate-500">
+                                    <i class="fas fa-tag text-xs text-emerald-500"></i>
+                                    <span class="text-xs font-semibold">Starts from <span class="text-dark font-black">৳ {{ number_format($event->price, 0) }}</span></span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Spacer for flex grow -->
-                        <div class="flex-1 min-h-[15px]"></div>
+                        <!-- Spacer -->
+                        <div class="flex-1 min-h-2"></div>
 
-                        <a href="#" class="mt-4 w-full flex items-center justify-center py-3 rounded-xl bg-slate-50 border border-slate-100 text-dark font-black text-[9px] tracking-[0.2em] uppercase transition-all hover:bg-dark hover:text-white hover:border-dark group-hover:translate-y-[-2px]">
-                            BOOK NOW
-                        </a>
+                        <span class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-secondary text-white font-black text-[10px] tracking-[0.15em] uppercase transition-all group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-translate-y-1">
+                            Book Your Seat <i class="fas fa-arrow-right text-[9px]"></i>
+                        </span>
                     </div>
-                </div>
+                </a>
                 @empty
                 <div class="col-span-full py-20 text-center">
+                    <i class="fas fa-calendar-xmark text-5xl text-slate-200 mb-4"></i>
                     <p class="text-slate-400 font-bold uppercase tracking-widest">More experiences coming soon.</p>
                 </div>
                 @endforelse
             </div>
 
-            <div class="text-center">
-                <a href="#" class="inline-flex items-center gap-3 px-12 py-5 border-2 border-slate-100 rounded-2xl font-black text-xs tracking-widest hover:border-dark transition-all group">
-                    VIEW ALL EXPERIENCES <i class="fas fa-chevron-right text-[8px] group-hover:translate-x-2 transition-transform"></i>
+            <!-- View All Link -->
+            <div class="flex justify-center">
+                <a href="{{ route('events') }}" class="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-2xl text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all shadow-md border border-slate-100">
+                    View All Events <i class="fas fa-arrow-right text-xs"></i>
                 </a>
             </div>
         </div>
     </section>
 
-     <!-- Flagship Events Review Section -->
+    <!-- Past Signature Events Section -->
+    @if($pastEvents->count() > 0)
     <section class="py-24 bg-[#E4EDF7] overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-left font-outfit text-4xl md:text-5xl font-black text-dark mb-6 tracking-tight">
+            <div class="mb-12">
+                <span class="text-primary font-black tracking-[0.3em] text-[10px] uppercase mb-3 block">LEGACY</span>
+                <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">
                     Past Signature Events
                 </h2>
-                <p class="text-left text-slate-400 text-lg font-light max-w-3xl">
-                   A legacy of flawlessly executed events, powered by Ticket Kinun
+                <p class="text-slate-400 font-medium tracking-wide">
+                    A legacy of flawlessly executed events, powered by Ticket Kinun
                 </p>
             </div>
 
-            <div class="relative pause-on-hover">
+            <!-- Marquee Row -->
+            <div class="relative" x-data="{ paused: false }">
                 <div class="overflow-hidden">
-                    <!-- Consolidated Single Row Marquee -->
-                    <div class="flex gap-6 animate-marquee whitespace-nowrap">
-                        @php
-                            $allPosters = [
-                                ['img' => 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&q=80', 'title' => 'Neon Nights'],
-                                ['img' => 'https://images.unsplash.com/photo-1514525253344-f814d0c9e583?auto=format&fit=crop&w=600&q=80', 'title' => 'DJ Summit'],
-                                ['img' => 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80', 'title' => 'Electronic Live'],
-                                ['img' => 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80', 'title' => 'Festivus 2024'],
-                                ['img' => 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=600&q=80', 'title' => 'Rock Arena'],
-                                ['img' => 'https://images.unsplash.com/photo-1453086411400-d12555627680?auto=format&fit=crop&w=600&q=80', 'title' => 'Gala Night'],
-                                ['img' => 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=600&q=80', 'title' => 'Stage Flow'],
-                                ['img' => 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=600&q=80', 'title' => 'Stadium Jam'],
-                                ['img' => 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&q=80', 'title' => 'Club Beats'],
-                                ['img' => 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=600&q=80', 'title' => 'Techno Wave'],
-                                ['img' => 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&w=600&q=80', 'title' => 'Crowd Pulse'],
-                                ['img' => 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80', 'title' => 'Pro Arena'],
-                            ];
-                        @endphp
-                        @foreach(array_merge($allPosters, $allPosters) as $poster)
-                            <div class="min-w-[300px] h-[200px] rounded-[2rem] overflow-hidden shadow-lg border border-slate-100 flex-shrink-0 group relative cursor-pointer">
-                                <img src="{{ $poster['img'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                                    <h4 class="text-white font-black text-xl">{{ $poster['title'] }}</h4>
+                    <div class="flex gap-6" :class="paused ? 'animate-none' : 'animate-marquee'"
+                         @mouseenter="paused = true" @mouseleave="paused = false"
+                         style="width: max-content">
+                        @php $marqueeItems = $pastEvents->concat($pastEvents); @endphp
+                        @foreach($marqueeItems as $past)
+                        <a href="{{ route('events.show', $past->slug) }}"
+                           class="shrink-0 w-72 h-52 rounded-[2rem] overflow-hidden shadow-md group relative cursor-pointer block">
+                            @if($past->image)
+                                <img src="{{ asset('storage/' . $past->image) }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $past->title }}">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/40 flex items-center justify-center">
+                                    <i class="fas fa-image text-4xl text-white/30"></i>
                                 </div>
+                            @endif
+                            <!-- Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                                <span class="text-[9px] font-black text-white/70 uppercase tracking-widest mb-1">{{ $past->category ? $past->category->name : 'Event' }}</span>
+                                <h4 class="text-white font-black text-base leading-tight line-clamp-2">{{ $past->title }}</h4>
+                                <span class="text-white/60 text-[10px] font-semibold mt-1">{{ $past->date->format('d M, Y') }}</span>
                             </div>
+                            <!-- Always-visible date badge -->
+                            <div class="absolute top-4 left-4 bg-black/40 backdrop-blur-md rounded-xl px-3 py-1.5">
+                                <span class="text-white text-[10px] font-black uppercase tracking-wide">{{ $past->date->format('M Y') }}</span>
+                            </div>
+                            <!-- Category badge -->
+                            <div class="absolute top-4 right-4 bg-primary/80 backdrop-blur-md rounded-xl px-3 py-1.5">
+                                <span class="text-white text-[9px] font-black uppercase tracking-wide">{{ $past->category ? $past->category->name : 'Event' }}</span>
+                            </div>
+                        </a>
                         @endforeach
                     </div>
                 </div>
             </div>
+
+            <!-- Grid view for mobile -->
+            <div class="grid grid-cols-2 md:hidden gap-4 mt-8">
+                @foreach($pastEvents->take(4) as $past)
+                <a href="{{ route('events.show', $past->slug) }}" class="rounded-2xl overflow-hidden h-40 group relative block">
+                    @if($past->image)
+                        <img src="{{ asset('storage/' . $past->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ $past->title }}">
+                    @else
+                        <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/40 flex items-center justify-center">
+                            <i class="fas fa-image text-3xl text-white/30"></i>
+                        </div>
+                    @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-3">
+                        <h4 class="text-white font-black text-xs line-clamp-2">{{ $past->title }}</h4>
+                        <span class="text-white/60 text-[9px] font-semibold">{{ $past->date->format('d M, Y') }}</span>
+                    </div>
+                </a>
+                @endforeach
+            </div>
         </div>
     </section>
+    @endif
 
     <!-- Coming Soon Section -->
     <section class="py-24 bg-[#F1F5F9]">
@@ -499,6 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const overviewTitle = document.getElementById('overview-title');
     const overviewDate = document.getElementById('overview-date');
     const overviewLocation = document.getElementById('overview-location');
+    const bookBtn = document.getElementById('overview-book-btn');
 
     let currentSlide = 0;
     const slideCount = {{ $featuredEvents->count() }};
@@ -506,6 +575,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (slideCount <= 0) return;
 
     const slideData = @json($slideData);
+    const baseUrl = '{{ url("/events") }}';
 
     function updateSlider() {
         slider.style.transform = `translateX(-${currentSlide * 100}%)`;
@@ -513,11 +583,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update Swipe Dots
         dots.forEach((dot, index) => {
             if (index === currentSlide) {
-                dot.classList.replace('bg-slate-200', 'bg-primary');
-                dot.classList.add('w-8');
+                dot.classList.remove('bg-white/40');
+                dot.classList.add('bg-white');
             } else {
-                dot.classList.replace('bg-primary', 'bg-slate-200');
-                dot.classList.remove('w-8');
+                dot.classList.remove('bg-white');
+                dot.classList.add('bg-white/40');
             }
         });
 
@@ -530,6 +600,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 overviewTitle.innerHTML = slideData[currentSlide].title;
                 overviewDate.innerText = slideData[currentSlide].date;
                 overviewLocation.innerText = slideData[currentSlide].location;
+                
+                // Update Book Your Seat button URL
+                if (bookBtn && slideData[currentSlide].slug) {
+                    bookBtn.href = baseUrl + '/' + slideData[currentSlide].slug;
+                }
 
                 overviewTitle.style.opacity = '1';
                 overviewTitle.style.transform = 'translateY(0)';
@@ -557,6 +632,120 @@ document.addEventListener('DOMContentLoaded', function() {
             currentSlide = (currentSlide + 1) % slideCount;
             updateSlider();
         }, 6000);
+    }
+
+    // Featured Events Carousel - Auto Slide
+    const featuredCarousel = document.getElementById('featured-carousel');
+    const featuredCards = document.querySelectorAll('.featured-card');
+    const featuredDots = document.querySelectorAll('.featured-dot');
+    
+    if (featuredCarousel && featuredCards.length > 0) {
+        let featuredIndex = 0;
+        const totalCards = featuredCards.length;
+        let autoSlideInterval;
+        
+        // Get cards per view based on screen size
+        function getCardsPerView() {
+            if (window.innerWidth >= 1024) return 3; // lg
+            if (window.innerWidth >= 768) return 2;  // md
+            return 1; // mobile
+        }
+        
+        let cardsPerView = getCardsPerView();
+        
+        function getMaxIndex() {
+            return Math.max(0, totalCards - getCardsPerView());
+        }
+        
+        function updateFeaturedCarousel() {
+            const cardWidth = featuredCards[0].offsetWidth;
+            const gap = 24; // 1.5rem gap
+            const offset = featuredIndex * (cardWidth + gap);
+            featuredCarousel.style.transform = `translateX(-${offset}px)`;
+            
+            // Update dots for mobile
+            featuredDots.forEach((dot, i) => {
+                if (i === featuredIndex) {
+                    dot.classList.remove('bg-slate-300');
+                    dot.classList.add('bg-primary');
+                } else {
+                    dot.classList.remove('bg-primary');
+                    dot.classList.add('bg-slate-300');
+                }
+            });
+        }
+        
+        // Auto slide function
+        function autoSlide() {
+            const maxIndex = getMaxIndex();
+            if (featuredIndex < maxIndex) {
+                featuredIndex++;
+            } else {
+                featuredIndex = 0; // Loop back to start
+            }
+            updateFeaturedCarousel();
+        }
+        
+        // Start auto sliding
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(autoSlide, 3000); // Slide every 3 seconds
+        }
+        
+        // Pause on hover
+        featuredCarousel.addEventListener('mouseenter', () => {
+            clearInterval(autoSlideInterval);
+        });
+        
+        featuredCarousel.addEventListener('mouseleave', () => {
+            startAutoSlide();
+        });
+        
+        // Handle dot clicks on mobile
+        featuredDots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                featuredIndex = Math.min(i, getMaxIndex());
+                updateFeaturedCarousel();
+                // Reset auto slide timer
+                clearInterval(autoSlideInterval);
+                startAutoSlide();
+            });
+        });
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+            cardsPerView = getCardsPerView();
+            featuredIndex = Math.min(featuredIndex, getMaxIndex());
+            updateFeaturedCarousel();
+        });
+        
+        // Initialize
+        updateFeaturedCarousel();
+        startAutoSlide();
+        
+        // Touch/Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        featuredCarousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            clearInterval(autoSlideInterval);
+        }, { passive: true });
+        
+        featuredCarousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            const maxIndex = getMaxIndex();
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && featuredIndex < maxIndex) {
+                    featuredIndex++;
+                } else if (diff < 0 && featuredIndex > 0) {
+                    featuredIndex--;
+                }
+                updateFeaturedCarousel();
+            }
+            startAutoSlide();
+        }, { passive: true });
     }
 });
 </script>

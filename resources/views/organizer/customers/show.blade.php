@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Profile | Organizer Insights</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -34,6 +39,13 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F8FAFC; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="text-slate-800">
 
@@ -68,7 +80,7 @@
                         </div>
                         <h3 class="font-outfit text-3xl font-black text-dark tracking-tight mb-2">{{ $user->name }}</h3>
                         <p class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-6">Confirmed Attendee</p>
-                        
+
                         <div class="flex items-center justify-center gap-2">
                             <span class="px-5 py-2 bg-slate-50 text-slate-400 text-[9px] font-black rounded-xl border border-slate-100 uppercase tracking-[0.1em]">Joined {{ $user->created_at->format('M Y') }}</span>
                         </div>
@@ -76,7 +88,7 @@
 
                     <div class="bg-white rounded-[3rem] p-10 shadow-premium border border-white space-y-8">
                         <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Contact Metadata</h4>
-                        
+
                         <div class="flex flex-col gap-6">
                             <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50/50 border border-slate-100">
                                 <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm">
@@ -94,7 +106,7 @@
                                 </div>
                                 <div>
                                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Mobile Contact</p>
-                                    <p class="text-xs font-black text-dark">+880 1XXX-XXXXXX</p> 
+                                    <p class="text-xs font-black text-dark">+880 1XXX-XXXXXX</p>
                                 </div>
                             </div>
 
@@ -122,7 +134,7 @@
                                 <p class="text-[11px] font-bold text-white/40 uppercase tracking-widest">Confirmed Events with You</p>
                             </div>
                         </div>
-                        
+
                         <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-white relative overflow-hidden group">
                             <i class="fas fa-star absolute -right-6 -bottom-6 text-9xl text-primary/5 transform -rotate-12 group-hover:scale-110 transition-transform"></i>
                             <div class="relative z-10">
@@ -143,7 +155,7 @@
                                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest font-plus">Synced Ledger</span>
                             </div>
                         </div>
-                        
+
                         <div class="space-y-6">
                             @forelse($bookings as $booking)
                             <div class="flex items-center justify-between p-6 rounded-3xl bg-slate-50/50 border border-slate-100 hover:bg-white hover:shadow-soft transition-all group">

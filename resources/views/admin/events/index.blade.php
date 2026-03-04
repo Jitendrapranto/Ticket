@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Control Center | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,11 +17,11 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { 
-                        primary: '#520C6B', 
-                        'primary-dark': '#21032B', 
-                        secondary: '#21032B', 
-                        accent: '#FF7D52', 
+                    colors: {
+                        primary: '#520C6B',
+                        'primary-dark': '#21032B',
+                        secondary: '#21032B',
+                        accent: '#FF7D52',
                         dark: '#0F172A',
                         'slate-custom': '#F8FAFC'
                     },
@@ -31,11 +36,18 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
-<body class="bg-[#F8FAFC] text-slate-800 font-plus" x-data="{ 
+<body class="bg-[#F8FAFC] text-slate-800 font-plus" x-data="{
     searchQuery: '',
-    deleteModal: false, 
-    deleteUrl: '', 
+    deleteModal: false,
+    deleteUrl: '',
     eventName: '',
     confirmDelete(url, name) {
         this.deleteUrl = url;
@@ -57,7 +69,7 @@
                     <input type="text" placeholder="Search platform resources..." class="bg-slate-50 border border-slate-100 rounded-2xl pl-10 pr-6 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64 uppercase tracking-tighter">
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-6">
                 <button class="relative text-slate-400 hover:text-primary transition-colors">
                     <i class="far fa-bell text-xl"></i>
@@ -120,7 +132,7 @@
                     <div class="flex items-center gap-3">
                         <div class="relative group">
                             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition-colors group-focus-within:text-primary"></i>
-                            <input type="text" x-model="searchQuery" placeholder="Search event or organizer..." 
+                            <input type="text" x-model="searchQuery" placeholder="Search event or organizer..."
                                 class="bg-white border border-slate-100 rounded-2xl pl-10 pr-6 py-3.5 text-xs font-bold focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/20 transition-all w-full lg:w-72">
                         </div>
                         <button class="bg-white text-dark px-6 py-3.5 rounded-2xl text-[10px] font-black tracking-widest uppercase border border-slate-100 flex items-center gap-2 hover:bg-slate-50 transition-all">
@@ -151,7 +163,7 @@
                                 $soldTickets = \App\Models\BookingAttendee::whereIn('ticket_type_id', $event->ticketTypes->pluck('id'))->count();
                                 $salesPercent = $totalTickets > 0 ? round(($soldTickets / $totalTickets) * 100) : 0;
                             @endphp
-                            <tr class="hover:bg-slate-50/50 transition-colors group" 
+                            <tr class="hover:bg-slate-50/50 transition-colors group"
                                 x-show="searchQuery === '' || '{{ strtolower($event->title) }}'.includes(searchQuery.toLowerCase()) || '{{ strtolower($event->organizer) }}'.includes(searchQuery.toLowerCase())">
                                 <td class="px-8 py-6">
                                     <span class="text-xs font-black text-slate-400 tracking-tighter uppercase">#{{ strtoupper(substr($event->id . '000000', 0, 6)) }}</span>
@@ -227,7 +239,7 @@
                                         <a href="{{ route('admin.events.edit', $event) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-sm" title="Edit">
                                             <i class="fas fa-pen text-[10px]"></i>
                                         </a>
-                                        <button @click="confirmDelete('{{ route('admin.events.destroy', $event) }}', '{{ $event->title }}')" 
+                                        <button @click="confirmDelete('{{ route('admin.events.destroy', $event) }}', '{{ $event->title }}')"
                                                 class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-red-500 hover:text-white hover:scale-110 transition-all shadow-sm" title="Delete">
                                             <i class="fas fa-trash-alt text-[10px]"></i>
                                         </button>

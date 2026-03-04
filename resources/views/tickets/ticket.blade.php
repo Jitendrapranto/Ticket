@@ -3,6 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Ticket #{{ $booking->booking_id }}</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <style>
         @page { margin: 0; size: a4 portrait; }
         * { box-sizing: border-box; }
@@ -199,6 +204,13 @@
             margin-top: 15px;
         }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body>
 
@@ -285,7 +297,7 @@
                             <span class="field-value">{{ $booking->user->email }}</span>
                         </div>
                     @endif
-                    
+
                     <div class="field">
                         <span class="field-label">Booking Date</span>
                         <span class="field-value">{{ $booking->created_at->format('M d, Y') }}</span>

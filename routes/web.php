@@ -43,20 +43,22 @@ Route::get('/', function () {
         ->where('is_approved', true)
         ->where('is_featured', true)
         ->orderBy('sort_order', 'asc')
-        ->latest()->take(2)->get();
+        ->latest()->take(9)->get();
     
     $slideData = $featuredEvents->map(function($e) {
         return [
             'title' => $e->title,
             'date' => strtoupper($e->date->format('d M, Y')),
-            'location' => strtoupper($e->location)
+            'location' => strtoupper($e->location),
+            'slug' => $e->slug
         ];
     });
 
     $trendingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(4)->get();
-    $upcomingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(8)->get();
+    $upcomingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(6)->get();
+    $pastEvents = Event::with('category')->where('is_approved', true)->where('date', '<', now())->orderBy('date', 'desc')->take(12)->get();
     
-    return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData'));
+    return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData', 'pastEvents'));
 });
 
 Route::get('/events', function () {

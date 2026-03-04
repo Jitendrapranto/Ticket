@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Categories | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -19,10 +24,17 @@
             }
         }
     </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus" x-data="{ 
-    deleteModal: false, 
-    deleteUrl: '', 
+<body class="bg-[#F1F5F9] text-slate-800 font-plus" x-data="{
+    deleteModal: false,
+    deleteUrl: '',
     categoryName: '',
     confirmDelete(url, name) {
         this.deleteUrl = url;
@@ -46,7 +58,7 @@
         <main class="p-8 flex-1">
             @if(session('success'))
                 <!-- Success Toast -->
-                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" 
+                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
                      x-transition:enter="transition ease-out duration-500"
                      x-transition:enter-start="translate-x-full opacity-0"
                      x-transition:enter-end="translate-x-0 opacity-100"
@@ -66,7 +78,7 @@
 
             @if(session('error') || $errors->any())
                 <!-- Error Toast -->
-                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 8000)" x-show="show" 
+                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 8000)" x-show="show"
                      x-transition:enter="transition ease-out duration-500"
                      x-transition:enter-start="translate-x-full opacity-0"
                      x-transition:enter-end="translate-x-0 opacity-100"
@@ -122,7 +134,7 @@
                                         <a href="{{ route('admin.categories.edit', $category) }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
                                             <i class="fas fa-edit text-xs"></i>
                                         </a>
-                                        <button @click="confirmDelete('{{ route('admin.categories.destroy', $category) }}', '{{ $category->name }}')" 
+                                        <button @click="confirmDelete('{{ route('admin.categories.destroy', $category) }}', '{{ $category->name }}')"
                                                 class="w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
                                             <i class="fas fa-trash-alt text-xs"></i>
                                         </button>
@@ -181,7 +193,7 @@
         </main>
 
         <!-- Professional Delete Modal -->
-        <div x-show="deleteModal" 
+        <div x-show="deleteModal"
              x-cloak
              class="fixed inset-0 z-[150] flex items-center justify-center px-4 overflow-hidden"
              x-transition:enter="transition ease-out duration-300"
@@ -190,7 +202,7 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0">
-            
+
             <!-- Backdrop -->
             <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm" @click="deleteModal = false"></div>
 
@@ -199,7 +211,7 @@
                  x-transition:enter="transition ease-out duration-300 translate-y-4"
                  x-transition:enter-start="translate-y-8 scale-95"
                  x-transition:enter-end="translate-y-0 scale-100">
-                
+
                 <div class="p-10 text-center">
                     <!-- Warning Icon -->
                     <div class="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 shadow-inner animate-bounce">
@@ -224,7 +236,7 @@
                         </form>
                     </div>
                 </div>
-                
+
                 <!-- Bottom Decorative Bar -->
                 <div class="h-1.5 bg-red-500 w-full opacity-20"></div>
             </div>

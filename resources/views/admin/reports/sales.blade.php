@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Platform Sales Reports | Admin Control Center</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -13,11 +18,11 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { 
-                        primary: '#520C6B', 
-                        'primary-dark': '#21032B', 
-                        secondary: '#1B2B46', 
-                        accent: '#FF7D52', 
+                    colors: {
+                        primary: '#520C6B',
+                        'primary-dark': '#21032B',
+                        secondary: '#1B2B46',
+                        accent: '#FF7D52',
                         dark: '#0F172A',
                         'brand-green': '#10B981',
                         'slate-custom': '#F8FAFC'
@@ -33,6 +38,13 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F8FAFC] text-slate-800 font-plus" x-data="{ searchQuery: '' }">
     @include('admin.sidebar')
@@ -49,7 +61,7 @@
                     <input type="text" x-model="searchQuery" placeholder="Search platform analytics..." class="bg-slate-50 border border-slate-100 rounded-2xl pl-10 pr-6 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64 uppercase tracking-tighter">
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-6">
                 <button class="relative text-slate-400 hover:text-primary transition-colors">
                     <i class="far fa-bell text-xl"></i>
@@ -71,7 +83,7 @@
                     <h1 class="font-outfit text-4xl font-black text-dark tracking-tighter mb-2">Platform Sales Reports</h1>
                     <p class="text-slate-400 font-medium text-sm">Comprehensive analysis of ticket volume and sales performance across all organizers.</p>
                 </div>
-                
+
                 <form action="{{ route('admin.finance.reports.sales') }}" method="GET" class="flex flex-wrap items-center gap-3">
                     <div class="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20">
                         <i class="far fa-calendar text-slate-400"></i>

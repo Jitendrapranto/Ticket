@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commission Settings | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -33,6 +38,13 @@
             }
         }
     </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F8FAFC] text-slate-800 font-plus overflow-x-hidden">
 
@@ -40,7 +52,7 @@
 
     <!-- Main Content wrapper -->
     <div class="lg:ml-72 min-h-screen flex flex-col transition-all duration-300">
-        
+
         <!-- Topbar -->
         <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40">
             <div class="flex items-center gap-6">
@@ -49,7 +61,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
-            
+
             <div class="flex items-center gap-6">
                 <div class="text-right">
                     <p class="text-xs font-black text-dark">{{ Auth::user()->name }}</p>
@@ -60,7 +72,7 @@
 
         <!-- Main Content -->
         <main class="p-10 flex-1 max-w-7xl mx-auto w-full">
-            
+
             <!-- Page Header -->
             <div class="mb-10 flex justify-between items-end">
                 <div>
@@ -84,7 +96,7 @@
             <form action="{{ route('admin.finance.commission.update') }}" method="POST">
                 @csrf
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
+
                     <div class="space-y-8">
                         <div class="bg-white rounded-[2rem] p-8 shadow-premium border border-slate-50">
                             <h3 class="font-outfit text-xl font-black text-dark tracking-tight mb-6 flex items-center gap-3">

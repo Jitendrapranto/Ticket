@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Dashboard | Ticket Kinun</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -44,6 +49,13 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F1F5F9] text-slate-800">
 
@@ -52,7 +64,7 @@
 
     <!-- Main Content Wrapper -->
     <div class="lg:ml-72 min-h-screen flex flex-col">
-        
+
         <!-- Header / Topbar -->
         <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40 transition-all duration-300 shadow-sm">
             <div class="flex items-center gap-4">
@@ -72,12 +84,12 @@
                     <i class="fas fa-search absolute left-4 text-slate-400 text-xs"></i>
                     <input type="text" placeholder="Quick Search..." class="bg-slate-50 border border-slate-100 rounded-2xl pl-10 pr-6 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64">
                 </div>
-                
+
                 <button class="relative w-11 h-11 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-500 hover:bg-primary/5 transition-colors">
                     <i class="far fa-bell"></i>
                     <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
                 </button>
-                
+
                 <div class="flex items-center gap-3 pl-4 border-l border-slate-100 ml-2" x-data="{ open: false }">
                     <div class="relative">
                         <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 group focus:outline-none">
@@ -93,7 +105,7 @@
                         </button>
 
                         <!-- Admin Action Dropdown -->
-                        <div x-show="open" 
+                        <div x-show="open"
                             x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0 scale-95 translate-y-2"
                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -102,7 +114,7 @@
                             x-transition:leave-end="opacity-0 scale-95 translate-y-2"
                             class="absolute right-0 mt-3 w-56 bg-white rounded-3xl shadow-2xl border border-slate-100 py-3 z-50 overflow-hidden"
                             style="display: none;">
-                            
+
                             <div class="px-6 py-4 border-b border-slate-50 mb-2">
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated As</p>
                                 <p class="text-xs font-bold text-dark truncate">{{ Auth::user()->email }}</p>
@@ -130,7 +142,7 @@
 
         <!-- Main Dashboard Content -->
         <main class="p-8 flex-1">
-            
+
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <!-- Total Sales -->
@@ -239,7 +251,7 @@
                     <div class="relative z-10">
                         <span class="text-primary-light font-black tracking-[0.3em] text-[10px] uppercase mb-12 block">Live Monitoring</span>
                         <h3 class="font-outfit text-4xl font-black tracking-tighter mb-10 leading-none">The <br><span class="text-accent tracking-normal">Pulse</span> of Events.</h3>
-                        
+
                         <div class="space-y-6">
                             <div class="flex items-center gap-4 bg-white/5 p-5 rounded-3xl border border-white/5">
                                 <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center animate-pulse">
@@ -266,7 +278,7 @@
                     <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform duration-700">
                         <i class="fas fa-satellite-dish text-[80px] text-white/[0.03]"></i>
                     </div>
-                    
+
                     <a href="#" class="relative z-10 mt-12 w-full py-5 glass rounded-2xl text-center font-black text-xs tracking-widest hover:bg-white hover:text-primary transition-all uppercase">
                         Real-time Analytics
                     </a>

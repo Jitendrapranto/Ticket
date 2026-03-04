@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Map Section | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -17,6 +22,13 @@
                 }
             }
         }
+    </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
     </script>
 </head>
 <body class="bg-[#F1F5F9] text-slate-800 font-plus">
@@ -32,7 +44,7 @@
 
         <main class="p-8 flex-1">
             @if(session('success'))
-                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" 
+                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
                      x-transition:enter="transition ease-out duration-500"
                      x-transition:enter-start="translate-x-full opacity-0"
                      x-transition:enter-end="translate-x-0 opacity-100"
@@ -53,9 +65,9 @@
             <form action="{{ route('admin.contact.map.update') }}" method="POST" enctype="multipart/form-data" class="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="p-10 space-y-10">
-                    
+
                     <!-- Content Info -->
                     <div>
                         <h3 class="font-outfit text-lg font-black text-dark mb-6 border-b border-slate-100 pb-2 uppercase tracking-tighter"><i class="fas fa-info-circle mr-2 text-primary"></i> Map Section Info</h3>
@@ -77,7 +89,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <h3 class="font-outfit text-lg font-black text-dark mb-6 border-b border-slate-100 pb-2 uppercase tracking-tighter"><i class="fas fa-map mr-2 text-primary"></i> Map Visual</h3>
-                            
+
                             <div class="space-y-6">
                                 <div>
                                     <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Background Image URL</label>
@@ -108,7 +120,7 @@
                     <!-- Google Map URL -->
                     <div class="bg-[#F8FAFC] rounded-[2.5rem] p-10 border border-slate-100">
                         <h3 class="font-outfit text-lg font-black text-dark mb-6 border-b border-slate-200 pb-2 uppercase tracking-tighter"><i class="fas fa-location-dot mr-2 text-primary"></i> Interactive Map</h3>
-                        
+
                         <div class="space-y-6">
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Google Maps Embed URL (src link only)</label>
@@ -119,7 +131,7 @@
                     </div>
 
                 </div>
-                
+
                 <div class="bg-slate-50 p-8 border-t border-slate-100 flex justify-end gap-4">
                     <button type="submit" class="bg-dark text-white px-10 py-4 rounded-xl font-black tracking-widest uppercase hover:bg-primary transition-all shadow-xl hover:shadow-primary/20 transform active:scale-95">
                         <i class="fas fa-save mr-2"></i> Save Changes

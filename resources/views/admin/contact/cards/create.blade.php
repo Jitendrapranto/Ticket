@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Contact Card | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -17,6 +22,13 @@
                 }
             }
         }
+    </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
     </script>
 </head>
 <body class="bg-[#F1F5F9] text-slate-800 font-plus">
@@ -34,7 +46,7 @@
             <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-10">
                 <form action="{{ route('admin.contact.cards.store') }}" method="POST" class="space-y-6">
                     @csrf
-                    
+
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Title</label>
                         <input type="text" name="title" value="{{ old('title') }}" required placeholder="e.g. Email Support" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold">
@@ -74,7 +86,7 @@
 
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col gap-6 mt-6">
                         <h4 class="font-outfit text-sm font-black text-slate-800 uppercase tracking-tight border-b border-slate-200 pb-2"><i class="fas fa-palette text-primary mr-2"></i> Design & Colors</h4>
-                        
+
                         <div class="grid grid-cols-2 gap-6">
                             <div x-data="{ color: '{{ old('bg_color', '#fffbf0') }}' }">
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Card Background</label>
@@ -83,7 +95,7 @@
                                     <input type="text" name="bg_color" x-ref="bgInput" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono text-xs">
                                 </div>
                             </div>
-                            
+
                             <div x-data="{ color: '{{ old('theme_color', '#f59e0b') }}' }">
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Theme (Icon/Border/Link)</label>
                                 <div class="flex items-center gap-2">

@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Profile | Ticket Kinun</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -22,6 +27,13 @@
                 }
             }
         }
+    </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
     </script>
 </head>
 <body class="bg-[#F1F5F9] font-plus text-slate-800">
@@ -55,7 +67,7 @@
                         </div>
                         <h3 class="font-outfit text-2xl font-black text-dark tracking-tight">{{ $user->name }}</h3>
                         <p class="text-xs font-bold text-primary mb-4 italic">Registered Fan</p>
-                        
+
                         <div class="flex items-center justify-center gap-3">
                             <span class="px-4 py-1.5 bg-green-50 text-green-600 text-[9px] font-black rounded-full border border-green-100 uppercase tracking-widest">Account Active</span>
                             <span class="px-4 py-1.5 bg-slate-50 text-slate-400 text-[9px] font-black rounded-full border border-slate-100 uppercase tracking-widest">Verified</span>
@@ -64,7 +76,7 @@
 
                     <div class="bg-white rounded-[2.5rem] p-8 shadow-premium border border-slate-50 space-y-6">
                         <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Identity Details</h4>
-                        
+
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email</span>
                             <span class="text-xs font-black text-dark">{{ $user->email }}</span>
@@ -104,7 +116,7 @@
                             <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Recent Activity</h3>
                             <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Latest 5 Transactions</span>
                         </div>
-                        
+
                         <div class="flex flex-col items-center justify-center h-64 border-2 border-dashed border-slate-100 rounded-[2rem]">
                             <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 mb-4">
                                 <i class="fas fa-history text-2xl"></i>

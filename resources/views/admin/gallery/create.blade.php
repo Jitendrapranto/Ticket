@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Gallery Asset | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -22,14 +27,21 @@
     <style>
         [x-cloak] { display: none !important; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F1F5F9] text-slate-800 font-plus">
     @include('admin.sidebar')
 
     <div class="lg:ml-72 min-h-screen flex flex-col">
-        <form action="{{ route('admin.gallery.images.store') }}" method="POST" enctype="multipart/form-data" 
-              x-data="{ 
-                  preview: null, 
+        <form action="{{ route('admin.gallery.images.store') }}" method="POST" enctype="multipart/form-data"
+              x-data="{
+                  preview: null,
                   handleFile(e) {
                       const file = e.target.files[0];
                       if (!file) return;
@@ -39,7 +51,7 @@
                   }
               }">
             @csrf
-            
+
             <header class="h-24 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-12 sticky top-0 z-40">
                 <div class="flex items-center gap-6">
                     <a href="{{ route('admin.gallery.images.index') }}" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-dark hover:bg-white transition-all border border-slate-100 shadow-sm">
@@ -98,11 +110,11 @@
                                         <div class="absolute left-6 top-1/2 -translate-y-1/2 text-primary/30 group-focus-within:text-primary transition-all duration-300">
                                             <i class="fas fa-quote-left text-xs"></i>
                                         </div>
-                                        <input type="text" 
-                                               name="title" 
-                                               value="{{ old('title') }}" 
-                                               required 
-                                               class="w-full bg-white border border-slate-200/60 rounded-[1.5rem] py-5 pl-14 pr-8 outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-dark font-bold text-sm shadow-sm hover:border-slate-300" 
+                                        <input type="text"
+                                               name="title"
+                                               value="{{ old('title') }}"
+                                               required
+                                               class="w-full bg-white border border-slate-200/60 rounded-[1.5rem] py-5 pl-14 pr-8 outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-dark font-bold text-sm shadow-sm hover:border-slate-300"
                                                placeholder="e.g. Neon Nights Symphony">
                                     </div>
                                 </div>
@@ -117,8 +129,8 @@
                                         <div class="absolute left-6 top-1/2 -translate-y-1/2 text-primary/30 group-focus-within:text-primary transition-all duration-300 pointer-events-none z-10">
                                             <i class="fas fa-tags text-xs"></i>
                                         </div>
-                                        <select name="category_id" 
-                                                required 
+                                        <select name="category_id"
+                                                required
                                                 class="w-full bg-white border border-slate-200/60 rounded-[1.5rem] py-5 pl-14 pr-12 outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-dark font-bold text-sm appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23520C6B%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C/polyline%3E%3C/svg%3E')] bg-[length:1rem] bg-[right_1.75rem_center] bg-no-repeat relative z-0 shadow-sm hover:border-slate-300">
                                             <option value="" disabled selected>Select categorization</option>
                                             @foreach($categories as $cat)

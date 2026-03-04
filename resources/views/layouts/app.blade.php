@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Ticket Kinun - Your Ultimate Event Ticketing Platform')</title>
+
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+    </style>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Scripts / Styles -->
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -55,7 +61,7 @@
         }
         .hero-banner { height: 600px; }
         @media (max-width: 768px) { .hero-banner { height: auto; min-height: 500px; } }
-        
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -80,7 +86,26 @@
         .pause-on-hover:hover .animate-marquee-slow {
             animation-play-state: paused;
         }
+
+        /* Reveal once ready */
+        html.ready {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.15s ease-in;
+        }
     </style>
+
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        // Fallback: reveal after short delay even if DOMContentLoaded already fired
+        setTimeout(function() {
+            document.documentElement.classList.add('ready');
+        }, 100);
+    </script>
+
     @yield('styles')
 </head>
 <body class="font-sans bg-[#fdfdfc] text-slate-900 leading-relaxed overflow-x-hidden">

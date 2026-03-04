@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commission Strategy | Ticket Kinun</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -35,6 +40,13 @@
             }
         }
     </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F8FAFC] text-slate-800 font-plus overflow-x-hidden">
 
@@ -52,7 +64,7 @@
                     <input type="text" placeholder="Search platform resources.." class="w-full bg-slate-50 border-none rounded-xl pl-12 pr-4 py-2.5 text-xs font-bold text-dark focus:ring-2 focus:ring-primary/10 transition-all">
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-6">
                 <button class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-primary/5 hover:text-primary transition-all relative">
                     <i class="far fa-bell"></i>
@@ -135,7 +147,7 @@
                                 <h3 class="font-outfit text-xl font-black text-dark mb-2 tracking-tight">Global Default Fees</h3>
                                 <p class="text-[11px] font-medium text-slate-400 leading-relaxed">Primary rates applied when no specific override exists across the board.</p>
                             </div>
-                            
+
                             <div class="p-10 space-y-8">
                                 <!-- Model Select -->
                                 <div class="space-y-4">
@@ -267,7 +279,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             <div class="p-10 bg-slate-50/30 flex items-center justify-center gap-3">
                                 <i class="fas fa-info-circle text-[10px] text-slate-300"></i>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Event-level overrides always take precedence over global settings.</p>

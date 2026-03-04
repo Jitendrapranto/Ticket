@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendee Segmentation | Organizer Dashboard</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -43,6 +48,13 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="text-slate-800">
 
@@ -60,7 +72,7 @@
                     <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Targeted Attendee Filter</p>
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3 pl-6 border-l border-slate-100 mr-4">
                     <div class="text-right hidden sm:block">
@@ -80,7 +92,7 @@
                 </div>
                 <div>
                     <a href="{{ route('organizer.customers.segmentation.export', request()->all()) }}" class="bg-dark text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-4 shadow-2xl shadow-dark/20 group text-center">
-                        <i class="fas fa-file-csv text-[14px] group-hover:-translate-y-1 transition-transform"></i> 
+                        <i class="fas fa-file-csv text-[14px] group-hover:-translate-y-1 transition-transform"></i>
                         <span>Download Segment</span>
                     </a>
                 </div>
@@ -114,9 +126,9 @@
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-primary transition-colors">Search Attendee Metadata</label>
                         <div class="relative">
                             <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
-                            <input type="text" name="search" id="segSearch" value="{{ request('search') }}" 
+                            <input type="text" name="search" id="segSearch" value="{{ request('search') }}"
                                 @input.debounce.500ms="$refs.filterForm.submit()"
-                                placeholder="Search by name, email, or phone..." 
+                                placeholder="Search by name, email, or phone..."
                                 class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-14 pr-8 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all outline-none">
                         </div>
                     </div>

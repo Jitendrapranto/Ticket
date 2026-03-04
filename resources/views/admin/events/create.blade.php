@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Event | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -24,12 +29,19 @@
         .form-input { @apply w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm; }
         .form-label { @apply text-xs font-bold text-slate-500 mb-2 block; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F1F5F9] text-slate-800 font-plus overflow-x-hidden">
     @include('admin.sidebar')
 
     <div class="lg:ml-72 min-h-screen flex flex-col">
-        <form action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data" x-data="{ 
+        <form action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data" x-data="{
             tickets: [{ name: 'General Admission', price: '25', quantity: '100' }],
             artists: [],
             formFields: [],
@@ -43,7 +55,7 @@
             removeOption(fieldIndex, optIndex) { this.formFields[fieldIndex].options.splice(optIndex, 1) }
         }">
             @csrf
-            
+
             <!-- Header Section -->
             <header class="h-24 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-12 sticky top-0 z-40">
                 <div class="flex items-center gap-6">
@@ -65,7 +77,7 @@
 
             @if(session('error') || $errors->any())
                 <!-- Error Notification -->
-                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 10000)" x-show="show" 
+                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 10000)" x-show="show"
                      x-transition:enter="transition ease-out duration-500"
                      x-transition:enter-start="translate-x-full opacity-0"
                      x-transition:enter-end="translate-x-0 opacity-100"
@@ -213,9 +225,9 @@
                 </div>
 
                 <!-- Media & Branding -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100" 
-                     x-data="{ 
-                        preview: null, 
+                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100"
+                     x-data="{
+                        preview: null,
                         imageError: null,
                         imageMeta: { size: 0, w: 0, h: 0 },
                         handleFile(e) {
@@ -259,7 +271,7 @@
                                 <label class="form-label">Event Banner</label>
                                 <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • < 5MB</span>
                             </div>
-                            
+
                             <div class="flex gap-4">
                                 <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 flex items-center justify-between overflow-hidden">
                                     <span class="text-xs font-bold text-slate-400 truncate" x-text="imageError ? 'Invalid File' : (preview ? 'Image selected' : 'No file chosen')"></span>
@@ -273,7 +285,7 @@
                                     <input type="file" name="image" class="hidden" accept="image/*" @change="handleFile($event)">
                                 </label>
                             </div>
-                            
+
                             <template x-if="imageError">
                                 <div class="flex items-center gap-3 py-3 px-5 bg-red-50 border border-red-100 rounded-xl text-red-500 animate-fadeInUp">
                                     <i class="fas fa-exclamation-circle text-xs"></i>
@@ -294,7 +306,7 @@
                                     <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Awaiting Media Asset</p>
                                 </div>
                             </template>
-                            
+
                             <!-- Floating Overlay Info -->
                             <div x-show="preview" x-cloak class="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
                                 <div class="bg-dark/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10">

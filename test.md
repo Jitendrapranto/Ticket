@@ -152,3 +152,16 @@ And then create another submenu named as Manual check-in where the scanner can m
 
 
 I think here live events not updated on scanner dashboard
+
+
+I want to here left side will be exist onlY banner and the right side will be event details and Book Your Seat button instead of Explore all events button...and Banner will be the featured event banner and also make sure to add the featured tag on the top of the banner...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to here add left sidde arrow and then 3 featured events and the right side arrow ...when clicked arrow then the next event wiil be appear on the list and first event will hide and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+here allignment is not good ,,I want to the first card will be exactlY the same alligned with respect to the Header logo and the last card will be exactlY the same alligned with respect to the login and register button and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to here will be show three card in a row and second row will be three card and the cards design will be exactlY ssame as the featured events card design and when clicked in the card then it will redirect to the event details page and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+I want to whenever clicked on the card it will redirect to the event details page....
+
+I want to here the past event will be shown in the past event section and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?

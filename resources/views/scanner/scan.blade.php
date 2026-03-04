@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>QR Scanner | Ticket Kinun</title>
+
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
+
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +20,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -33,6 +40,14 @@
                 }
             }
         }
+    </script>
+
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
     </script>
 </head>
 <body class="bg-black text-white font-plus overflow-hidden h-screen flex flex-col">
@@ -54,7 +69,7 @@
     <!-- Scanner Viewport -->
     <div class="flex-grow flex items-center justify-center relative">
         <div id="reader" class="w-full h-full object-cover"></div>
-        
+
         <!-- Framing Overlay -->
         <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
             <div class="w-72 h-72 border-2 border-white/20 rounded-[3rem] relative shadow-[0_0_0_1000px_rgba(0,0,0,0.6)]">
@@ -63,7 +78,7 @@
                 <div class="absolute -top-1 -right-1 w-12 h-12 border-t-8 border-r-8 border-primary rounded-tr-3xl"></div>
                 <div class="absolute -bottom-1 -left-1 w-12 h-12 border-b-8 border-l-8 border-primary rounded-bl-3xl"></div>
                 <div class="absolute -bottom-1 -right-1 w-12 h-12 border-b-8 border-r-8 border-primary rounded-br-3xl"></div>
-                
+
                 <!-- Scanning Line -->
                 <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent animate-scan"></div>
             </div>
@@ -98,8 +113,8 @@
         const startScanner = () => {
              const qrConfig = { fps: 10, qrbox: { width: 300, height: 300 } };
              html5QrCode.start(
-                { facingMode: "environment" }, 
-                qrConfig, 
+                { facingMode: "environment" },
+                qrConfig,
                 onScanSuccess
             );
         };
@@ -107,10 +122,10 @@
         const onScanSuccess = (decodedText) => {
             if (isProcessing) return;
             isProcessing = true;
-            
+
             // Visual feedback
             vibrate();
-            
+
             fetch("{{ route('scanner.scan.process') }}", {
                 method: "POST",
                 headers: {
@@ -135,7 +150,7 @@
         const showResult = (data) => {
             let icon = 'fa-check-circle text-emerald-500';
             let bg = 'bg-emerald-50';
-            
+
             if (data.status === 'error' || data.status === 'invalid') {
                 icon = 'fa-times-circle text-rose-500';
                 bg = 'bg-rose-50';

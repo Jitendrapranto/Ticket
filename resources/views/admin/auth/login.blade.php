@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Ticket Kinun Dashboard</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -24,9 +29,16 @@
             }
         }
     </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="font-outfit bg-[#0F172A] min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-    
+
     <!-- Background Accents -->
     <div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
         <div class="absolute -top-48 -left-48 w-full h-full bg-primary/20 rounded-full blur-[150px]"></div>
@@ -46,7 +58,7 @@
 
             <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-6">
                 @csrf
-                
+
                 <div class="space-y-2">
                     <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Admin Email</label>
                     <div class="relative">
@@ -84,7 +96,7 @@
                     <i class="fas fa-sign-in-alt"></i> Access Dashboard
                 </button>
             </form>
-            
+
             <div class="mt-8 pt-8 border-t border-slate-50 text-center">
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Authorized Personnel Only</p>
             </div>

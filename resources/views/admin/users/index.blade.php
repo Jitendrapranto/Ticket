@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Database | Ticket Kinun</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -41,6 +46,13 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F8FAFC] text-slate-800">
 
@@ -58,7 +70,7 @@
                     <input type="text" placeholder="Search platform resources.." class="bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-primary/10 transition-all w-80">
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-6">
                 <button class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400">
                     <i class="far fa-bell"></i>
@@ -144,9 +156,9 @@
                     <div class="flex items-center gap-4">
                         <form x-data="{ timer: null }" action="{{ route('admin.customers.index') }}" method="GET" x-ref="searchForm" class="relative group">
                             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within:text-primary"></i>
-                            <input type="text" name="search" id="customerSearch" value="{{ request('search') }}" 
+                            <input type="text" name="search" id="customerSearch" value="{{ request('search') }}"
                                 @input.debounce.500ms="$refs.searchForm.submit()"
-                                placeholder="Search name, email..." 
+                                placeholder="Search name, email..."
                                 class="bg-slate-50 border-none rounded-xl pl-12 pr-6 py-3.5 text-xs font-semibold focus:ring-2 focus:ring-primary/10 transition-all w-72">
                         </form>
 
@@ -228,8 +240,8 @@
                                 </td>
                                 <td class="px-8 py-7 text-center">
                                     <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] border
-                                        @if($customer->id % 3 == 0) bg-brand-amber/10 text-brand-amber border-brand-amber/20 
-                                        @elseif($customer->id % 4 == 0) bg-brand-red/10 text-brand-red border-brand-red/20 
+                                        @if($customer->id % 3 == 0) bg-brand-amber/10 text-brand-amber border-brand-amber/20
+                                        @elseif($customer->id % 4 == 0) bg-brand-red/10 text-brand-red border-brand-red/20
                                         @else bg-brand-green/10 text-brand-green border-brand-green/20 @endif">
                                         <span class="w-1 h-1 rounded-full currentColor bg-current"></span>
                                         @if($customer->id % 3 == 0) Pending @elseif($customer->id % 4 == 0) Suspended @else Active @endif

@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Attendee | Ticket Kinun</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -22,6 +27,13 @@
                 }
             }
         }
+    </script>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
     </script>
 </head>
 <body class="bg-[#F8FAFC] font-plus text-slate-800">
@@ -71,7 +83,7 @@
                             <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Attendee Name</label>
                             <div class="relative">
                                 <i class="fas fa-user absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
-                                <input type="text" name="name" value="{{ old('name', $attendee->name) }}" required 
+                                <input type="text" name="name" value="{{ old('name', $attendee->name) }}" required
                                     class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 pl-14 pr-8 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-sm">
                             </div>
                         </div>
@@ -81,7 +93,7 @@
                             <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Contact Mobile</label>
                             <div class="relative">
                                 <i class="fas fa-phone-alt absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
-                                <input type="text" name="mobile" value="{{ old('mobile', $attendee->mobile) }}" required 
+                                <input type="text" name="mobile" value="{{ old('mobile', $attendee->mobile) }}" required
                                     class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 pl-14 pr-8 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-sm">
                             </div>
                         </div>

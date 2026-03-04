@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Gallery Hero | Ticket Kinun Admin</title>
+    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,6 +44,13 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
     </style>
+    <!-- Reveal page once Tailwind is ready -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('ready');
+        });
+        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
+    </script>
 </head>
 <body class="bg-[#F1F5F9] text-slate-800">
 
@@ -171,7 +183,7 @@
                 <div class="mt-12 bg-dark rounded-[3.5rem] p-16 text-white relative overflow-hidden group border border-white/5 shadow-2xl">
                     <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent"></div>
                     <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] translate-x-1/4 -translate-y-1/4"></div>
-                    
+
                     <div class="max-w-xl relative z-10 text-center mx-auto sm:text-left sm:mx-0">
                         <div class="inline-block px-5 py-2 rounded-full border border-white/10 bg-white/5 mb-8 animate-bounce">
                             <span class="text-accent font-black text-[10px] tracking-[0.3em] uppercase">{{ $hero->badge_text }}</span>
