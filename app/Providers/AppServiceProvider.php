@@ -12,7 +12,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // On cPanel: public_html IS the public folder, storage lives one level up
+        if (is_dir(dirname(base_path()) . '/storage')) {
+            $this->app->useStoragePath(dirname(base_path()) . '/storage');
+        }
+        if (file_exists(base_path('index.php'))) {
+            $this->app->usePublicPath(base_path());
+        }
     }
 
     /**

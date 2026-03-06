@@ -13,11 +13,13 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@ticketkinun.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@ticketkinun.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ]
+        );
     }
 }

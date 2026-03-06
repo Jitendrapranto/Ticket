@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SuperAdminSeeder::class,
+            OrganizerSeeder::class,
+            ScannerSeeder::class,
             EventCategorySeeder::class,
             EventSeeder::class,
             EventHeroSeeder::class,
@@ -33,13 +36,5 @@ class DatabaseSeeder extends Seeder
             SiteHeaderSeeder::class,
             SiteFooterSeeder::class,
         ]);
-
-        \App\Models\User::updateOrCreate(
-            ['email' => 'admin@ticket.com'],
-            [
-                'name' => 'Admin User',
-                'password' => bcrypt('password'),
-            ]
-        );
     }
 }

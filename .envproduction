@@ -1,7 +1,7 @@
 APP_NAME=TicketKinun
 APP_ENV=production
 APP_KEY=base64:6ixtEt4Tp/t/Ir1wH6vfuGE6FuQI7CvslDnEeIE/gRs=
-APP_DEBUG=true
+APP_DEBUG=false
 APP_URL=https://ticketkinun.com
 
 APP_LOCALE=en
@@ -31,7 +31,7 @@ SESSION_PATH=/
 SESSION_DOMAIN=.ticketkinun.com
 
 BROADCAST_CONNECTION=log
-FILESYSTEM_DISK=local
+FILESYSTEM_DISK=public
 QUEUE_CONNECTION=database
 
 CACHE_STORE=database
