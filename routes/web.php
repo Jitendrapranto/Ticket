@@ -29,6 +29,35 @@ use App\Models\HomeCtaSection;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 
+// TEMPORARY: Create storage symlink - DELETE THIS AFTER VISITING THE URL ONCE
+Route::get('/create-storage-link', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+    
+    // Remove existing link/folder if exists
+    if (is_link($link)) {
+        unlink($link);
+    } elseif (is_dir($link)) {
+        rmdir($link);
+    }
+    
+    // Create symlink
+    if (symlink($target, $link)) {
+        return 'Storage link created successfully! Target: ' . $target . ' -> Link: ' . $link;
+    }
+    
+    return 'Failed to create symlink. Try creating it manually via file manager.';
+});
+
+// Fallback: Serve storage files directly if symlink doesn't work
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup');
