@@ -86,6 +86,22 @@
                                     <span class="text-xs font-black uppercase tracking-wider">My Bookings</span>
                                 </a>
 
+                                @if(Auth::user()->role === 'pending_organizer' || Auth::user()->organizer_status === 'pending')
+                                <div class="px-4 py-2">
+                                    <a href="{{ route('organizer.pending') }}" class="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl bg-yellow-50 border border-yellow-200 transition-all">
+                                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse shrink-0"></span>
+                                        <span class="text-xs font-black uppercase tracking-wider text-yellow-700">Approval Pending</span>
+                                    </a>
+                                </div>
+                                @elseif(Auth::user()->role !== 'organizer' && Auth::user()->role !== 'admin')
+                                <div class="px-4 py-2">
+                                    <a href="{{ route('organizer.register') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-white font-black text-xs uppercase tracking-wider transition-all hover:opacity-90" style="background-color: #4F0B67;">
+                                        <i class="fas fa-user-tie text-[10px]"></i>
+                                        Join as Organizer
+                                    </a>
+                                </div>
+                                @endif
+
                                 <div class="mt-2 pt-2 border-t border-slate-50">
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
@@ -144,10 +160,22 @@
                         <div class="grid grid-cols-1 gap-3">
                             <a href="{{ route('login') }}" class="w-full py-4 rounded-2xl bg-slate-50 text-dark font-black text-xs text-center tracking-widest hover:bg-slate-100 transition-all uppercase">Login</a>
                             <a href="{{ route('signup') }}" class="w-full py-4 rounded-2xl bg-primary text-white font-black text-xs text-center tracking-widest shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all uppercase">Sign Up Free</a>
+                            <a href="{{ route('organizer.register') }}" class="w-full py-4 rounded-2xl bg-[#4F0B67] text-white font-black text-xs text-center tracking-widest hover:bg-[#3D0851] transition-all uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-user-tie text-[10px]"></i> Join as Organizer
+                            </a>
                         </div>
                     @else
                         <div class="space-y-4">
                             <p class="text-[11px] font-black text-slate-500 uppercase">Logged in as: {{ Auth::user()->name }}</p>
+                            @if(!in_array(Auth::user()->role, ['organizer', 'admin', 'pending_organizer']))
+                            <a href="{{ route('organizer.register') }}" class="w-full py-4 rounded-2xl bg-[#4F0B67] text-white font-black text-xs text-center tracking-widest hover:bg-[#3D0851] transition-all uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-user-tie text-[10px]"></i> Join as Organizer
+                            </a>
+                            @elseif(Auth::user()->role === 'pending_organizer')
+                            <a href="{{ route('organizer.pending') }}" class="w-full py-4 rounded-2xl bg-[#FFE700]/10 border border-[#FFE700]/40 text-yellow-700 font-black text-xs text-center tracking-widest transition-all uppercase flex items-center justify-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span> Approval Pending
+                            </a>
+                            @endif
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="w-full py-4 rounded-2xl bg-red-50 text-red-500 font-black text-xs text-center tracking-widest hover:bg-red-100 transition-all uppercase">Logout</button>
@@ -165,7 +193,7 @@
 
     <!-- Bottom Row: Navigation Links -->
     <div class="bg-slate-50/50 border-t border-slate-100 hidden md:block">
-        <div class="max-w-7xl mx-auto px-6 h-12 flex items-center">
+        <div class="max-w-7xl mx-auto px-6 h-12 flex items-center justify-between">
             <nav>
                 <ul class="flex items-center gap-8">
                     @foreach($navLinks as $navLink)
@@ -173,6 +201,20 @@
                     @endforeach
                 </ul>
             </nav>
+
+            @if(!Auth::check() || !in_array(Auth::user()->role, ['organizer', 'admin', 'pending_organizer']))
+            <a href="{{ route('organizer.register') }}"
+               class="inline-flex items-center gap-2 bg-[#4F0B67] text-white px-5 py-1.5 rounded-lg font-black text-[11px] tracking-widest uppercase hover:bg-[#3D0851] transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
+                <i class="fas fa-user-tie text-[10px] group-hover:scale-110 transition-transform"></i>
+                Join as Organizer
+            </a>
+            @elseif(Auth::check() && Auth::user()->role === 'pending_organizer')
+            <a href="{{ route('organizer.pending') }}"
+               class="inline-flex items-center gap-2 bg-[#FFE700]/10 border border-[#FFE700]/40 text-yellow-700 px-5 py-1.5 rounded-lg font-black text-[11px] tracking-widest uppercase hover:bg-[#FFE700]/20 transition-all">
+                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                Approval Pending
+            </a>
+            @endif
         </div>
     </div>
 

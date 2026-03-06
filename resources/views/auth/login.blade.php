@@ -27,7 +27,7 @@
                     <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-16 brightness-0 invert">
                 </a>
                 <div class="mt-16 space-y-6">
-                    <h2 class="font-outfit text-4xl font-black leading-tight tracking-tight">Access Your <span class="text-primary italic">Exclusive</span> Access.</h2>
+                    <h2 class="font-outfit text-4xl font-black leading-tight tracking-tight">Access Your <span class="text-primary">Exclusive</span> Access.</h2>
                     <p class="text-slate-400 font-medium leading-relaxed">Log in to manage your tickets, review past events, and update your preferences.</p>
                 </div>
             </div>

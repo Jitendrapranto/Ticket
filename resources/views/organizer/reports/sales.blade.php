@@ -10,7 +10,7 @@
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -27,7 +27,7 @@
                         'brand-green': '#10B981',
                         'slate-custom': '#F8FAFC'
                     },
-                    fontFamily: { outfit: ['Outfit', 'sans-serif'], plus: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                     boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
                 }
             }
@@ -299,8 +299,8 @@
                     legend: { display: false },
                     tooltip: {
                         backgroundColor: '#0F172A',
-                        titleFont: { family: 'Outfit', size: 12, weight: '900' },
-                        bodyFont: { family: 'Plus Jakarta Sans', size: 11, weight: '700' },
+                        titleFont: { family: 'Arial', size: 12, weight: '900' },
+                        bodyFont: { family: 'Arial', size: 11, weight: '700' },
                         padding: 15,
                         displayColors: false,
                         callbacks: {
@@ -315,7 +315,7 @@
                         beginAtZero: true,
                         grid: { color: '#F1F5F9', drawBorder: false },
                         ticks: {
-                            font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' },
+                            font: { family: 'Arial', size: 10, weight: '700' },
                             color: '#94a3b8',
                             callback: function(value) { return '৳' + value.toLocaleString(); }
                         }
@@ -323,7 +323,7 @@
                     x: {
                         grid: { display: false },
                         ticks: {
-                            font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' },
+                            font: { family: 'Arial', size: 10, weight: '700' },
                             color: '#94a3b8'
                         }
                     }

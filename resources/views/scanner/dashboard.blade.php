@@ -13,7 +13,6 @@
 
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -33,8 +32,9 @@
                         'brand-purple': '#520C6B',
                     },
                     fontFamily: {
-                        outfit: ['Outfit', 'sans-serif'],
-                        plus: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['Arial', 'Helvetica', 'sans-serif'],
+                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
+                        plus: ['Arial', 'Helvetica', 'sans-serif'],
                     },
                     boxShadow: {
                         'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)',
@@ -45,7 +45,8 @@
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: Arial, Helvetica, sans-serif; }
+        * { font-style: normal !important; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -72,7 +73,7 @@
             <div class="flex items-center gap-6">
                 <div class="text-right hidden sm:block">
                     <p class="text-xs font-black text-dark leading-none pb-1">{{ Auth::user()->name }}</p>
-                    <p class="text-[10px] font-bold text-primary uppercase tracking-widest italic">Authorized Scanner</p>
+                    <p class="text-[10px] font-bold text-primary uppercase tracking-widest">Authorized Scanner</p>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-black">
                     {{ substr(Auth::user()->name, 0, 1) }}
@@ -84,7 +85,7 @@
         <main class="p-10 max-w-[1600px] mx-auto w-full flex-grow">
             <!-- Hero Stats -->
             <div class="mb-12">
-                <h2 class="font-outfit text-4xl font-black text-dark tracking-tighter mb-2 italic">Shift Overview</h2>
+                <h2 class="font-outfit text-4xl font-black text-dark tracking-tighter mb-2">Shift Overview</h2>
                 <p class="text-slate-400 font-bold text-xs uppercase tracking-widest">{{ now()->format('l, F d, Y') }} — Processing events for {{ Auth::user()->organizer->name ?? 'Organizer' }}</p>
             </div>
 
@@ -144,7 +145,7 @@
                         <div class="w-12 h-12 rounded-2xl bg-violet-50 text-violet-500 flex items-center justify-center">
                             <i class="fas fa-hand-holding-usd"></i>
                         </div>
-                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Revenue</span>
+                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Revenue</span>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Shift Value</p>
                     <p class="text-4xl font-outfit font-black text-dark tracking-tighter">৳{{ number_format($totalSalesToday, 0) }}</p>

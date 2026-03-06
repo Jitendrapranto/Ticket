@@ -136,8 +136,19 @@
             </div>
         </div>
 
-        <!-- Users -->
+        <!-- Users & Staff -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Users & Staff</span>
+
+        <!-- Organizer Requests -->
+        @php $pendingOrganizerCount = \App\Models\User::where('role','pending_organizer')->where('organizer_status','pending')->count(); @endphp
+        <a href="{{ route('admin.organizer-requests.index') }}" class="flex items-center justify-between gap-4 px-4 py-3 {{ request()->routeIs('admin.organizer-requests.*') ? 'bg-primary border-primary/20 shadow-premium' : 'border-transparent hover:bg-white/5 hover:border-white/5' }} rounded-2xl text-white/60 hover:text-white text-sm font-bold transition-all border">
+            <div class="flex items-center gap-4">
+                <i class="fas fa-user-tie {{ request()->routeIs('admin.organizer-requests.*') ? 'text-white' : 'text-accent' }}"></i> Organizer Requests
+            </div>
+            @if($pendingOrganizerCount > 0)
+            <span class="bg-[#FFE700] text-[#21032B] text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">{{ $pendingOrganizerCount }}</span>
+            @endif
+        </a>
        
         <div x-data="{ open: false }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none">
@@ -202,9 +213,12 @@
 
     <!-- Sidebar Footer -->
     <div class="p-6 mt-10 border-t border-white/5">
-        <a href="#" class="flex items-center gap-4 px-4 py-4 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-2xl font-bold transition-all group">
-            <i class="fas fa-sign-out-alt text-rose-500 group-hover:translate-x-1 transition-transform"></i> Logout
-        </a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full flex items-center gap-4 px-4 py-4 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-2xl font-bold transition-all group">
+                <i class="fas fa-sign-out-alt text-rose-500 group-hover:translate-x-1 transition-transform"></i> Logout
+            </button>
+        </form>
     </div>
 </aside>
 

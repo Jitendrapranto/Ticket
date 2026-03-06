@@ -67,7 +67,7 @@
                     <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
                         <div>
                             <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Amount Payable</h4>
-                            <p class="text-[10px] text-slate-400 font-medium italic italic">Inclusive of all administrative fees</p>
+                            <p class="text-[10px] text-slate-400 font-medium">Inclusive of all administrative fees</p>
                         </div>
                         <div class="text-right">
                             <span class="text-3xl font-outfit font-black text-dark tracking-tighter">৳{{ number_format($booking->total_amount) }}</span>

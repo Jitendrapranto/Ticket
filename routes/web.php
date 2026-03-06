@@ -241,6 +241,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/site/header', [\App\Http\Controllers\Admin\SiteHeaderController::class, 'update'])->name('site.header.update');
         Route::get('/site/footer', [\App\Http\Controllers\Admin\SiteFooterController::class, 'edit'])->name('site.footer.edit');
         Route::put('/site/footer', [\App\Http\Controllers\Admin\SiteFooterController::class, 'update'])->name('site.footer.update');
+
+        // Organizer Requests
+        Route::get('/organizer-requests', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'index'])->name('organizer-requests.index');
+        Route::post('/organizer-requests/{id}/approve', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'approve'])->name('organizer-requests.approve');
+        Route::post('/organizer-requests/{id}/reject', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'reject'])->name('organizer-requests.reject');
+        Route::delete('/organizer-requests/{id}', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'destroy'])->name('organizer-requests.destroy');
     });
 });
 
@@ -249,6 +255,7 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
     Route::post('/login', [\App\Http\Controllers\Organizer\AuthController::class, 'login']);
     Route::get('/register', [\App\Http\Controllers\Organizer\AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [\App\Http\Controllers\Organizer\AuthController::class, 'register']);
+    Route::get('/pending', [\App\Http\Controllers\Organizer\AuthController::class, 'showPendingPage'])->name('pending');
     Route::post('/logout', [\App\Http\Controllers\Organizer\AuthController::class, 'logout'])->name('logout');
 
     Route::middleware(['organizer'])->group(function () {

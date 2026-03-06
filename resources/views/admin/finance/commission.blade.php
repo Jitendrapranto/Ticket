@@ -11,7 +11,7 @@
     </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -30,8 +30,8 @@
                         'brand-amber': '#F59E0B',
                     },
                     fontFamily: {
-                        outfit: ['Outfit', 'sans-serif'],
-                        plus: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
+                        plus: ['Arial', 'Helvetica', 'sans-serif'],
                     },
                     boxShadow: {
                         'premium': '0 25px 60px -15px rgba(27, 43, 70, 0.08)',

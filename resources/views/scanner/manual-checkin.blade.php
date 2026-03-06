@@ -14,7 +14,6 @@
 
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -28,8 +27,9 @@
                         dark: '#0F172A',
                     },
                     fontFamily: {
-                        outfit: ['Outfit', 'sans-serif'],
-                        plus: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['Arial', 'Helvetica', 'sans-serif'],
+                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
+                        plus: ['Arial', 'Helvetica', 'sans-serif'],
                     },
                     boxShadow: {
                         'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)',
@@ -106,7 +106,7 @@
                             }"></i>
                         </div>
                         <div class="flex-grow">
-                            <h3 class="font-outfit text-3xl font-black italic tracking-tighter mb-1 uppercase" x-text="result?.status.replace('_', ' ') "></h3>
+                            <h3 class="font-outfit text-3xl font-black tracking-tighter mb-1 uppercase" x-text="getStatusTitle(result?.status)"></h3>
                             <p class="font-bold text-sm opacity-60 mb-8" x-text="result?.message"></p>
 
                             <template x-if="result?.attendee">
@@ -117,11 +117,11 @@
                                     </div>
                                     <div>
                                         <p class="text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Ticket Tier</p>
-                                        <p class="text-xl font-black tracking-tight italic" x-text="result.attendee.ticket_type?.name || 'N/A'"></p>
+                                        <p class="text-xl font-black tracking-tight" x-text="result.attendee.ticket_type?.name || 'N/A'"></p>
                                     </div>
                                     <div class="col-span-2">
                                         <p class="text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Event Name</p>
-                                        <p class="text-lg font-bold tracking-tight bg-black/5 p-4 rounded-xl" x-text="result.attendee.booking.event.title"></p>
+                                        <p class="text-lg font-bold tracking-tight bg-black/5 p-4 rounded-xl" x-text="result.attendee.booking?.event?.title || 'N/A'"></p>
                                     </div>
                                 </div>
                             </template>
@@ -138,8 +138,17 @@
                 ticketNumber: '',
                 isLoading: false,
                 result: null,
+                getStatusTitle(status) {
+                    const titles = {
+                        'success': 'Valid Entry',
+                        'already_scanned': 'Already Scanned',
+                        'invalid': 'Invalid Ticket',
+                        'error': 'Error'
+                    };
+                    return titles[status] || (status ? status.replace('_', ' ') : 'Unknown');
+                },
                 processCheckin() {
-                    if(!this.ticketNumber) return;
+                    if(!this.ticketNumber || this.ticketNumber.trim() === '') return;
                     this.isLoading = true;
                     this.result = null;
 
@@ -149,16 +158,18 @@
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                         },
-                        body: JSON.stringify({ ticket_number: this.ticketNumber })
+                        body: JSON.stringify({ ticket_number: this.ticketNumber.trim() })
                     })
                     .then(res => res.json())
                     .then(data => {
+                        console.log('Server response:', data);
                         this.result = data;
                         this.isLoading = false;
                         if(data.status === 'success') this.ticketNumber = '';
                     })
                     .catch(err => {
-                        this.result = { status: 'error', message: 'Connection Error' };
+                        console.error('Error:', err);
+                        this.result = { status: 'error', message: 'Connection Error. Please try again.' };
                         this.isLoading = false;
                     });
                 }

@@ -14,10 +14,9 @@
 
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- html5-qrcode library -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <!-- html5-qrcode library - use specific version -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -31,8 +30,9 @@
                         dark: '#0F172A',
                     },
                     fontFamily: {
-                        outfit: ['Outfit', 'sans-serif'],
-                        plus: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['Arial', 'Helvetica', 'sans-serif'],
+                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
+                        plus: ['Arial', 'Helvetica', 'sans-serif'],
                     },
                     boxShadow: {
                         'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.25)',
@@ -70,8 +70,31 @@
     <div class="flex-grow flex items-center justify-center relative">
         <div id="reader" class="w-full h-full object-cover"></div>
 
+        <!-- Start Camera Button (shown initially) -->
+        <div id="startCameraOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black z-20">
+            <div class="text-center p-8">
+                <div class="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-camera text-3xl text-primary"></i>
+                </div>
+                <h2 class="text-xl font-black text-white mb-2">Start Scanner</h2>
+                <p class="text-white/50 mb-6 text-sm max-w-xs">Tap the button below to activate the camera and start scanning QR codes.</p>
+                <button id="startCameraBtn" class="px-8 py-4 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-primary/80 transition-all shadow-premium">
+                    <i class="fas fa-video mr-2"></i> Enable Camera
+                </button>
+                <p id="cameraError" class="text-rose-400 text-sm mt-4 hidden"></p>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black z-20 hidden">
+            <div class="text-center">
+                <i class="fas fa-spinner fa-spin text-4xl text-primary mb-4"></i>
+                <p class="text-white/60 text-sm">Starting camera...</p>
+            </div>
+        </div>
+
         <!-- Framing Overlay -->
-        <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+        <div id="framingOverlay" class="absolute inset-0 pointer-events-none flex items-center justify-center hidden">
             <div class="w-72 h-72 border-2 border-white/20 rounded-[3rem] relative shadow-[0_0_0_1000px_rgba(0,0,0,0.6)]">
                 <!-- Bezel Corners -->
                 <div class="absolute -top-1 -left-1 w-12 h-12 border-t-8 border-l-8 border-primary rounded-tl-3xl"></div>
@@ -100,31 +123,74 @@
         .animate-scan { animation: scan 2s ease-in-out infinite alternate; }
         .pulse-emerald { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); animation: pulse 2s infinite; }
         @keyframes pulse { 70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-        #reader__scan_region video { object-fit: cover !important; height: 100vh !important; }
+        #reader video { 
+            object-fit: cover !important; 
+            width: 100% !important;
+            height: 100% !important; 
+        }
         #reader__dashboard { display: none !important; }
+        #reader__dashboard_section { display: none !important; }
+        #reader__dashboard_section_csr { display: none !important; }
     </style>
 
     <script>
-        const html5QrCode = new Html5Qrcode("reader");
+        let html5QrCode = null;
         const modal = document.getElementById('resultModal');
         const modalContent = document.getElementById('modalContent');
+        const startCameraOverlay = document.getElementById('startCameraOverlay');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const framingOverlay = document.getElementById('framingOverlay');
+        const startCameraBtn = document.getElementById('startCameraBtn');
+        const cameraError = document.getElementById('cameraError');
         let isProcessing = false;
 
-        const startScanner = () => {
-             const qrConfig = { fps: 10, qrbox: { width: 300, height: 300 } };
-             html5QrCode.start(
-                { facingMode: "environment" },
-                qrConfig,
-                onScanSuccess
-            );
+        const startScanner = async () => {
+            try {
+                // Show loading
+                startCameraOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('hidden');
+                cameraError.classList.add('hidden');
+
+                // Initialize scanner
+                html5QrCode = new Html5Qrcode("reader");
+
+                const qrConfig = { 
+                    fps: 10, 
+                    qrbox: { width: 280, height: 280 },
+                    aspectRatio: 1.0,
+                    disableFlip: false
+                };
+
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    qrConfig,
+                    onScanSuccess,
+                    onScanFailure
+                );
+
+                // Camera started successfully
+                loadingOverlay.classList.add('hidden');
+                framingOverlay.classList.remove('hidden');
+                console.log('Camera started successfully');
+
+            } catch (err) {
+                console.error('Camera start error:', err);
+                loadingOverlay.classList.add('hidden');
+                startCameraOverlay.classList.remove('hidden');
+                cameraError.textContent = 'Error: ' + (err.message || 'Unable to access camera. Please check permissions.');
+                cameraError.classList.remove('hidden');
+            }
         };
 
-        const onScanSuccess = (decodedText) => {
+        const onScanSuccess = (decodedText, decodedResult) => {
             if (isProcessing) return;
             isProcessing = true;
 
+            console.log('QR Code scanned:', decodedText);
+
             // Visual feedback
             vibrate();
+            playBeep();
 
             fetch("{{ route('scanner.scan.process') }}", {
                 method: "POST",
@@ -135,10 +201,18 @@
                 body: JSON.stringify({ ticket_number: decodedText })
             })
             .then(res => res.json())
-            .then(data => showResult(data))
+            .then(data => {
+                console.log('Server response:', data);
+                showResult(data);
+            })
             .catch(err => {
-                showResult({ status: 'error', message: 'Connection Error' });
+                console.error('Fetch error:', err);
+                showResult({ status: 'error', message: 'Connection Error. Please try again.' });
             });
+        };
+
+        const onScanFailure = (error) => {
+            // Silent - this is called continuously when no QR is found
         };
 
         const vibrate = () => {
@@ -147,39 +221,67 @@
             }
         };
 
+        const playBeep = () => {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.frequency.value = 1200;
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.15);
+            } catch(e) {
+                console.log('Audio not available');
+            }
+        };
+
         const showResult = (data) => {
             let icon = 'fa-check-circle text-emerald-500';
             let bg = 'bg-emerald-50';
+            let statusTitle = 'Success';
 
             if (data.status === 'error' || data.status === 'invalid') {
                 icon = 'fa-times-circle text-rose-500';
                 bg = 'bg-rose-50';
+                statusTitle = data.status === 'invalid' ? 'Invalid' : 'Error';
             } else if (data.status === 'already_scanned') {
                 icon = 'fa-exclamation-triangle text-amber-500';
                 bg = 'bg-amber-50';
+                statusTitle = 'Already Scanned';
+            } else if (data.status === 'success') {
+                statusTitle = 'Valid Entry';
             }
 
             let attendeeInfo = '';
             if (data.attendee) {
+                const attendee = data.attendee;
+                const ticketTypeName = attendee.ticket_type?.name || 'N/A';
+                const bookingId = attendee.booking?.booking_id || 'N/A';
+                const eventTitle = attendee.booking?.event?.title || 'N/A';
+                const guestName = attendee.name || 'Guest Participant';
+
                 attendeeInfo = `
                     <div class="mt-8 space-y-4 border-t border-slate-100 pt-8">
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Pass Holder</p>
-                            <p class="text-xl font-black text-dark tracking-tight leading-none">${data.attendee.name || 'Guest Participant'}</p>
+                            <p class="text-xl font-black text-dark tracking-tight leading-none">${guestName}</p>
                         </div>
                         <div class="flex items-center gap-8">
                             <div class="flex-grow">
                                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Tier</p>
-                                <p class="text-xs font-bold text-dark">${data.attendee.ticket_type?.name || 'N/A'}</p>
+                                <p class="text-xs font-bold text-dark">${ticketTypeName}</p>
                             </div>
                             <div>
                                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Order Ref</p>
-                                <p class="text-xs font-bold text-primary italic font-mono">${data.attendee.booking.booking_id}</p>
+                                <p class="text-xs font-bold text-primary font-mono">${bookingId}</p>
                             </div>
                         </div>
                         <div class="p-4 bg-slate-50 rounded-2xl">
                              <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Associated Event</p>
-                             <p class="text-xs font-bold text-dark truncate">${data.attendee.booking.event.title}</p>
+                             <p class="text-xs font-bold text-dark truncate">${eventTitle}</p>
                         </div>
                     </div>
                 `;
@@ -190,7 +292,7 @@
                     <div class="w-24 h-24 rounded-[2rem] ${bg} flex items-center justify-center text-4xl mb-8">
                         <i class="fas ${icon}"></i>
                     </div>
-                    <h2 class="font-outfit text-3xl font-black text-dark tracking-tighter mb-2 italic uppercase">${data.status.replace('_', ' ')}</h2>
+                    <h2 class="font-outfit text-3xl font-black text-dark tracking-tighter mb-2 uppercase">${statusTitle}</h2>
                     <p class="text-sm font-bold text-slate-400">${data.message}</p>
                     ${attendeeInfo}
                     <button onclick="closeModal()" class="w-full mt-10 bg-dark text-white py-5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary transition-all shadow-premium">
@@ -213,7 +315,10 @@
             }, 300);
         };
 
-        window.onload = startScanner;
+        // Event listener for start button
+        startCameraBtn.addEventListener('click', startScanner);
+
+        // Do NOT auto-start - require user interaction for camera permissions
     </script>
 </body>
 </html>

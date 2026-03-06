@@ -58,7 +58,7 @@
                                             <i class="fas fa-user-circle text-primary mr-2"></i>
                                             {{ $ticket['name'] }} - Other Participant
                                         </h3>
-                                        <span class="text-[10px] font-black text-slate-300 uppercase italic">Attendee Profile</span>
+                                        <span class="text-[10px] font-black text-slate-300 uppercase">Attendee Profile</span>
                                     </div>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div class="space-y-2">

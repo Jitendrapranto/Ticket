@@ -188,3 +188,19 @@ Here the header search bar does not work
 On event page, I want to here add a search bar where search by event name and category name and also make it responsive for mobile devices as well. 
 
 When download tickets then it downloaded but pdf file is empty and also make sure to add a professional design for the ticket pdf which includes event details, customer details, and a unique QR code for each ticket. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When a user fill up the Join as a organizer form and submit it then this request will be sent to the super admin for approval and when super admin approve the request then the organizer can access the organizer dashboard and also make sure to add a professional popup when super admin approve the request and also make sure to add a toast message after super admin approve the request...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When press download segment data then here downloaded csv format and here photo has been exist in link but I want to photo will be exist here jpg format inside the csv file .... is it possible...
+
+
+I want to the all dashboard font will be arial and also make sure to remove the italic font from the website and also make sure to remove the italic font from the admin dashboard as well...I want to the all dashboard look attractive and professional?
+
+
+On scanner dashboard when press qr scan code then scanner camera open but it does not scan the qr code and the manual check in also does not work...I want to when scanner scan the ticket then it will show the ticket details and also show the status of the ticket whether it is valid or invalid or already scanned and also make sure to add a professional design for this section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When I deploYed this project on the live server then pdf file not downloaded...
+I want to when deploYed on the live server then pdf file will be downloaded....

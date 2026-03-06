@@ -24,13 +24,19 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->remember)) {
-            if (Auth::user()->role === 'organizer') {
+            $user = Auth::user();
+
+            if ($user->role === 'organizer' && $user->organizer_status === 'approved') {
                 $request->session()->regenerate();
                 return redirect()->intended(route('organizer.dashboard'));
-            } else {
-                Auth::logout();
-                return back()->withErrors(['email' => 'You do not have organizer privileges.']);
             }
+
+            if ($user->role === 'pending_organizer' || ($user->role === 'organizer' && $user->organizer_status !== 'approved')) {
+                return redirect()->route('organizer.pending');
+            }
+
+            Auth::logout();
+            return back()->withErrors(['email' => 'You do not have organizer privileges.']);
         }
 
         return back()->withErrors([
@@ -41,6 +47,14 @@ class AuthController extends Controller
     public function showRegisterForm()
     {
         return view('organizer.auth.register');
+    }
+
+    public function showPendingPage()
+    {
+        if (Auth::check() && Auth::user()->role === 'organizer' && Auth::user()->organizer_status === 'approved') {
+            return redirect()->route('organizer.dashboard');
+        }
+        return view('organizer.auth.pending');
     }
 
     public function register(Request $request)
@@ -69,12 +83,13 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'present_address' => $request->present_address,
             'password' => Hash::make($request->password),
-            'role' => 'organizer',
+            'role' => 'pending_organizer',
+            'organizer_status' => 'pending',
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('organizer.dashboard');
+        return redirect()->route('organizer.pending');
     }
 
     public function logout(Request $request)

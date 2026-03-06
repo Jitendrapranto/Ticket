@@ -11,7 +11,6 @@
     </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -29,8 +28,9 @@
                     },
                     brand: '#520C6B',
                     fontFamily: {
-                        outfit: ['Outfit', 'sans-serif'],
-                        plus: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['Arial', 'Helvetica', 'sans-serif'],
+                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
+                        plus: ['Arial', 'Helvetica', 'sans-serif'],
                     },
                     boxShadow: {
                         'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.25)',
@@ -40,7 +40,8 @@
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: Arial, Helvetica, sans-serif; }
+        * { font-style: normal !important; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .glass-dark {
@@ -95,7 +96,7 @@
                         <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 group focus:outline-none">
                             <div class="text-right hidden sm:block">
                                 <p class="text-xs font-black text-dark group-hover:text-primary transition-colors">Super Admin</p>
-                                <p class="text-[10px] font-bold text-primary italic uppercase tracking-tighter">Master Control</p>
+                                <p class="text-[10px] font-bold text-primary uppercase tracking-tighter">Master Control</p>
                             </div>
                             <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium group-hover:scale-105 transition-transform">
                                 <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">

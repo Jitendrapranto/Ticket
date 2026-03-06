@@ -10,7 +10,7 @@
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
@@ -18,7 +18,7 @@
             theme: {
                 extend: {
                     colors: { primary: '#520C6B', 'primary-dark': '#21032B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Outfit', 'sans-serif'], plus: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                 }
             }
         }
@@ -125,7 +125,7 @@
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Google Maps Embed URL (src link only)</label>
                                 <textarea name="google_map_url" rows="4" class="w-full bg-white border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm leading-relaxed" placeholder="Paste the 'src' value from Google Maps embed iframe code here...">{{ old('google_map_url', $map->google_map_url) }}</textarea>
-                                <p class="text-[10px] text-slate-400 mt-2 italic">Tip: Go to Google Maps > Share > Embed a map > Copy ONLY the URL inside the src="" attribute.</p>
+                                <p class="text-[10px] text-slate-400 mt-2">Tip: Go to Google Maps > Share > Embed a map > Copy ONLY the URL inside the src="" attribute.</p>
                             </div>
                         </div>
                     </div>

@@ -27,7 +27,7 @@
                     <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-16 brightness-0 invert">
                 </a>
                 <div class="mt-16 space-y-6">
-                    <h2 class="font-outfit text-4xl font-black leading-tight tracking-tight">Unlock the World of <span class="text-primary italic">Live Events.</span></h2>
+                    <h2 class="font-outfit text-4xl font-black leading-tight tracking-tight">Unlock the World of <span class="text-primary">Live Events.</span></h2>
                     <p class="text-slate-400 font-medium leading-relaxed">Join thousands of fans and get early access to concerts, sports, and exclusive gatherings.</p>
                 </div>
             </div>

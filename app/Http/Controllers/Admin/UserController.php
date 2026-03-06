@@ -150,50 +150,112 @@ class UserController extends Controller
     }
 
     $attendees = $query->get();
-    $fileName = 'attendees_segmentation_' . date('Y-m-d') . '.csv';
-    
-    $headers = [
-        "Content-type" => "text/csv",
-        "Content-Disposition" => "attachment; filename=$fileName",
-    ];
 
-    $callback = function() use ($attendees) {
-        $file = fopen('php://output', 'w');
-        fputcsv($file, ['ID', 'Event', 'Attendee Name', 'Email', 'Mobile', 'Ticket Type', 'Status', 'Picture URL']);
+    // --- Build Word Document ---
+    $phpWord = new \PhpOffice\PhpWord\PhpWord();
+    $phpWord->getSettings()->setUpdateFields(true);
 
-        foreach ($attendees as $item) {
-            $customerPhoto = '';
-            if ($item->booking->form_data && $item->booking->event && $item->booking->event->formFields) {
-                $fileFields = $item->booking->event->formFields->where('type', 'file');
-                foreach ($fileFields as $ff) {
-                    $val = $item->booking->form_data[$ff->id] ?? null;
-                    if ($val && \Storage::disk('public')->exists($val)) {
-                        $ext = strtolower(pathinfo($val, PATHINFO_EXTENSION));
-                        if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
-                            $customerPhoto = url('storage/' . $val);
-                        }
+    $section = $phpWord->addSection([
+        'orientation' => 'landscape',
+        'pageSizeW' => \PhpOffice\PhpWord\Shared\Converter::cmToEmu(35),
+        'pageSizeH' => \PhpOffice\PhpWord\Shared\Converter::cmToEmu(21),
+        'marginTop'    => 800,
+        'marginBottom' => 800,
+        'marginLeft'   => 800,
+        'marginRight'  => 800,
+    ]);
+
+    // Title
+    $section->addText(
+        'Attendee Segmentation Report — ' . date('Y-m-d'),
+        ['bold' => true, 'size' => 14],
+        ['spaceAfter' => 200]
+    );
+
+    // Table style
+    $phpWord->addTableStyle('SegTable', [
+        'borderSize' => 6,
+        'borderColor' => 'cccccc',
+        'cellMargin' => 80,
+    ], [
+        'bgColor' => '4F0B67',
+        'color'   => 'ffffff',
+        'bold'    => true,
+    ]);
+
+    $table = $section->addTable('SegTable');
+
+    // Header row
+    $headers = ['ID', 'Event', 'Attendee Name', 'Email', 'Mobile', 'Ticket Type', 'Status', 'Photo'];
+    $colWidths = [700, 2400, 2000, 2400, 1400, 1600, 1200, 1800];
+    $table->addRow(500);
+    foreach ($headers as $i => $hdr) {
+        $cell = $table->addCell($colWidths[$i], ['bgColor' => '4F0B67']);
+        $cell->addText($hdr, ['bold' => true, 'color' => 'ffffff', 'size' => 9]);
+    }
+
+    // Data rows
+    foreach ($attendees as $item) {
+        $storagePath = null;
+
+        if ($item->booking->form_data && $item->booking->event && $item->booking->event->formFields) {
+            $fileFields = $item->booking->event->formFields->where('type', 'file');
+            foreach ($fileFields as $ff) {
+                $val = $item->booking->form_data[$ff->id] ?? null;
+                if ($val && \Storage::disk('public')->exists($val)) {
+                    $ext = strtolower(pathinfo($val, PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
+                        $storagePath = $val;
                     }
                 }
             }
-            if (!$customerPhoto && $item->booking->user && $item->booking->user->profile_picture) {
-                $customerPhoto = url('storage/' . $item->booking->user->profile_picture);
-            }
-
-            fputcsv($file, [
-                $item->id, 
-                $item->booking->event->title ?? 'N/A', 
-                $item->name ?: ($item->booking->user->name ?? 'N/A'), 
-                $item->booking->user->email ?? 'N/A',
-                $item->mobile ?: 'N/A', 
-                $item->ticketType->name ?? 'N/A',
-                $item->booking->status,
-                $customerPhoto
-            ]);
         }
-        fclose($file);
-    };
+        if (!$storagePath && $item->booking->user && $item->booking->user->profile_picture) {
+            $pp = $item->booking->user->profile_picture;
+            if (\Storage::disk('public')->exists($pp)) {
+                $storagePath = $pp;
+            }
+        }
 
-    return response()->stream($callback, 200, $headers);
+        $table->addRow(1400);
+        $cellStyle = ['valign' => 'center'];
+        $textStyle = ['size' => 9];
+
+        $table->addCell($colWidths[0], $cellStyle)->addText((string)$item->id, $textStyle);
+        $table->addCell($colWidths[1], $cellStyle)->addText($item->booking->event->title ?? 'N/A', $textStyle);
+        $table->addCell($colWidths[2], $cellStyle)->addText($item->name ?: ($item->booking->user->name ?? 'N/A'), $textStyle);
+        $table->addCell($colWidths[3], $cellStyle)->addText($item->booking->user->email ?? 'N/A', $textStyle);
+        $table->addCell($colWidths[4], $cellStyle)->addText($item->mobile ?: 'N/A', $textStyle);
+        $table->addCell($colWidths[5], $cellStyle)->addText($item->ticketType->name ?? 'N/A', $textStyle);
+        $table->addCell($colWidths[6], $cellStyle)->addText($item->booking->status ?? 'N/A', $textStyle);
+
+        $photoCell = $table->addCell($colWidths[7], $cellStyle);
+        if ($storagePath) {
+            $absolutePath = \Storage::disk('public')->path($storagePath);
+            if (file_exists($absolutePath)) {
+                try {
+                    $photoCell->addImage($absolutePath, ['width' => 70, 'height' => 70, 'wrappingStyle' => 'inline']);
+                } catch (\Exception $e) {
+                    $photoCell->addText('(image error)', $textStyle);
+                }
+            } else {
+                $photoCell->addText('N/A', $textStyle);
+            }
+        } else {
+            $photoCell->addText('N/A', $textStyle);
+        }
+    }
+
+    // Save to temp file and stream
+    $tmpFile = tempnam(sys_get_temp_dir(), 'seg_word_') . '.docx';
+    $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+    $writer->save($tmpFile);
+
+    $fileName = 'attendees_segmentation_' . date('Y-m-d') . '.docx';
+
+    return response()->download($tmpFile, $fileName, [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ])->deleteFileAfterSend(true);
 }
 
     public function segmentationEdit($id)

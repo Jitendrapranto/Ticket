@@ -11,7 +11,7 @@
     </style>
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -66,7 +66,7 @@
                             @endif
                         </div>
                         <h3 class="font-outfit text-2xl font-black text-dark tracking-tight">{{ $user->name }}</h3>
-                        <p class="text-xs font-bold text-primary mb-4 italic">Registered Fan</p>
+                        <p class="text-xs font-bold text-primary mb-4">Registered Fan</p>
 
                         <div class="flex items-center justify-center gap-3">
                             <span class="px-4 py-1.5 bg-green-50 text-green-600 text-[9px] font-black rounded-full border border-green-100 uppercase tracking-widest">Account Active</span>

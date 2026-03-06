@@ -27,6 +27,7 @@ class User extends Authenticatable
         'avatar',
         'role',
         'organizer_id',
+        'organizer_status',
     ];
 
     /**

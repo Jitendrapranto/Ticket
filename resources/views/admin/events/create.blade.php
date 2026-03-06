@@ -10,7 +10,7 @@
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
@@ -18,7 +18,7 @@
             theme: {
                 extend: {
                     colors: { primary: '#520C6B', 'primary-dark': '#21032B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
-                    fontFamily: { outfit: ['Outfit', 'sans-serif'], plus: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                     boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
                 }
             }
@@ -364,7 +364,7 @@
                                 <i class="fas fa-sort-numeric-down absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors"></i>
                                 <input type="number" name="sort_order" value="0" min="0" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-14 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 1">
                             </div>
-                            <p class="text-[10px] text-slate-400 font-medium italic">Lower numbers appear first in the listing.</p>
+                            <p class="text-[10px] text-slate-400 font-medium">Lower numbers appear first in the listing.</p>
                         </div>
                         <div class="space-y-4">
                             <label class="form-label">Featured Experience</label>
@@ -442,19 +442,19 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 border-b border-dashed border-slate-100">
                             <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
                                 <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark italic">Name</p>
+                                <p class="text-[13px] font-bold text-dark">Name</p>
                             </div>
                             <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
                                 <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark italic">Email</p>
+                                <p class="text-[13px] font-bold text-dark">Email</p>
                             </div>
                             <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
                                 <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark italic">Phone</p>
+                                <p class="text-[13px] font-bold text-dark">Phone</p>
                             </div>
                             <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
                                 <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark italic">Address</p>
+                                <p class="text-[13px] font-bold text-dark">Address</p>
                             </div>
                         </div>
 

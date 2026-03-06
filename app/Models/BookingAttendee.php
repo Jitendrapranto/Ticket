@@ -17,6 +17,11 @@ class BookingAttendee extends Model
         'scanner_id'
     ];
 
+    protected $casts = [
+        'is_scanned' => 'boolean',
+        'scanned_at' => 'datetime',
+    ];
+
     public function scanner()
     {
         return $this->belongsTo(User::class, 'scanner_id');
