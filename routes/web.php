@@ -33,19 +33,19 @@ use App\Http\Controllers\ProfileController;
 Route::get('/create-storage-link', function () {
     $target = storage_path('app/public');
     $link = public_path('storage');
-    
+
     // Remove existing link/folder if exists
     if (is_link($link)) {
         unlink($link);
     } elseif (is_dir($link)) {
         rmdir($link);
     }
-    
+
     // Create symlink
     if (symlink($target, $link)) {
         return 'Storage link created successfully! Target: ' . $target . ' -> Link: ' . $link;
     }
-    
+
     return 'Failed to create symlink. Try creating it manually via file manager.';
 });
 
@@ -81,7 +81,7 @@ Route::get('/', function () {
         ->where('is_featured', true)
         ->orderBy('sort_order', 'asc')
         ->latest()->take(9)->get();
-    
+
     $slideData = $featuredEvents->map(function($e) {
         return [
             'title' => $e->title,
@@ -107,7 +107,7 @@ Route::get('/events', function (\Illuminate\Http\Request $request) {
     $categories = EventCategory::withCount(['events' => function($q) {
         $q->where('status', 'Live')->where('is_approved', true);
     }])->get();
-    
+
     $featuredEvents = Event::with('category')
         ->where('status', 'Live')
         ->where('is_approved', true)
@@ -135,7 +135,7 @@ Route::get('/events', function (\Illuminate\Http\Request $request) {
     $events = $eventsQuery->orderBy('sort_order', 'asc')
         ->latest()->paginate(12)
         ->appends(['search' => $search]);
-        
+
     return view('events', compact('hero', 'categories', 'events', 'featuredEvents', 'search'));
 })->name('events');
 
@@ -144,13 +144,13 @@ Route::get('/events/{slug}', function ($slug) {
         ->where('slug', $slug)
         ->where('is_approved', true)
         ->firstOrFail();
-        
+
     $relatedEvents = Event::with('category')
         ->where('category_id', $event->category_id)
         ->where('is_approved', true)
         ->where('id', '!=', $event->id)
         ->take(4)->get();
-        
+
     return view('events.show', compact('event', 'relatedEvents'));
 })->name('events.show');
 
@@ -197,14 +197,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/events/hero', [EventHeroController::class, 'edit'])->name('events.hero');
         Route::post('/events/hero', [EventHeroController::class, 'update'])->name('events.hero.update');
-        
+
         Route::get('/events/drafts', [EventController::class, 'drafts'])->name('events.drafts');
         Route::post('/events/{event}/publish', [EventController::class, 'publish'])->name('events.publish');
         Route::post('/events/{event}/approve', [EventController::class, 'approve'])->name('events.approve');
-        
+
         Route::get('/gallery/hero', [GalleryHeroController::class, 'edit'])->name('gallery.hero');
         Route::post('/gallery/hero', [GalleryHeroController::class, 'update'])->name('gallery.hero.update');
-        
+
         Route::get('/gallery/images', [GalleryController::class, 'index'])->name('gallery.images.index');
         Route::get('/gallery/images/create', [GalleryController::class, 'create'])->name('gallery.images.create');
         Route::post('/gallery/images', [GalleryController::class, 'store'])->name('gallery.images.store');
@@ -216,7 +216,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
-        
+
         Route::get('/about/story', [AboutStoryController::class, 'edit'])->name('about.story.edit');
         Route::put('/about/story', [AboutStoryController::class, 'update'])->name('about.story.update');
 
@@ -225,7 +225,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/about/cta', [AboutCtaController::class, 'edit'])->name('about.cta.edit');
         Route::put('/about/cta', [AboutCtaController::class, 'update'])->name('about.cta.update');
-        
+
         Route::resource('about/statistics', AboutStatisticController::class)->names('about.statistics');
         Route::resource('about/advantages', AboutAdvantageController::class)->names('about.advantages');
 
@@ -289,10 +289,10 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
 
     Route::middleware(['organizer'])->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Organizer\DashboardController::class, 'index'])->name('dashboard');
-        
+
         Route::resource('events', \App\Http\Controllers\Organizer\EventController::class);
         Route::get('/get-next-code', [\App\Http\Controllers\Organizer\EventController::class, 'getNextCode'])->name('events.get-next-code');
-        
+
         // Customer Management
         Route::get('/customers', [\App\Http\Controllers\Organizer\UserController::class, 'index'])->name('customers.index');
         Route::get('/customers/export', [\App\Http\Controllers\Organizer\UserController::class, 'export'])->name('customers.export');
@@ -312,10 +312,10 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
 Route::prefix('scanner')->name('scanner.')->group(function () {
     Route::middleware(['auth', 'scanner'])->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Scanner\ScannerController::class, 'dashboard'])->name('dashboard');
-        
+
         Route::get('/scan', [\App\Http\Controllers\Scanner\ScannerController::class, 'showScan'])->name('scan');
         Route::post('/scan/process', [\App\Http\Controllers\Scanner\ScannerController::class, 'processScan'])->name('scan.process');
-        
+
         Route::get('/manual-checkin', [\App\Http\Controllers\Scanner\ScannerController::class, 'showManualCheckin'])->name('manual-checkin');
     });
 });
