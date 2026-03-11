@@ -13,7 +13,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#21032B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A' },
+                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
                     fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                 }
             }
@@ -99,7 +99,7 @@
                 <div class="lg:col-span-1">
                     <div class="sticky top-28">
                         <p class="text-xs font-black text-dark uppercase tracking-widest mb-4">Live Preview</p>
-                        <div class="rounded-3xl overflow-hidden relative bg-gradient-to-r from-[#520C6B] to-[#21032B] min-h-[260px] flex items-center justify-center p-8">
+                        <div class="rounded-3xl overflow-hidden relative bg-gradient-to-r from-[#520C6B] to-[#1B2B46] min-h-[260px] flex items-center justify-center p-8">
                             <!-- Glows -->
                             <div class="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
                             <div class="absolute bottom-0 left-0 w-24 h-24 bg-[#FF7D52]/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>

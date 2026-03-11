@@ -22,7 +22,7 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',
-                        secondary: '#21032B',
+                        secondary: '#1B2B46',
                         accent: '#2563EB',
                         dark: '#0F172A',
                         'brand-green': '#10B981',

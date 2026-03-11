@@ -89,7 +89,7 @@
                         Main Registration Details
                     </h2>
 
-                    <div class="bg-[#21032B] rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                    <div class="bg-[#1B2B46] rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
                         <!-- Decorative background -->
                         <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
                         <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-accent/10 rounded-full blur-3xl"></div>
@@ -236,6 +236,47 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(isset($existingBooking) && $existingBooking)
+            Swal.fire({
+                title: 'Pending Booking Found!',
+                text: "You already have an unfinished booking ({{ $existingBooking->booking_id }}) for this event. Would you like to resume your previous booking?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#7C3AED',
+                cancelButtonColor: '#F1556C',
+                confirmButtonText: 'Resume Previous',
+                cancelButtonText: 'Create New',
+                background: '#ffffff',
+                color: '#1e293b',
+                customClass: {
+                    popup: 'rounded-[2rem] border border-slate-100 shadow-2xl',
+                    confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest',
+                    cancelButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('events.checkout', $existingBooking->booking_id) }}";
+                } else {
+                     const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                    Toast.fire({
+                        icon: 'info',
+                        title: 'Starting a new registration.'
+                    });
+                }
+            });
+        @endif
+    });
+</script>
 
 <style>
     body { background-color: #F8FAFC !important; }

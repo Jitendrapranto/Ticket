@@ -17,7 +17,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#21032B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A' },
+                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
                     fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                     boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
                 }

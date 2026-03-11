@@ -3,7 +3,7 @@
 @section('title', 'Register as Organizer - Ticket Kinun')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center py-20 px-4 bg-[#21032B] relative overflow-hidden" style="margin-top: -100px;">
+<div class="min-h-screen flex items-center justify-center py-20 px-4 bg-[#1B2B46] relative overflow-hidden" style="margin-top: -100px;">
     <!-- Decorative background elements -->
     <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary rounded-full blur-[120px]"></div>
@@ -79,7 +79,7 @@
             </div>
 
             <div class="mb-8">
-                <h2 class="font-outfit text-2xl font-black text-[#21032B] tracking-tight">Organizer Registration</h2>
+                <h2 class="font-outfit text-2xl font-black text-[#1B2B46] tracking-tight">Organizer Registration</h2>
                 <p class="text-slate-400 text-sm font-medium mt-1">Fill in your details to create your organizer account.</p>
             </div>
 
@@ -229,7 +229,7 @@
 </div>
 
 <style>
-    body { background-color: #21032B !important; }
+    body { background-color: #1B2B46 !important; }
     header, footer { display: none !important; }
 </style>
 

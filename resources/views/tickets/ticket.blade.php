@@ -16,14 +16,14 @@
         /* ===== EVENT BANNER ===== */
         .event-banner {
             width: 100%;
-            height: 220px;
+            height: 180px;
             overflow: hidden;
             position: relative;
-            background: linear-gradient(135deg, #520C6B 0%, #21032B 100%);
+            background: #520C6B;
         }
         .event-banner img {
             width: 100%;
-            height: 220px;
+            height: 180px;
         }
         .banner-overlay {
             position: absolute;
@@ -43,27 +43,46 @@
             border-radius: 4px;
         }
         .banner-logo {
-            position: absolute;
-            top: 16px; right: 16px;
-            color: #fff;
-            font-size: 14px;
+            color: #520C6B;
+            font-size: 16px;
             font-weight: 900;
-            letter-spacing: 1px;
-            opacity: 0.9;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .user-avatar-box {
+            margin-bottom: 12px;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #f1f5f9;
+        }
+        .user-avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* ===== TITLE SECTION ===== */
+        .form-uploaded-image {
+            margin-top: 5px;
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
         .title-section {
-            background: linear-gradient(135deg, #520C6B 0%, #3b0764 100%);
-            padding: 20px 35px;
+            background-color: #520C6B;
+            padding: 15px 35px;
             color: #fff;
         }
         .title-section h1 {
-            margin: 0 0 4px 0;
-            font-size: 24px;
+            margin: 0 0 2px 0;
+            font-size: 22px;
             font-weight: 900;
             letter-spacing: 0.5px;
-            line-height: 1.2;
+            line-height: 1.1;
         }
         .title-meta {
             font-size: 10px;
@@ -77,8 +96,8 @@
         .status-bar {
             background: #f0fdf4;
             border-bottom: 2px solid #bbf7d0;
-            padding: 10px 35px;
-            font-size: 11px;
+            padding: 8px 35px;
+            font-size: 10px;
             font-weight: 800;
             color: #166534;
             letter-spacing: 0.5px;
@@ -90,7 +109,7 @@
 
         /* ===== MAIN CONTENT ===== */
         .main-content {
-            padding: 22px 35px 10px;
+            padding: 12px 35px 5px;
         }
 
         /* ===== INFO GRID (Table-based for DomPDF) ===== */
@@ -278,21 +297,25 @@
 
         /* ===== FOOTER ===== */
         .page-footer {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #94a3b8;
+            background-color: #1B2B46;
+            color: #ffffff;
             text-align: center;
-            padding: 12px 30px;
-            font-size: 7px;
+            padding: 15px 30px;
+            font-size: 7.5px;
             font-weight: 800;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
         .footer-brand {
-            color: #fff;
+            color: #ffffff;
             font-size: 10px;
             font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 2px;
+            letter-spacing: 1.5px;
+            margin-bottom: 3px;
+        }
+        .page-footer p {
+            margin: 0;
+            color: #ffffff;
         }
 
         /* ===== DASHED DIVIDER ===== */
@@ -309,10 +332,11 @@
     <div class="event-banner">
         @if($eventImage)
             <img src="{{ $eventImage }}" alt="Event Banner">
+        @else
+            <div style="width: 100%; height: 220px; background: linear-gradient(135deg, #520C6B 0%, #1B2B46 100%);"></div>
         @endif
         <div class="banner-overlay"></div>
         <div class="banner-badge">{{ $booking->event->category->name ?? 'Event' }}</div>
-        <div class="banner-logo">TICKET KINUN</div>
     </div>
 
     <!-- ========== TITLE SECTION ========== -->
@@ -323,37 +347,30 @@
 
     <!-- ========== STATUS BAR ========== -->
     <div class="status-bar">
-        <span class="check">&#10003;</span> Booking Confirmed &mdash; Order #{{ $booking->booking_id }}
-        &nbsp;&nbsp;|&nbsp;&nbsp; Booked on {{ $booking->created_at->format('M d, Y \a\t h:i A') }}
+        <span style="color: #16a34a; font-weight: 900;">[CONFIRMED]</span> Order #{{ $booking->booking_id }}
+        &nbsp;&nbsp;|&nbsp;&nbsp; Booked on {{ $booking->created_at->format('M d, Y') }}
+    </div>
+
+    <!-- ========== LOGO SECTION ========== -->
+    <div style="padding: 2px 35px 0; text-align: right;">
+        {{-- Text logo removed as requested --}}
     </div>
 
     <!-- ========== MAIN DETAILS ========== -->
     <div class="main-content">
         <table class="info-table">
             <tr>
-                <!-- Column 1: Event Details -->
+                <!-- Column 1: Venue & Access -->
                 <td style="width: 32%; padding-right: 18px;">
-                    <p class="section-heading">Event Details</p>
+                    <p class="section-heading">Venue &amp; Entry</p>
 
-                    <div class="info-field">
-                        <span class="info-label">Event Name</span>
-                        <span class="info-value">{{ $booking->event->title }}</span>
-                    </div>
                     <div class="info-field">
                         <span class="info-label">Venue / Location</span>
                         <span class="info-value">{{ $booking->event->venue_name ?? $booking->event->location }}</span>
                     </div>
                     <div class="info-field">
-                        <span class="info-label">Event Date</span>
-                        <span class="info-value">{{ $booking->event->date->format('l, F d, Y') }}</span>
-                    </div>
-                    <div class="info-field">
-                        <span class="info-label">Category</span>
-                        <span class="info-value-accent">{{ $booking->event->category->name ?? 'General' }}</span>
-                    </div>
-                    <div class="info-field">
-                        <span class="info-label">Ticket Type</span>
-                        <span class="info-value">
+                        <span class="info-label">Access Level</span>
+                        <span class="info-value-accent">
                             @foreach($booking->attendees->groupBy('ticket_type_id') as $tier)
                                 {{ $tier->count() }}&times; {{ $tier->first()->ticketType->name ?? 'Standard' }}@if(!$loop->last), @endif
                             @endforeach
@@ -363,20 +380,33 @@
 
                 <!-- Column 2: Registration Info -->
                 <td style="width: 34%; padding-right: 18px;">
-                    <p class="section-heading">Registration Info</p>
+                    <p class="section-heading">Registration Details</p>
+                    
+                    @if($userAvatar)
+                        <div class="user-avatar-box">
+                            <img src="{{ $userAvatar }}" alt="User Picture">
+                        </div>
+                    @endif
+
                     @php
                         $formData = $booking->form_data ?? [];
                         $formFields = $booking->event->formFields ?? collect();
                         $displayCount = 0;
+                        // Define fields we want to exclude because they are duplicated or shown elsewhere
+                        $excludedFields = ['Name', 'Email', 'Booking Reference', 'Booking ID'];
                     @endphp
 
                     @foreach($formFields as $field)
-                        @if(isset($formData[$field->id]) && !empty($formData[$field->id]) && $displayCount < 6)
+                        @if(isset($formData[$field->id]) && !empty($formData[$field->id]) && !in_array($field->label, $excludedFields) && $displayCount < 6)
                             <div class="info-field">
                                 <span class="info-label">{{ $field->label }}</span>
                                 <span class="info-value">
                                     @if($field->type === 'file')
-                                        [Uploaded File]
+                                        @if(isset($formImages[$field->id]))
+                                            <img src="{{ $formImages[$field->id] }}" class="form-uploaded-image" alt="Uploaded File">
+                                        @else
+                                            [Attachment: {{ basename($formData[$field->id]) }}]
+                                        @endif
                                     @else
                                         {{ $formData[$field->id] }}
                                     @endif
@@ -386,21 +416,13 @@
                         @endif
                     @endforeach
 
-                    @if($displayCount == 0)
+                    @if($displayCount == 0 && !$userAvatar)
                         <div class="info-field">
-                            <span class="info-label">Name</span>
+                            <span class="info-label">Guest Name</span>
                             <span class="info-value">{{ $booking->user->name }}</span>
-                        </div>
-                        <div class="info-field">
-                            <span class="info-label">Email</span>
-                            <span class="info-value">{{ $booking->user->email }}</span>
                         </div>
                     @endif
 
-                    <div class="info-field">
-                        <span class="info-label">Booking Reference</span>
-                        <span class="info-value-accent">{{ $booking->booking_id }}</span>
-                    </div>
                     <div class="info-field">
                         <span class="info-label">Booking Date</span>
                         <span class="info-value">{{ $booking->created_at->format('M d, Y') }}</span>
@@ -455,7 +477,7 @@
             <tr>
                 <td class="stat-box bg-1">
                     <span class="s-label">Total Paid</span>
-                    <span class="s-value">&#2547; {{ number_format($booking->total_amount, 2) }}</span>
+                    <span class="s-value">BDT {{ number_format($booking->total_amount, 2) }}</span>
                 </td>
                 <td class="stat-box bg-2">
                     <span class="s-label">Tickets</span>
@@ -486,11 +508,17 @@
                 <li>Tickets are non-refundable unless the event is cancelled by the organizer.</li>
             </ul>
         </div>
+
+        <!-- ========== REDUNDANT LOGO / BRANDING ========== -->
+        @if($siteLogo)
+            <div style="text-align: center; margin-top: 15px; margin-bottom: 10px;">
+                <img src="{{ $siteLogo }}" alt="Logo" style="height: 45px; width: auto; opacity: 0.8;">
+            </div>
+        @endif
     </div>
 
     <!-- ========== FOOTER ========== -->
     <div class="page-footer">
-        <p class="footer-brand">Ticket Kinun</p>
         <p>Your Trusted Event Ticketing Platform &bull; www.ticketkinun.com &bull; Generated on {{ now()->format('M d, Y \a\t h:i A') }}</p>
     </div>
 

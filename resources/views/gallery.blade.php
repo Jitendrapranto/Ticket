@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#21032B] overflow-hidden min-h-[400px] flex items-center">
+    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[400px] flex items-center">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
         <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center">
@@ -25,11 +25,11 @@
     <section class="py-5 bg-white border-b border-slate-100 sticky top-20 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="flex flex-wrap justify-center gap-2 sm:gap-4">
-                <button data-category="all" class="gallery-filter-btn active bg-[#21032B] text-white shadow-lg px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
+                <button data-category="all" class="gallery-filter-btn active bg-[#1B2B46] text-white shadow-lg px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
                     ALL
                 </button>
                 @foreach(\App\Models\EventCategory::all() as $cat)
-                    <button data-category="{{ strtolower($cat->name) }}" class="gallery-filter-btn bg-slate-50 text-slate-400 hover:text-[#21032B] hover:bg-purple-50 px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
+                    <button data-category="{{ strtolower($cat->name) }}" class="gallery-filter-btn bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50 px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
                         {{ strtoupper($cat->name) }}
                     </button>
                 @endforeach
@@ -95,7 +95,7 @@
                         <div class="w-24 h-24 bg-white rounded-[2rem] shadow-lg flex items-center justify-center text-slate-200 text-4xl mb-8">
                             <i class="fas fa-camera-retro"></i>
                         </div>
-                        <h3 class="font-outfit text-2xl sm:text-3xl font-black text-[#21032B] tracking-tight">Exhibition Still in Prep</h3>
+                        <h3 class="font-outfit text-2xl sm:text-3xl font-black text-[#1B2B46] tracking-tight">Exhibition Still in Prep</h3>
                         <p class="text-slate-400 text-base font-light mt-4 max-w-md px-4">Our curators are currently selecting the finest moments. Check back soon.</p>
                     </div>
                 @endforelse
@@ -194,7 +194,7 @@
 
             <!-- Footer info -->
             <div class="px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 flex-wrap"
-                 style="background:linear-gradient(135deg,#520C6B,#21032B);">
+                 style="background:linear-gradient(135deg,#520C6B,#1B2B46);">
                 <div>
                     <span id="modalCategory"
                           class="text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full mb-2 inline-block"
@@ -213,7 +213,7 @@
     <!-- ===== END LIGHTBOX MODAL ===== -->
 
     <!-- CTA Section -->
-    <section class="py-24 sm:py-40 bg-[#21032B] text-white relative overflow-hidden">
+    <section class="py-24 sm:py-40 bg-[#1B2B46] text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2"></div>
         <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <h2 class="font-outfit text-4xl sm:text-5xl md:text-7xl font-black mb-8 sm:mb-10 tracking-tighter leading-[0.9]">Make Your Own <br><span class="text-accent">Memories.</span></h2>
@@ -237,10 +237,10 @@ document.addEventListener('DOMContentLoaded', function () {
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => {
-                b.classList.remove('bg-[#21032B]', 'text-white', 'shadow-lg');
+                b.classList.remove('bg-[#1B2B46]', 'text-white', 'shadow-lg');
                 b.classList.add('bg-slate-50', 'text-slate-400');
             });
-            btn.classList.add('bg-[#21032B]', 'text-white', 'shadow-lg');
+            btn.classList.add('bg-[#1B2B46]', 'text-white', 'shadow-lg');
             btn.classList.remove('bg-slate-50', 'text-slate-400');
 
             const cat = btn.getAttribute('data-category');

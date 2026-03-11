@@ -22,7 +22,7 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',
-                        'primary-dark': '#21032B',
+                        'primary-dark': '#1B2B46',
                         accent: '#FF7D52',
                         dark: '#0F172A',
                         brand: '#520C6B',
@@ -96,7 +96,7 @@
                      x-transition:leave-end="translate-x-full opacity-0"
                      class="fixed top-8 right-8 z-[150] max-w-sm w-full font-plus">
 
-                    <div class="bg-[#21032B] rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] border border-white/5 p-6 flex items-center gap-6 relative overflow-hidden group text-white">
+                    <div class="bg-[#1B2B46] rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] border border-white/5 p-6 flex items-center gap-6 relative overflow-hidden group text-white">
                         <!-- Left Accent Bar -->
                         <div class="absolute left-0 top-0 bottom-0 w-2 bg-primary"></div>
 

@@ -50,6 +50,7 @@ Route::get('/', function () {
         ->where('status', 'Live')
         ->where('is_approved', true)
         ->where('is_featured', true)
+        ->where('date', '>=', now())
         ->orderBy('sort_order', 'asc')
         ->latest()->take(9)->get();
 
@@ -62,33 +63,39 @@ Route::get('/', function () {
         ];
     });
 
-    $trendingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(4)->get();
-    $upcomingEvents = Event::with('category')->where('is_approved', true)->where('status', 'Live')->orderBy('sort_order', 'asc')->latest()->take(6)->get();
+    $upcomingEvents = Event::with('category')
+        ->where('is_approved', true)
+        ->where('status', 'Live')
+        ->where('date', '>=', now())
+        ->latest()
+        ->take(6)->get();
     $pastEvents = Event::with('category')->where('is_approved', true)->where('date', '<', now())->orderBy('date', 'desc')->take(12)->get();
     $platformFeatures = PlatformFeature::active()->orderBy('sort_order')->get();
     $gallerySection   = HomeGallerySection::first();
     $homepageGalleryImages = GalleryImage::with('category')->homepage()->orderBy('homepage_sort_order')->latest()->get();
     $ctaSection       = HomeCtaSection::first();
 
-    return view('home', compact('featuredEvents', 'trendingEvents', 'upcomingEvents', 'slideData', 'pastEvents', 'platformFeatures', 'gallerySection', 'homepageGalleryImages', 'ctaSection'));
+    return view('home', compact('featuredEvents', 'upcomingEvents', 'slideData', 'pastEvents', 'platformFeatures', 'gallerySection', 'homepageGalleryImages', 'ctaSection'));
 });
 
 Route::get('/events', function (\Illuminate\Http\Request $request) {
     $hero = EventHero::first();
     $categories = EventCategory::withCount(['events' => function($q) {
-        $q->where('status', 'Live')->where('is_approved', true);
+        $q->where('status', 'Live')->where('is_approved', true)->where('date', '>=', now());
     }])->get();
 
     $featuredEvents = Event::with('category')
         ->where('status', 'Live')
         ->where('is_approved', true)
         ->where('is_featured', true)
+        ->where('date', '>=', now())
         ->orderBy('sort_order', 'asc')
         ->latest()->take(3)->get();
 
     $eventsQuery = Event::with('category')
         ->where('status', 'Live')
-        ->where('is_approved', true);
+        ->where('is_approved', true)
+        ->where('date', '>=', now());
 
     // Server-side search logic
     $search = $request->input('search');
@@ -114,11 +121,14 @@ Route::get('/events/{slug}', function ($slug) {
     $event = Event::with(['category', 'ticketTypes'])
         ->where('slug', $slug)
         ->where('is_approved', true)
+        ->where('date', '>=', now())
         ->firstOrFail();
 
     $relatedEvents = Event::with('category')
         ->where('category_id', $event->category_id)
         ->where('is_approved', true)
+        ->where('status', 'Live')
+        ->where('date', '>=', now())
         ->where('id', '!=', $event->id)
         ->take(4)->get();
 
@@ -162,9 +172,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Protected Admin Routes
     Route::middleware(['admin'])->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/events/hero', [EventHeroController::class, 'edit'])->name('events.hero');
         Route::post('/events/hero', [EventHeroController::class, 'update'])->name('events.hero.update');
@@ -172,6 +180,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/events/drafts', [EventController::class, 'drafts'])->name('events.drafts');
         Route::post('/events/{event}/publish', [EventController::class, 'publish'])->name('events.publish');
         Route::post('/events/{event}/approve', [EventController::class, 'approve'])->name('events.approve');
+        Route::get('/events/export', [EventController::class, 'export'])->name('events.export');
 
         Route::get('/gallery/hero', [GalleryHeroController::class, 'edit'])->name('gallery.hero');
         Route::post('/gallery/hero', [GalleryHeroController::class, 'update'])->name('gallery.hero.update');
@@ -233,8 +242,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class, 'index'])->name('finance.commission.index');
         Route::post('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class, 'update'])->name('finance.commission.update');
+        Route::resource('finance/payment-methods', \App\Http\Controllers\Admin\PaymentMethodController::class)->names('finance.payment-methods');
         Route::get('/finance/reports/sales', [\App\Http\Controllers\Admin\ReportController::class, 'sales'])->name('finance.reports.sales');
         Route::get('/finance/reports/sales/export', [\App\Http\Controllers\Admin\ReportController::class, 'exportSales'])->name('finance.reports.sales.export');
+        
+        Route::get('/finance/bookings', [\App\Http\Controllers\Admin\BookingController::class, 'index'])->name('finance.bookings.index');
+        Route::get('/finance/bookings/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'show'])->name('finance.bookings.show');
+        Route::post('/finance/bookings/{id}/approve', [\App\Http\Controllers\Admin\BookingController::class, 'approve'])->name('finance.bookings.approve');
+        Route::post('/finance/bookings/{id}/reject', [\App\Http\Controllers\Admin\BookingController::class, 'reject'])->name('finance.bookings.reject');
 
         // Site Header & Footer
         Route::get('/site/header', [\App\Http\Controllers\Admin\SiteHeaderController::class, 'edit'])->name('site.header.edit');

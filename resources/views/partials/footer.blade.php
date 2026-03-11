@@ -22,7 +22,7 @@
     $fTerms            = $f->terms_url ?? '#';
     $fCookies          = $f->cookies_url ?? '#';
 @endphp
-<footer class="bg-gradient-to-r from-[#520C6B] to-[#21032B] text-white pt-24 pb-12 shadow-[0_-10px_40px_-15px_rgba(82,12,107,0.3)]">
+<footer class="bg-gradient-to-r from-[#520C6B] to-[#1B2B46] text-white pt-24 pb-12 shadow-[0_-10px_40px_-15px_rgba(82,12,107,0.3)]">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
             <!-- Branding -->

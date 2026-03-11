@@ -94,7 +94,7 @@
         </div>
 
         <!-- Summary Side -->
-        <div class="bg-[#21032B] rounded-[3rem] p-10 text-white relative overflow-hidden flex flex-col justify-between">
+        <div class="bg-[#1B2B46] rounded-[3rem] p-10 text-white relative overflow-hidden flex flex-col justify-between">
             <div class="relative z-10">
                 <span class="text-white/40 font-black tracking-[0.3em] text-[10px] uppercase mb-12 block">Quick Actions</span>
                 <h3 class="font-outfit text-4xl font-black tracking-tighter mb-10 leading-none">Manage<br><span class="text-accent tracking-normal">Your</span> Events.</h3>

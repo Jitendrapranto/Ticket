@@ -10,8 +10,10 @@
         html { visibility: hidden; opacity: 0; }
     </style>
 
-    <!-- Scripts / Styles -->
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -22,14 +24,14 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',     // Brand Purple
-                        secondary: '#21032B',   // Deep Plum
+                        secondary: '#1B2B46',   // Deep Plum
                         accent: '#2563EB',      // Vibrant Blue
                         dark: '#0F172A',
                         brand: '#520C6B',
                     },
                     fontFamily: {
-                        sans: ['Arial', 'Helvetica', 'sans-serif'],
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Inter', 'sans-serif'],
                     },
                     boxShadow: {
                         'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.08)',
@@ -41,8 +43,11 @@
     </script>
 
     <style>
-        body { font-family: Arial, Helvetica, sans-serif; }
+        body { font-family: 'Inter', sans-serif !important; font-style: normal !important; }
         * { font-style: normal !important; }
+        *:not(i):not([class*="fa"]) { font-family: 'Inter', sans-serif !important; }
+        .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands { font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important; }
+        i, em, q, dfn { font-style: normal !important; }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }

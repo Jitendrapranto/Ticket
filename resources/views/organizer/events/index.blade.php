@@ -19,8 +19,8 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',
-                        'primary-dark': '#21032B',
-                        secondary: '#21032B',
+                        'primary-dark': '#1B2B46',
+                        secondary: '#1B2B46',
                         accent: '#FF7D52',
                         dark: '#0F172A',
                         'slate-custom': '#F8FAFC'

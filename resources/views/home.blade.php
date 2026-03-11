@@ -354,7 +354,7 @@
                     <div class="flex gap-6" :class="paused ? 'animate-none' : 'animate-marquee'"
                          @mouseenter="paused = true" @mouseleave="paused = false"
                          style="width: max-content">
-                        @php $marqueeItems = $pastEvents->concat($pastEvents); @endphp
+                        @php $marqueeItems = $pastEvents; @endphp
                         @foreach($marqueeItems as $past)
                         <a href="{{ route('events.show', $past->slug) }}"
                            class="shrink-0 w-72 h-52 rounded-[2rem] overflow-hidden shadow-md group relative cursor-pointer block">
@@ -642,7 +642,7 @@
 
             <div class="flex flex-col sm:flex-row justify-center gap-6">
                
-                <a href="{{ route('organizer.register') }}" class="px-16 py-6 rounded-3xl font-black text-2xl transition-all hover:scale-105 hover:shadow-2xl" style="background-color: #FFE700; color: #21032B;">Join as a Organizer</a>
+                <a href="{{ route('organizer.register') }}" class="px-16 py-6 rounded-3xl font-black text-2xl transition-all hover:scale-105 hover:shadow-2xl" style="background-color: #FFE700; color: #1B2B46;">Join as a Organizer</a>
             </div>
         </div>
 

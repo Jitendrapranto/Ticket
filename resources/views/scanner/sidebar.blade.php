@@ -14,7 +14,7 @@
         <!-- Overview -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block">Monitoring</span>
         <a href="{{ route('scanner.dashboard') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('scanner.dashboard') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10">
-            <i class="fas fa-chart-line text-sky-400"></i> Dashboard
+            <i class="fa-solid fa-chart-line text-sky-400"></i> Dashboard
         </a>
 
         <!-- Scan Section -->
@@ -22,9 +22,9 @@
         <div x-data="{ open: {{ request()->routeIs('scanner.scan') || request()->routeIs('scanner.manual-checkin') ? 'true' : 'false' }} }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 {{ request()->routeIs('scanner.scan*') || request()->routeIs('scanner.manual-checkin*') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-qrcode text-emerald-400"></i> Scan & Verify
+                    <i class="fa-solid fa-qrcode text-emerald-400"></i> Scan & Verify
                 </div>
-                <i class="fas fa-chevron-down text-[10px] transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" x-transition class="mt-2 space-y-1 pl-12 border-l border-white/5 ml-4">
                 <a href="{{ route('scanner.scan') }}" class="block py-2 text-xs font-bold {{ request()->routeIs('scanner.scan') ? 'text-accent' : 'text-white/40' }} hover:text-white transition-colors">QR Code Scan</a>
@@ -35,7 +35,7 @@
         <!-- Authentication -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">System</span>
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fas fa-sign-out-alt text-red-500"></i> Log Out
+            <i class="fa-solid fa-sign-out-alt text-red-500"></i> Log Out
         </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
             @csrf

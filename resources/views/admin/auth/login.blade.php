@@ -18,7 +18,7 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',
-                        secondary: '#21032B',
+                        secondary: '#1B2B46',
                         dark: '#0F172A',
                     },
                     fontFamily: {
@@ -92,7 +92,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-[#21032B] hover:bg-black text-white py-5 rounded-2xl font-black text-xs tracking-[0.2em] transition-all shadow-xl active:scale-[0.98] uppercase flex items-center justify-center gap-3">
+                <button type="submit" class="w-full bg-[#1B2B46] hover:bg-black text-white py-5 rounded-2xl font-black text-xs tracking-[0.2em] transition-all shadow-xl active:scale-[0.98] uppercase flex items-center justify-center gap-3">
                     <i class="fas fa-sign-in-alt"></i> Access Dashboard
                 </button>
             </form>

@@ -52,12 +52,38 @@ class TicketController extends Controller
 
             // Prepare Event Banner Image as Base64 for PDF
             $eventImage = $this->getEventImageBase64($booking->event->image);
+            
+            // Prepare User Avatar as Base64
+            $userAvatar = $this->getEventImageBase64($booking->user->avatar);
+
+            // Fetch Site Logo
+            $siteHeader = \App\Models\SiteHeader::first();
+            $logoPath = $siteHeader && $siteHeader->logo_path
+                ? (str_starts_with($siteHeader->logo_path, 'site/') ? 'storage/' . $siteHeader->logo_path : $siteHeader->logo_path)
+                : 'Blue_Simple_Technology_Logo.png';
+            $siteLogo = $this->getEventImageBase64($logoPath);
+
+            // Prepare Form Uploaded Images as Base64
+            $formImages = [];
+            $formData = $booking->form_data ?? [];
+            foreach ($booking->event->formFields as $field) {
+                if ($field->type === 'file' && isset($formData[$field->id])) {
+                    $filePath = $formData[$field->id];
+                    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
+                        $formImages[$field->id] = $this->getEventImageBase64($filePath);
+                    }
+                }
+            }
 
             // Generate PDF (A4)
             $pdf = Pdf::loadView('tickets.ticket', [
                 'booking'        => $booking,
                 'qrcode'         => $qrcode,
                 'eventImage'     => $eventImage,
+                'userAvatar'     => $userAvatar,
+                'siteLogo'       => $siteLogo,
+                'formImages'     => $formImages,
                 'attendeeQRCodes' => $attendeeQRCodes,
             ])->setPaper('a4', 'portrait');
 

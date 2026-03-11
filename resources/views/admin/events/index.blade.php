@@ -19,8 +19,8 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',
-                        'primary-dark': '#21032B',
-                        secondary: '#21032B',
+                        'primary-dark': '#1B2B46',
+                        secondary: '#1B2B46',
                         accent: '#FF7D52',
                         dark: '#0F172A',
                         'slate-custom': '#F8FAFC'
@@ -44,8 +44,9 @@
         setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
     </script>
 </head>
-<body class="bg-[#F8FAFC] text-slate-800 font-plus" x-data="{
+<body class="bg-[#F8FAFC] text-slate-800 font-plus h-screen overflow-hidden" x-data="{
     searchQuery: '',
+    dateRange: 'all',
     deleteModal: false,
     deleteUrl: '',
     eventName: '',
@@ -57,7 +58,7 @@
 }">
     @include('admin.sidebar')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
+    <div class="lg:ml-72 h-screen flex flex-col overflow-hidden">
         <!-- Top Header -->
         <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
             <div class="flex items-center gap-4">
@@ -84,93 +85,136 @@
             </div>
         </header>
 
-        <main class="p-8 flex-1">
-            <!-- Page Title Area -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <main class="p-8 flex-1 overflow-hidden flex flex-col">
+            <!-- Page Title Area - Compact & Professional -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 shrink-0">
                 <div>
-                    <h1 class="font-outfit text-4xl font-black text-dark tracking-tighter mb-2">Event Control Center</h1>
-                    <p class="text-slate-400 font-medium text-sm">Monitor, approve, and manage all events across the platform.</p>
+                    <h1 class="font-outfit text-4xl font-black text-dark tracking-tighter mb-1">Event <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Control Center.</span></h1>
+                    <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.4em]">Operations Hub • Control & Monitoring</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button class="bg-white text-dark px-6 py-3 rounded-2xl text-xs font-black tracking-widest uppercase border border-slate-100 flex items-center gap-2 hover:bg-slate-50 transition-all">
-                        <i class="fas fa-download text-[10px]"></i> Export CSV
-                    </button>
-                    <a href="{{ route('admin.events.create') }}" class="bg-dark text-white px-6 py-3 rounded-2xl text-xs font-black tracking-widest uppercase flex items-center gap-2 hover:bg-primary transition-all shadow-xl shadow-dark/10">
-                        <i class="fas fa-plus text-[10px]"></i> Create New Event
+                    <a href="{{ route('admin.events.export') }}" class="bg-white text-dark px-6 py-2.5 rounded-xl text-[9px] font-black tracking-widest uppercase border border-slate-100 flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm">
+                        <i class="fas fa-download text-[10px] text-primary"></i> Export System Logs
+                    </a>
+                    <a href="{{ route('admin.events.create') }}" class="bg-dark text-white px-6 py-2.5 rounded-xl text-[9px] font-black tracking-widest uppercase flex items-center gap-2 hover:bg-primary transition-all shadow-xl shadow-dark/10">
+                        <i class="fas fa-plus text-[10px] text-accent"></i> Create New Event
                     </a>
                 </div>
             </div>
 
-            <!-- Stats Overview -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                    <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3 text-center sm:text-left">Total Events</p>
-                    <h3 class="font-outfit text-4xl font-black text-dark text-center sm:text-left">{{ $stats['total'] }}</h3>
+            <!-- Stats Overview - Low Profile, High Impact -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 shrink-0">
+                <div class="group relative bg-[#4F46E5] px-8 py-7 rounded-[1.8rem] shadow-lg overflow-hidden transition-all hover:-translate-y-1">
+                    <div class="relative z-10 text-white flex items-center justify-between">
+                        <div>
+                            <p class="text-[9px] font-black tracking-[0.3em] text-white/50 uppercase mb-2">Total Records</p>
+                            <h3 class="font-outfit text-3xl font-black tracking-tight">{{ $stats['total'] }}</h3>
+                        </div>
+                        <i class="fa-solid fa-calendar-days text-4xl opacity-20"></i>
+                    </div>
                 </div>
-                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                    <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3 text-center sm:text-left">Pending Approval</p>
-                    <h3 class="font-outfit text-4xl font-black text-accent text-center sm:text-left">{{ $stats['pending'] }}</h3>
+
+                <div class="group relative bg-[#F59E0B] px-8 py-7 rounded-[1.8rem] shadow-lg overflow-hidden transition-all hover:-translate-y-1">
+                    <div class="relative z-10 text-white flex items-center justify-between">
+                        <div>
+                            <p class="text-[9px] font-black tracking-[0.3em] text-white/50 uppercase mb-2">In Review</p>
+                            <h3 class="font-outfit text-3xl font-black tracking-tight">{{ $stats['pending'] }}</h3>
+                        </div>
+                        <i class="fa-solid fa-clock-rotate-left text-4xl opacity-20"></i>
+                    </div>
                 </div>
-                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                    <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3 text-center sm:text-left">Active Today</p>
-                    <h3 class="font-outfit text-4xl font-black text-emerald-500 text-center sm:text-left">{{ $stats['active_today'] }}</h3>
+
+                <div class="group relative bg-[#10B981] px-8 py-7 rounded-[1.8rem] shadow-lg overflow-hidden transition-all hover:-translate-y-1">
+                    <div class="relative z-10 text-white flex items-center justify-between">
+                        <div>
+                            <p class="text-[9px] font-black tracking-[0.3em] text-white/50 uppercase mb-2">Verified Base</p>
+                            <h3 class="font-outfit text-3xl font-black tracking-tight">{{ $stats['active_today'] }}</h3>
+                        </div>
+                        <i class="fa-solid fa-circle-check text-4xl opacity-20"></i>
+                    </div>
                 </div>
-                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                    <p class="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3 text-center sm:text-left">Reported</p>
-                    <h3 class="font-outfit text-4xl font-black text-red-500 text-center sm:text-left">{{ $stats['reported'] }}</h3>
+
+                <div class="group relative bg-[#EF4444] px-8 py-7 rounded-[1.8rem] shadow-lg overflow-hidden transition-all hover:-translate-y-1">
+                    <div class="relative z-10 text-white flex items-center justify-between">
+                        <div>
+                            <p class="text-[9px] font-black tracking-[0.3em] text-white/50 uppercase mb-2">Anomalies</p>
+                            <h3 class="font-outfit text-3xl font-black tracking-tight">{{ $stats['reported'] }}</h3>
+                        </div>
+                        <i class="fa-solid fa-flag text-4xl opacity-20"></i>
+                    </div>
                 </div>
             </div>
 
-            <!-- Main Listing Card -->
-            <div class="bg-white rounded-[2.5rem] shadow-premium border border-slate-50 overflow-hidden min-h-[600px] flex flex-col">
+            <!-- Main Listing Card - Maximized Vertical Area -->
+            <div class="bg-white rounded-[2rem] shadow-premium border border-slate-50 flex-1 overflow-hidden flex flex-col mb-4">
                 <!-- Search & Filters -->
-                <div class="p-8 border-b border-slate-50 flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-slate-50/10">
+                <div class="p-6 border-b border-slate-50 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50/5 shrink-0">
                     <div>
-                        <h2 class="font-outfit text-2xl font-black text-dark tracking-tighter mb-1">All Events</h2>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Comprehensive list of platform events and status.</p>
+                        <h2 class="font-outfit text-2xl font-black text-dark tracking-tighter mb-0.5">Authenticated Events</h2>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Platform Operational Master List</p>
                     </div>
                     <div class="flex items-center gap-3">
+                        <!-- Date Range Dropdown -->
+                        <div class="relative group">
+                            <i class="fas fa-filter absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition-colors group-focus-within:text-primary z-10"></i>
+                            <select x-model="dateRange"
+                                class="bg-white border border-slate-100 rounded-2xl pl-10 pr-6 py-3.5 text-xs font-black focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/20 transition-all w-48 appearance-none cursor-pointer uppercase tracking-widest">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="year">This Year</option>
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 text-[10px] pointer-events-none"></i>
+                        </div>
                         <div class="relative group">
                             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs transition-colors group-focus-within:text-primary"></i>
-                            <input type="text" x-model="searchQuery" placeholder="Search event or organizer..."
+                            <input type="text" x-model="searchQuery" placeholder="Search events, organizers, categories..."
                                 class="bg-white border border-slate-100 rounded-2xl pl-10 pr-6 py-3.5 text-xs font-bold focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/20 transition-all w-full lg:w-72">
                         </div>
-                        <button class="bg-white text-dark px-6 py-3.5 rounded-2xl text-[10px] font-black tracking-widest uppercase border border-slate-100 flex items-center gap-2 hover:bg-slate-50 transition-all">
-                            <i class="fas fa-sliders-h"></i> Filter
+                        <button @click="searchQuery = ''; dateRange = 'all'" class="bg-white text-dark px-6 py-3.5 rounded-2xl text-[10px] font-black tracking-widest uppercase border border-slate-100 hover:bg-slate-50 transition-all shadow-sm">
+                            Reset
                         </button>
                     </div>
                 </div>
 
-                <!-- Table Area -->
-                <div class="overflow-x-auto flex-1">
-                    <table class="w-full text-left whitespace-nowrap">
+                <!-- Table Area - Strictly No X-Scroll, 4 Rows Height -->
+                <div class="overflow-y-auto flex-1 no-scrollbar overflow-x-hidden">
+                    <table class="w-full text-left table-fixed">
                         <thead>
                             <tr class="bg-slate-50/50 text-[10px] font-black tracking-widest text-slate-400 uppercase">
-                                <th class="px-8 py-6">Event ID</th>
-                                <th class="px-8 py-6">Event Details</th>
-                                <th class="px-8 py-6">Category</th>
-                                <th class="px-8 py-6">Date & Venue</th>
-                                <th class="px-8 py-6">Status</th>
-                                <th class="px-8 py-6">Sales</th>
-                                <th class="px-8 py-6 text-right">Actions</th>
+                                <th class="px-8 py-5 w-24">ID</th>
+                                <th class="px-8 py-5">Event Details</th>
+                                <th class="px-8 py-5 w-32 text-center">Category</th>
+                                <th class="px-8 py-5 w-44">Date & Venue</th>
+                                <th class="px-8 py-5 w-36 text-center">Status</th>
+                                <th class="px-8 py-5 w-32">Sales</th>
+                                <th class="px-8 py-5 w-48 text-right pr-12">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
                             @forelse($events as $event)
                             @php
                                 $totalTickets = $event->ticketTypes->sum('quantity');
-                                // Calculate sold tickets from attendees across all bookings
                                 $soldTickets = \App\Models\BookingAttendee::whereIn('ticket_type_id', $event->ticketTypes->pluck('id'))->count();
                                 $salesPercent = $totalTickets > 0 ? round(($soldTickets / $totalTickets) * 100) : 0;
+                                
+                                $evDate = $event->date;
+                                $isToday = $evDate->isToday() ? 'true' : 'false';
+                                $isWeek = $evDate->between(now()->startOfWeek(), now()->endOfWeek()) ? 'true' : 'false';
+                                $isMonth = $evDate->between(now()->startOfMonth(), now()->endOfMonth()) ? 'true' : 'false';
+                                $isYear = $evDate->between(now()->startOfYear(), now()->endOfYear()) ? 'true' : 'false';
+                                
+                                $searchContent = strtolower($event->title . ' ' . $event->organizer . ' ' . $event->category->name);
                             @endphp
-                            <tr class="hover:bg-slate-50/50 transition-colors group"
-                                x-show="searchQuery === '' || '{{ strtolower($event->title) }}'.includes(searchQuery.toLowerCase()) || '{{ strtolower($event->organizer) }}'.includes(searchQuery.toLowerCase())">
+                            <tr class="hover:bg-slate-50/50 transition-colors group h-24"
+                                x-show="(searchQuery === '' || '{{ $searchContent }}'.includes(searchQuery.toLowerCase())) && (dateRange === 'all' || (dateRange === 'today' && {{ $isToday }}) || (dateRange === 'week' && {{ $isWeek }}) || (dateRange === 'month' && {{ $isMonth }}) || (dateRange === 'year' && {{ $isYear }}))">
                                 <td class="px-8 py-6">
                                     <span class="text-xs font-black text-slate-400 tracking-tighter uppercase">#{{ strtoupper(substr($event->id . '000000', 0, 6)) }}</span>
                                 </td>
-                                <td class="px-8 py-6">
-                                    <div class="flex items-center gap-4 min-w-[300px]">
-                                        <div class="w-16 h-12 rounded-xl bg-slate-100 flex-shrink-0 overflow-hidden shadow-inner">
+                                <td class="px-8 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-10 rounded-xl bg-slate-100 flex-shrink-0 overflow-hidden shadow-inner hidden sm:block">
                                             @if($event->image)
                                                 <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
                                             @else
@@ -179,69 +223,67 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <div>
-                                            <p class="font-black text-dark text-sm tracking-tight mb-0.5 group-hover:text-primary transition-colors">{{ $event->title }}</p>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">by <span class="text-slate-500">{{ $event->organizer }}</span></p>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-black text-dark text-sm tracking-tight mb-0.5 group-hover:text-primary transition-colors line-clamp-1">{{ $event->title }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tight truncate">by {{ $event->organizer }}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-8 py-6">
-                                    <span class="px-4 py-1.5 rounded-full border border-slate-100 bg-white text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ $event->category->name }}</span>
+                                <td class="px-8 py-4 text-center">
+                                    <span class="px-3 py-1.5 rounded-full border border-slate-100 bg-white text-[8px] font-black text-slate-500 uppercase tracking-widest">{{ $event->category->name }}</span>
                                 </td>
-                                <td class="px-8 py-6">
-                                    <div class="flex flex-col gap-1.5 min-w-[180px]">
+                                <td class="px-8 py-4">
+                                    <div class="flex flex-col gap-1 min-w-0">
                                         <div class="flex items-center gap-2 text-slate-500">
-                                            <i class="far fa-calendar-alt text-[10px]"></i>
-                                            <span class="text-[11px] font-bold">{{ $event->date->format('M d, Y') }}</span>
+                                            <i class="far fa-calendar-alt text-[9px]"></i>
+                                            <span class="text-[10px] font-bold">{{ $event->date->format('M d, Y') }}</span>
                                         </div>
                                         <div class="flex items-center gap-2 text-slate-400">
-                                            <i class="fas fa-map-marker-alt text-[10px]"></i>
-                                            <span class="text-[10px] font-medium truncate max-w-[150px]">{{ $event->venue_name ?? $event->location }}</span>
+                                            <i class="fas fa-map-marker-alt text-[9px]"></i>
+                                            <span class="text-[9px] font-medium truncate">{{ $event->venue_name ?? $event->location }}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-8 py-6">
+                                <td class="px-8 py-4 text-center">
                                     @if($event->is_approved)
-                                        <div class="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-xl border border-emerald-100 max-w-fit">
+                                        <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-xl border border-emerald-100">
                                             <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                                            <span class="text-[10px] font-black uppercase tracking-wider">Approved</span>
+                                            <span class="text-[9px] font-black uppercase tracking-wider">Active</span>
                                         </div>
                                     @else
-                                        <div class="flex items-center gap-2 bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl border border-orange-100 max-w-fit">
+                                        <div class="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl border border-orange-100">
                                             <div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></div>
-                                            <span class="text-[10px] font-black uppercase tracking-wider">Pending</span>
+                                            <span class="text-[9px] font-black uppercase tracking-wider">Review</span>
                                         </div>
                                     @endif
                                 </td>
-                                <td class="px-8 py-6">
-                                    <div class="w-24">
-                                        <div class="flex justify-between items-end mb-2">
-                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ $salesPercent }}% sold</span>
-                                        </div>
+                                <td class="px-8 py-4">
+                                    <div class="w-full">
                                         <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
                                             <div class="h-full bg-dark rounded-full shadow-sm shadow-dark/20 transition-all duration-1000" style="width: {{ $salesPercent }}%"></div>
                                         </div>
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1.5 block">{{ $salesPercent }}% Sold</span>
                                     </div>
                                 </td>
-                                <td class="px-8 py-6 text-right">
-                                    <div class="flex justify-end items-center gap-2">
+                                <td class="px-8 py-4 text-right pr-6">
+                                    <div class="flex justify-end items-center gap-1.5">
                                         @if(!$event->is_approved)
                                         <form action="{{ route('admin.events.approve', $event) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-emerald-600 hover:text-white hover:scale-110 transition-all shadow-sm group/btn" title="Approve">
-                                                <i class="fas fa-check text-[10px]"></i>
+                                            <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-emerald-600 hover:text-white hover:scale-110 transition-all shadow-sm group/btn" title="Approve">
+                                                <i class="fas fa-check text-[9px]"></i>
                                             </button>
                                         </form>
                                         @endif
-                                        <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-primary hover:text-white hover:scale-110 transition-all shadow-sm" title="Preview">
-                                            <i class="far fa-eye text-[10px]"></i>
+                                        <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-primary hover:text-white hover:scale-110 transition-all shadow-sm" title="Preview">
+                                            <i class="far fa-eye text-[9px]"></i>
                                         </a>
-                                        <a href="{{ route('admin.events.edit', $event) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-sm" title="Edit">
-                                            <i class="fas fa-pen text-[10px]"></i>
+                                        <a href="{{ route('admin.events.edit', $event) }}" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-sm" title="Edit">
+                                            <i class="fas fa-pen text-[9px]"></i>
                                         </a>
                                         <button @click="confirmDelete('{{ route('admin.events.destroy', $event) }}', '{{ $event->title }}')"
-                                                class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-red-500 hover:text-white hover:scale-110 transition-all shadow-sm" title="Delete">
-                                            <i class="fas fa-trash-alt text-[10px]"></i>
+                                                class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-red-500 hover:text-white hover:scale-110 transition-all shadow-sm" title="Delete">
+                                            <i class="fas fa-trash-alt text-[9px]"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -262,10 +304,6 @@
                 </div>
             </div>
         </main>
-
-        <footer class="p-8 text-center text-[10px] font-black text-slate-400 tracking-widest uppercase border-t border-slate-50 bg-white">
-            Ticket Kinun • Control Center Beta • © 2026
-        </footer>
     </div>
 
     <!-- Delete Modal -->

@@ -14,19 +14,19 @@
         <!-- Overview -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block">Core</span>
         <a href="{{ route('organizer.dashboard') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.dashboard') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10">
-            <i class="fas fa-th-large text-sky-400"></i> Dashboard
+            <i class="fa-solid fa-th-large text-sky-400"></i> Dashboard
         </a>
 
         <!-- Event Management -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Event Management</span>
         <a href="{{ route('organizer.events.index') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.events.index') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10">
-            <i class="fas fa-calendar-alt text-amber-400"></i> My Events
+            <i class="fa-solid fa-calendar-alt text-amber-400"></i> My Events
         </a>
         <a href="{{ route('organizer.events.create') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.events.create') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10">
-            <i class="fas fa-plus text-emerald-400"></i> Create Event
+            <i class="fa-solid fa-plus text-emerald-400"></i> Create Event
         </a>
         <a href="{{ route('organizer.scanners.index') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.scanners.*') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all border border-white/10 mt-1">
-            <i class="fas fa-qrcode text-violet-400"></i> Scanners
+            <i class="fa-solid fa-qrcode text-violet-400"></i> Scanners
         </a>
 
         <!-- Customer CRM -->
@@ -34,9 +34,9 @@
         <div x-data="{ open: {{ request()->routeIs('organizer.customers.*') ? 'true' : 'false' }} }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 {{ request()->routeIs('organizer.customers.*') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-users-cog text-sky-400"></i> Customers
+                    <i class="fa-solid fa-users-cog text-sky-400"></i> Customers
                 </div>
-                <i class="fas fa-chevron-down text-[10px] transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" x-transition class="mt-2 space-y-1 pl-12">
                 <a href="{{ route('organizer.customers.index') }}" class="block py-2 text-xs font-bold {{ request()->routeIs('organizer.customers.index') ? 'text-accent' : 'text-white/40' }} hover:text-white transition-colors">All Customers</a>
@@ -47,16 +47,16 @@
         <!-- Revenue -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Financials</span>
         <a href="{{ route('organizer.reports.sales') }}" class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('organizer.reports.sales') ? 'bg-white/10 text-white' : 'text-white/60' }} hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-chart-line text-green-400"></i> Sales Reports
+            <i class="fa-solid fa-chart-line text-green-400"></i> Sales Reports
         </a>
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all">
-            <i class="fas fa-wallet text-violet-400"></i> Payouts
+            <i class="fa-solid fa-wallet text-violet-400"></i> Payouts
         </a>
 
         <!-- Settings -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">System</span>
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fas fa-sign-out-alt text-red-500"></i> Log Out
+            <i class="fa-solid fa-sign-out-alt text-red-500"></i> Log Out
         </a>
         <form id="logout-form" action="{{ route('organizer.logout') }}" method="POST" class="hidden">
             @csrf

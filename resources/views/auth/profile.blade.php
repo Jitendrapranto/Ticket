@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="bg-[#21032B] rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
+            <div class="bg-[#1B2B46] rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
                 <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
                 
                 <h2 class="text-lg font-outfit font-black mb-8 relative z-10 flex items-center gap-3">

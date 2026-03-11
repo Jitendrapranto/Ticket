@@ -3,7 +3,7 @@
 @section('title', 'Application Pending - Ticket Kinun')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center py-20 px-4 bg-[#21032B] relative overflow-hidden" style="margin-top: -100px;">
+<div class="min-h-screen flex items-center justify-center py-20 px-4 bg-[#1B2B46] relative overflow-hidden" style="margin-top: -100px;">
     <!-- Background Decoration -->
     <div class="absolute inset-0 pointer-events-none opacity-20">
         <div class="absolute -top-32 -left-32 w-[500px] h-[500px] bg-[#520C6B] rounded-full blur-[180px]"></div>
@@ -76,7 +76,7 @@
             <div class="mt-8 bg-white/5 rounded-2xl p-4 border border-white/5 text-left">
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Your Application</p>
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#21032B] to-[#520C6B] flex items-center justify-center shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1B2B46] to-[#520C6B] flex items-center justify-center shrink-0">
                         <span class="text-[#FFE700] font-black text-sm">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                     </div>
                     <div>
@@ -90,7 +90,7 @@
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row gap-3">
-            <a href="/" class="flex-1 py-4 rounded-2xl bg-[#FFE700] text-[#21032B] font-black text-xs uppercase tracking-widest hover:bg-yellow-300 transition-all flex items-center justify-center gap-2">
+            <a href="/" class="flex-1 py-4 rounded-2xl bg-[#FFE700] text-[#1B2B46] font-black text-xs uppercase tracking-widest hover:bg-yellow-300 transition-all flex items-center justify-center gap-2">
                 <i class="fas fa-home"></i> Go to Homepage
             </a>
             <form action="{{ route('organizer.logout') }}" method="POST" class="flex-1">
@@ -109,7 +109,7 @@
 </div>
 
 <style>
-    body { background-color: #21032B !important; }
+    body { background-color: #1B2B46 !important; }
     header, footer { display: none !important; }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fadeInUp { animation: fadeInUp 0.5s ease forwards; }

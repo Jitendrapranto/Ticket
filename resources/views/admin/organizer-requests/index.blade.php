@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
-        tailwind.config={theme:{extend:{colors:{primary:'#520C6B',secondary:'#21032B',accent:'#FFE700',dark:'#0F172A'},fontFamily:{sans:['Arial','Helvetica','sans-serif'],outfit:['Arial','Helvetica','sans-serif'],plus:['Arial','Helvetica','sans-serif']},boxShadow:{'premium':'0 20px 50px -12px rgba(82,12,107,0.25)'}}}}
+        tailwind.config={theme:{extend:{colors:{primary:'#520C6B',secondary:'#1B2B46',accent:'#FFE700',dark:'#0F172A'},fontFamily:{sans:['Arial','Helvetica','sans-serif'],outfit:['Arial','Helvetica','sans-serif'],plus:['Arial','Helvetica','sans-serif']},boxShadow:{'premium':'0 20px 50px -12px rgba(82,12,107,0.25)'}}}}
     </script>
     <style>
         body{font-family:Arial,Helvetica,sans-serif}*{font-style:normal!important}
@@ -41,7 +41,7 @@
         <div class="flex items-center gap-4" x-data="{ open: false }">
             <div class="relative">
                 <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 focus:outline-none">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#520C6B] to-[#21032B] p-0.5 shadow-premium">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#520C6B] to-[#1B2B46] p-0.5 shadow-premium">
                         <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center">
                             <i class="fas fa-crown text-[#520C6B] text-xs"></i>
                         </div>
@@ -71,7 +71,7 @@
         <div id="approveModal" class="fixed inset-0 z-[9998] flex items-center justify-center hidden">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeApproveModal()"></div>
             <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-fadeInUp">
-                <div class="bg-gradient-to-br from-[#21032B] to-[#520C6B] p-8 text-center">
+                <div class="bg-gradient-to-br from-[#1B2B46] to-[#520C6B] p-8 text-center">
                     <div class="w-20 h-20 rounded-full bg-[#FFE700]/20 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-user-check text-[#FFE700] text-3xl"></i>
                     </div>
@@ -80,13 +80,13 @@
                 </div>
                 <div class="p-6 space-y-4">
                     <div class="bg-slate-50 rounded-2xl p-4 space-y-1">
-                        <p class="font-black text-[#21032B] text-sm" id="modal-org-name">—</p>
+                        <p class="font-black text-[#1B2B46] text-sm" id="modal-org-name">—</p>
                         <p class="text-slate-500 font-medium text-xs" id="modal-org-institution">—</p>
                         <p class="text-slate-400 text-xs font-medium" id="modal-org-email">—</p>
                     </div>
                     <div class="flex gap-3">
                         <button onclick="closeApproveModal()" class="flex-1 py-3 rounded-xl border-2 border-slate-100 text-slate-500 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">Cancel</button>
-                        <button id="confirmApproveBtn" onclick="confirmApprove()" class="flex-1 py-3 rounded-xl bg-[#21032B] text-[#FFE700] font-black text-xs uppercase tracking-widest hover:bg-[#520C6B] transition-all flex items-center justify-center gap-2">
+                        <button id="confirmApproveBtn" onclick="confirmApprove()" class="flex-1 py-3 rounded-xl bg-[#1B2B46] text-[#FFE700] font-black text-xs uppercase tracking-widest hover:bg-[#520C6B] transition-all flex items-center justify-center gap-2">
                             <i class="fas fa-check"></i> Approve Now
                         </button>
                     </div>
@@ -117,13 +117,13 @@
         <!-- Page Header -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-black text-[#21032B] tracking-tight">Organizer Requests</h1>
+                <h1 class="text-3xl font-black text-[#1B2B46] tracking-tight">Organizer Requests</h1>
                 <p class="text-slate-400 text-sm font-medium mt-1">Review and manage organizer account applications</p>
             </div>
             @if($pendingCount > 0)
             <div class="inline-flex items-center gap-2 bg-[#FFE700]/10 border border-[#FFE700]/30 rounded-2xl px-5 py-3">
                 <span class="w-2.5 h-2.5 rounded-full bg-[#FFE700] animate-pulse"></span>
-                <span class="text-[#21032B] font-black text-sm">{{ $pendingCount }} Pending Review</span>
+                <span class="text-[#1B2B46] font-black text-sm">{{ $pendingCount }} Pending Review</span>
             </div>
             @endif
         </div>
@@ -134,7 +134,7 @@
             <a href="{{ route('admin.organizer-requests.index', ['status' => $tab]) }}"
                class="px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all border
                @if($status === $tab)
-                   @if($tab === 'pending') bg-[#21032B] text-[#FFE700] border-transparent shadow-lg
+                   @if($tab === 'pending') bg-[#1B2B46] text-[#FFE700] border-transparent shadow-lg
                    @elseif($tab === 'approved') bg-green-600 text-white border-transparent shadow-lg
                    @elseif($tab === 'rejected') bg-red-500 text-white border-transparent shadow-lg
                    @else bg-slate-600 text-white border-transparent shadow-lg
@@ -143,7 +143,7 @@
                @endif">
                 {{ $label }}
                 @if($tab === 'pending' && $pendingCount > 0)
-                    <span class="ml-1.5 bg-[#FFE700] text-[#21032B] text-[9px] font-black px-1.5 py-0.5 rounded-full">{{ $pendingCount }}</span>
+                    <span class="ml-1.5 bg-[#FFE700] text-[#1B2B46] text-[9px] font-black px-1.5 py-0.5 rounded-full">{{ $pendingCount }}</span>
                 @endif
             </a>
             @endforeach
@@ -179,7 +179,7 @@
                             <td class="px-6 py-5 text-slate-400 text-sm font-bold">{{ $requests->firstItem() + $i }}</td>
                             <td class="px-6 py-5">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#21032B] to-[#520C6B] flex items-center justify-center shrink-0 shadow">
+                                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#1B2B46] to-[#520C6B] flex items-center justify-center shrink-0 shadow">
                                         @if($req->avatar)
                                             <img src="{{ asset('storage/'.$req->avatar) }}" class="w-11 h-11 rounded-xl object-cover">
                                         @else
@@ -187,7 +187,7 @@
                                         @endif
                                     </div>
                                     <div>
-                                        <p class="text-[#21032B] font-black text-sm">{{ $req->name }}</p>
+                                        <p class="text-[#1B2B46] font-black text-sm">{{ $req->name }}</p>
                                         <p class="text-slate-400 text-xs font-medium">{{ $req->institution_name ?? '—' }}</p>
                                     </div>
                                 </div>
@@ -222,7 +222,7 @@
                                 <div class="flex items-center gap-2">
                                     @if($req->organizer_status === 'pending')
                                     <button onclick="openApproveModal({{ $req->id }},'{{ addslashes($req->name) }}','{{ addslashes($req->institution_name ?? '') }}','{{ $req->email }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#21032B] text-[#FFE700] hover:bg-[#520C6B] transition-all text-xs" title="Approve">
+                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B2B46] text-[#FFE700] hover:bg-[#520C6B] transition-all text-xs" title="Approve">
                                         <i class="fas fa-check"></i>
                                     </button>
                                     <button onclick="openRejectModal({{ $req->id }})"
@@ -231,7 +231,7 @@
                                     </button>
                                     @elseif($req->organizer_status === 'rejected')
                                     <button onclick="openApproveModal({{ $req->id }},'{{ addslashes($req->name) }}','{{ addslashes($req->institution_name ?? '') }}','{{ $req->email }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#21032B] text-[#FFE700] hover:bg-[#520C6B] transition-all text-xs" title="Re-approve">
+                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B2B46] text-[#FFE700] hover:bg-[#520C6B] transition-all text-xs" title="Re-approve">
                                         <i class="fas fa-redo"></i>
                                     </button>
                                     @else
@@ -361,7 +361,7 @@
 
     function showToast(type, message) {
         const container = document.getElementById('toast-container');
-        const styles = { success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', warning: 'bg-[#FFE700] text-[#21032B]' };
+        const styles = { success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', warning: 'bg-[#FFE700] text-[#1B2B46]' };
         const icons  = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle' };
         const toast = document.createElement('div');
         toast.className = `pointer-events-auto flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-black transform transition-all duration-300 translate-x-20 opacity-0 ${styles[type]}`;

@@ -13,7 +13,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#520C6B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A' },
+                    colors: { primary: '#520C6B', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
                     fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                 }
             }
@@ -29,7 +29,7 @@
           buttonText:       '{{ old('button_text', $cta->button_text ?? 'Join as a Organizer') }}',
           buttonUrl:        '{{ old('button_url', $cta->button_url ?? '/organizer/register') }}',
           buttonBg:         '{{ old('button_bg_color', $cta->button_bg_color ?? '#FFE700') }}',
-          buttonTextColor:  '{{ old('button_text_color', $cta->button_text_color ?? '#21032B') }}',
+          buttonTextColor:  '{{ old('button_text_color', $cta->button_text_color ?? '#1B2B46') }}',
           bgImageUrl:       '{{ old('bg_image_url', $cta->bg_image_url ?? '') }}',
           successModal: {{ session('success') ? 'true' : 'false' }},
       }">

@@ -22,7 +22,7 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',
-                        secondary: '#21032B',
+                        secondary: '#1B2B46',
                         accent: '#FF7D52',
                         dark: '#0F172A',
                         'brand-green': '#10B981',
@@ -298,7 +298,7 @@
                 text: "This customer's profile and data will be permanently archived.",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#21032B',
+                confirmButtonColor: '#1B2B46',
                 cancelButtonColor: '#F1F5F9',
                 confirmButtonText: 'Yes, Delete!',
                 cancelButtonText: 'Cancel',

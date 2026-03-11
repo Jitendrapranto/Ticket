@@ -17,7 +17,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#21032B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
+                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
                     fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                     boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
                 }
@@ -129,8 +129,17 @@
                             <input type="text" name="title" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Summer Music Festival">
                         </div>
                         <div class="space-y-4">
-                            <label class="form-label">Organizer Name</label>
-                            <input type="text" name="organizer" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. LiveNation Events">
+                            <label class="form-label">Assigned Organizer <span class="text-[9px] text-primary/40 ml-2 font-black uppercase tracking-widest">(Platform Account)</span></label>
+                            <select name="user_id" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm appearance-none cursor-pointer">
+                                <option value="">Independent / Unassigned</option>
+                                @foreach($organizers as $org)
+                                    <option value="{{ $org->id }}" {{ old('user_id') == $org->id ? 'selected' : '' }}>{{ $org->name }} ({{ $org->email }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="form-label">Public Organizer Name <span class="text-[9px] text-slate-300 ml-2 font-black uppercase tracking-widest">(Displayed to Users)</span></label>
+                            <input type="text" name="organizer" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. LiveNation Events">
                         </div>
                         <div class="space-y-4">
                             <label class="form-label">Category</label>

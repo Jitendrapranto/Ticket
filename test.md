@@ -204,3 +204,46 @@ On scanner dashboard when press qr scan code then scanner camera open but it doe
 
 When I deploYed this project on the live server then pdf file not downloaded...
 I want to when deploYed on the live server then pdf file will be downloaded....
+
+
+When Registration date is passed then a user can not book the event and also make sure to add a professional popup when user try to book the event after registration date and also make sure to add a toast message after that...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When event date is passed then this event dont need to show on the featured event section and also need not to show on the All event section on home page and also need not to show on the event page as well...
+
+On Home page all events section I want to here will show the latest 6 events...
+
+
+I want to here change the checkout page ...Here the following design I want to implement...its a manual paYment method ...And I want to paYment instruction will be dYnamicallY updated from admin dashboard and make sure here user upload the screenshot of the paYment and want to here admin upload a qr code image sothat user can scan it and also make sure to add a professional design for the payment instruction section and also for the file upload section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When user completed booking then the user paYment information will be sent to the admin for approval and when admin approve the paYment then user can download the ticket and also make sure to add a professional popup when admin approve the paYment and also make sure to add a toast message after admin approve the paYment...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+For checkout page I want to add a new menu on admin dashboard named Checkout where the super admin can update and create the payment instruction and also can upload the qr code image for the manual payment method and also make sure to add a professional popup when update or create the payment instruction and also make sure to add a toast message after update or create the payment instruction...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to same transaction id for the same booking when user try to book the same event again and also make sure to add a professional popup when user try to book the same event again and also make sure to add a toast message after that...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+
+
+I want to here will show the transaction id instead of booking id, sender no , transaction date and time on the main screen and the action button wil be professional and modern and text format will be arial and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the the overall website font will be the following image and I want to the icon of this website will be look attractive and colourfull ...make sure the overall design of the all dashboard look professional and attractive and modern and also make sure to remove the italic font from the website and also make sure to remove the italic font from the admin dashboard as well...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to here the wonderful and profesional and modern dashboard for super admin
+make sure here all data will be dynamicallY updated from the database and also make sure to add a professional popup when update or create any content from the dashboard and also make sure to add a toast message after update or create any content from the dashboard...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+Add these feature Total sales , TodaYs sale , Total events , TodaYs events , Total Organizer , Organizer Request , Event Approval Request , Total Customer , Total Booking and all card will be colorfull and clickable whenever needed and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+Add PaYment Approval section and I dont need to the all card clickable just need to clickable for the paYment approval  Event Request and Organizer request...and rename the Approval request to Event approval request and make sure all the card background will be colourfull and text and icon will be white and also make it responsive for mobile devices as well. You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+When admin create a event then he can select the organizer from the dropdown and when admin select the organizer then this event will be assigned to that organizer and this organizer can see the event details and also make sure when admin update the event then he can change the assigned organizer as well and also make sure when admin delete the event then it will be deleted from the assigned organizer events list as well...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When user buY a ticket then he can paY for three ticket price...alwaYs he can paY for the extra one ticket price... fix it..

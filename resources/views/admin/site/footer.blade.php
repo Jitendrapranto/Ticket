@@ -13,7 +13,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#520C6B', secondary: '#21032B', accent: '#2563EB', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
+                    colors: { primary: '#520C6B', secondary: '#1B2B46', accent: '#2563EB', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
                     fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                     boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.25)' }
                 }
@@ -270,7 +270,7 @@
                     <div class="lg:col-span-1">
                         <div class="sticky top-28">
                             <p class="text-xs font-black text-dark uppercase tracking-widest mb-4">Live Preview</p>
-                            <div class="bg-gradient-to-r from-[#520C6B] to-[#21032B] rounded-3xl overflow-hidden shadow-sm p-6 space-y-5">
+                            <div class="bg-gradient-to-r from-[#520C6B] to-[#1B2B46] rounded-3xl overflow-hidden shadow-sm p-6 space-y-5">
                                 <!-- Logo & Desc -->
                                 <div>
                                     <img :src="logoPreview" class="h-10 w-auto object-contain brightness-0 invert mb-3" alt="Footer Logo">

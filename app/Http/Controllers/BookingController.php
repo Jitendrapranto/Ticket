@@ -61,7 +61,20 @@ class BookingController extends Controller
         }
         $finalTotal = $totalPrice + $commissionAmount;
 
-        return view('events.booking', compact('event', 'ticketsData', 'totalPrice', 'totalQty', 'commissionAmount', 'commissionSetting', 'finalTotal'));
+        if ($event->registration_deadline && $event->registration_deadline->isPast()) {
+            return redirect()->back()->with('error', 'Registration for this event has closed.');
+        }
+
+        $existingBooking = null;
+        if (Auth::check()) {
+            $existingBooking = Booking::where('event_id', $event->id)
+                ->where('user_id', Auth::id())
+                ->where('status', 'pending')
+                ->where('payment_status', 'unpaid')
+                ->first();
+        }
+
+        return view('events.booking', compact('event', 'ticketsData', 'totalPrice', 'totalQty', 'commissionAmount', 'commissionSetting', 'finalTotal', 'existingBooking'));
     }
 
     public function process(Request $request, $slug)
@@ -71,6 +84,10 @@ class BookingController extends Controller
         }
 
         $event = Event::with('ticketTypes')->where('slug', $slug)->firstOrFail();
+        
+        if ($event->registration_deadline && $event->registration_deadline->isPast()) {
+            return redirect()->route('events.show', $event->slug)->with('error', 'Registration for this event has closed.');
+        }
         
         // Basic validation for attendees if provided
         $request->validate([
@@ -107,11 +124,6 @@ class BookingController extends Controller
                 if (isset($attendeesData[$tier->id])) {
                     $qty = count($attendeesData[$tier->id]);
                 }
-                
-                // If it's the main ticket, add the 1 we hid from the UI
-                if ($tier->id == $mainTicketId) {
-                    $qty += 1;
-                }
 
                 if ($qty > 0) {
                     $totalAmount += ($tier->price * $qty);
@@ -139,18 +151,36 @@ class BookingController extends Controller
 
             $finalTotal = $totalAmount + $commissionAmount;
 
-            $booking = Booking::create([
-                'event_id' => $event->id,
-                'user_id' => Auth::id(),
-                'booking_id' => 'TK-' . strtoupper(Str::random(10)),
-                'subtotal_amount' => $totalAmount,
-                'commission_amount' => $commissionAmount,
-                'commission_percentage' => $commissionPercentage,
-                'total_amount' => $finalTotal,
-                'status' => 'pending',
-                'payment_status' => 'unpaid',
-                'form_data' => $formData
-            ]);
+            // Check for existing pending/unpaid booking to reuse ID
+            $booking = Booking::where('event_id', $event->id)
+                ->where('user_id', Auth::id())
+                ->where('status', 'pending')
+                ->where('payment_status', 'unpaid')
+                ->first();
+
+            if ($booking) {
+                $booking->update([
+                    'subtotal_amount' => $totalAmount,
+                    'commission_amount' => $commissionAmount,
+                    'commission_percentage' => $commissionPercentage,
+                    'total_amount' => $finalTotal,
+                    'form_data' => $formData
+                ]);
+                $booking->attendees()->delete();
+            } else {
+                $booking = Booking::create([
+                    'event_id' => $event->id,
+                    'user_id' => Auth::id(),
+                    'booking_id' => 'TK-' . strtoupper(Str::random(10)),
+                    'subtotal_amount' => $totalAmount,
+                    'commission_amount' => $commissionAmount,
+                    'commission_percentage' => $commissionPercentage,
+                    'total_amount' => $finalTotal,
+                    'status' => 'pending',
+                    'payment_status' => 'unpaid',
+                    'form_data' => $formData
+                ]);
+            }
 
             // Save Attendees
             $idOfNameField = $event->formFields()->where('is_default', true)->where('label', 'Name')->first()?->id;
@@ -158,16 +188,21 @@ class BookingController extends Controller
 
             foreach ($ticketSummary as $tierId => $qty) {
                 for ($i = 1; $i <= $qty; $i++) {
-                    $name = '';
-                    $mobile = '';
+                    // Extract data from form or auth for main person
+                    $mainName = $formData[$idOfNameField] ?? Auth::user()->name; 
+                    $mainMobile = $formData[$idOfPhoneField] ?? Auth::user()->mobile ?? '';
 
                     if ($tierId == $mainTicketId && $i == 1) {
-                         // Default to Form Data Name/Email if it's the main person
-                         $name = $formData[$idOfNameField] ?? Auth::user()->name; 
-                         $mobile = $formData[$idOfPhoneField] ?? Auth::user()->mobile ?? '';
+                         $name = $mainName;
+                         $mobile = $mainMobile;
                     } else {
-                        $name = $attendeesData[$tierId][$i]['name'] ?? '';
-                        $mobile = $attendeesData[$tierId][$i]['mobile'] ?? '';
+                        // Use attendee data if provided, otherwise default to main person
+                        $name = $attendeesData[$tierId][$i]['name'] ?? $mainName;
+                        $mobile = $attendeesData[$tierId][$i]['mobile'] ?? $mainMobile;
+
+                        // Extra safety check for explicitly empty strings
+                        if (empty($name)) $name = $mainName;
+                        if (empty($mobile)) $mobile = $mainMobile;
                     }
 
                     BookingAttendee::create([
@@ -192,7 +227,8 @@ class BookingController extends Controller
     public function checkout($booking_id)
     {
         $booking = Booking::with(['event', 'attendees.ticketType'])->where('booking_id', $booking_id)->firstOrFail();
-        return view('events.checkout', compact('booking'));
+        $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->orderBy('sort_order')->get();
+        return view('events.checkout', compact('booking', 'paymentMethods'));
     }
 
     public function complete(Request $request, $booking_id)
@@ -200,15 +236,38 @@ class BookingController extends Controller
         $booking = Booking::where('booking_id', $booking_id)->firstOrFail();
         
         $request->validate([
-            'payment_method' => 'required|in:bkash,card,cod'
+            'payment_method' => 'required',
+            'transaction_id' => 'required|string',
+            'payment_number' => 'required|string',
+            'payment_screenshot' => 'nullable|image|max:2048'
         ]);
+
+        // Global check for Unique Transaction ID
+        $exists = Booking::where('transaction_id', $request->transaction_id)
+            ->where('id', '!=', $booking->id)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->withInput()->with('error', 'This Transaction ID has already been used. Please provide a valid one.');
+        }
+
+        $screenshotPath = $booking->payment_screenshot;
+        if ($request->hasFile('payment_screenshot')) {
+            $screenshotPath = $request->file('payment_screenshot')->store('screenshots', 'public');
+        }
+
+        $method = \App\Models\PaymentMethod::where('slug', $request->payment_method)->first();
 
         $booking->update([
             'payment_method' => $request->payment_method,
-            'status' => $request->payment_method === 'cod' ? 'confirmed' : 'pending',
-            'payment_status' => $request->payment_method === 'cod' ? 'unpaid' : 'pending' // COD is unpaid until arrival
+            'payment_method_name' => $method ? $method->name : $request->payment_method,
+            'transaction_id' => $request->transaction_id,
+            'payment_number' => $request->payment_number,
+            'payment_screenshot' => $screenshotPath,
+            'status' => 'pending',
+            'payment_status' => 'pending'
         ]);
 
-        return redirect()->route('bookings.index')->with('booking_success', 'Ticket Booked Successfully!');
+        return redirect()->route('bookings.index')->with('booking_success', 'Booking submitted successfully! Our team will verify your payment soon.');
     }
 }

@@ -26,7 +26,7 @@
                 extend: {
                     colors: {
                         primary: '#520C6B',     // Brand Purple
-                        secondary: '#21032B',   // Deep Plum
+                        secondary: '#1B2B46',   // Deep Plum
                         accent: '#FF7D52',      // Brand Orange
                         dark: '#0F172A',
                         'brand-purple': '#520C6B',

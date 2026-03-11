@@ -13,7 +13,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#520C6B', secondary: '#21032B', accent: '#FF7D52', dark: '#0F172A' },
+                    colors: { primary: '#520C6B', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
                     fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
                 }
             }

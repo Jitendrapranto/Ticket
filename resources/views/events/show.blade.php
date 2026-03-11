@@ -365,8 +365,54 @@
         
         // Book Now Redirect
         const bookNowBtn = document.getElementById('bookNowBtn');
+        const isRegistrationClosed = {{ ($event->registration_deadline && $event->registration_deadline->isPast()) ? 'true' : 'false' }};
+
         if (bookNowBtn) {
+            if (isRegistrationClosed) {
+                // Change button text and style if closed
+                bookNowBtn.innerText = 'Registration Closed';
+                bookNowBtn.classList.remove('bg-[#F1556C]', 'hover:bg-[#E1445B]');
+                bookNowBtn.classList.add('bg-slate-400', 'cursor-not-allowed');
+            }
+
             bookNowBtn.addEventListener('click', () => {
+                if (isRegistrationClosed) {
+                    // Show Professional Popup
+                    Swal.fire({
+                        title: 'Registration Closed!',
+                        text: 'We are sorry, the registration date for this event has already passed.',
+                        icon: 'info',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Got it',
+                        confirmButtonColor: '#520C6B', // Brand Purple
+                        background: '#ffffff',
+                        customClass: {
+                            title: 'font-outfit font-black text-2xl',
+                            content: 'font-medium text-slate-500',
+                            confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                        }
+                    }).then(() => {
+                        // Toast Message
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        });
+
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'The booking window is closed.'
+                        });
+                    });
+                    return;
+                }
+
                 let params = new URLSearchParams();
                 let hasTickets = false;
                 
@@ -382,7 +428,14 @@
                 if (hasTickets) {
                     window.location.href = `{{ route('events.booking', $event->slug) }}?${params.toString()}`;
                 } else {
-                    alert('Please select at least one ticket to proceed.');
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-center',
+                        icon: 'error',
+                        title: 'Please select at least one ticket.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
             });
         }
