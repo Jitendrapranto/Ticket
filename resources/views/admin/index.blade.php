@@ -91,7 +91,7 @@
     </div>
 
     <!-- Organizer Request (CLICKABLE) -->
-    <a href="{{ route('admin.customers.index', ['role' => 'pending_organizer']) }}" class="group relative bg-[#EF4444] p-6 rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border-2 border-white/10">
+    <a href="{{ route('admin.organizer-requests.index') }}" class="group relative bg-[#EF4444] p-6 rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border-2 border-white/10">
         <div class="relative z-10 text-white">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-10 h-10 rounded-xl bg-white/40 flex items-center justify-center group-hover:scale-110 transition-transform">

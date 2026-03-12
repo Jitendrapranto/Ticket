@@ -7,6 +7,24 @@
     <div class="mb-12">
         <h1 class="font-outfit text-4xl font-black text-dark tracking-tight mb-2">My Profile</h1>
         <p class="text-slate-500 font-medium">Manage your personal information and security settings.</p>
+
+        @if($errors->any())
+            <div class="mt-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-xl">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700 font-bold uppercase tracking-widest text-[10px]">Validation Errors</p>
+                        <ul class="mt-1 list-disc list-inside text-xs text-red-600 font-medium">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -31,8 +49,17 @@
                         <input type="file" id="avatar-upload" name="avatar" class="hidden" onchange="previewImage(this)">
                     </label>
                 </div>
+                @error('avatar') <p class="text-[10px] text-red-500 font-bold mb-4">{{ $message }}</p> @enderror
                 <h3 class="font-black text-dark uppercase tracking-widest text-xs mb-1">{{ $user->name }}</h3>
-                <p class="text-[10px] font-black text-primary uppercase tracking-tighter">Verified Fan</p>
+                <p class="text-[10px] font-black text-primary uppercase tracking-tighter">
+                    @if($user->role === 'admin')
+                        System Administrator
+                    @elseif($user->role === 'organizer')
+                        Official Organizer
+                    @else
+                        Verified Fan
+                    @endif
+                </p>
                 
                 <div class="mt-8 pt-8 border-t border-slate-50 text-left space-y-4">
                     <div class="flex items-center gap-4 text-slate-400">
@@ -56,12 +83,32 @@
                         <div class="space-y-2">
                             <label class="text-[11px] font-black text-slate-400 uppercase tracking-wider block ml-1">Full Name</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}" required
-                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner">
+                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none @error('name') border-red-500 @else focus:border-primary/30 @enderror focus:bg-white transition-all text-sm font-bold shadow-inner">
+                            @error('name') <p class="text-[10px] text-red-500 font-bold ml-1 mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="space-y-2">
                             <label class="text-[11px] font-black text-slate-400 uppercase tracking-wider block ml-1">Email Address</label>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required
-                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner">
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="email"
+                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none @error('email') border-red-500 @else focus:border-primary/30 @enderror focus:bg-white transition-all text-sm font-bold shadow-inner"
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address (e.g. shakib@gmail.com)">
+                            @error('email') <p class="text-[10px] text-red-500 font-bold ml-1 mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-wider block ml-1">Mobile Number</label>
+                            <input type="tel" name="phone" value="{{ old('phone', $user->phone) }}"
+                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none @error('phone') border-red-500 @else focus:border-primary/30 @enderror focus:bg-white transition-all text-sm font-bold shadow-inner"
+                                placeholder="Enter mobile number">
+                            @error('phone') <p class="text-[10px] text-red-500 font-bold ml-1 mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-wider block ml-1">Present Address</label>
+                            <input type="text" name="present_address" value="{{ old('present_address', $user->present_address) }}"
+                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none @error('present_address') border-red-500 @else focus:border-primary/30 @enderror focus:bg-white transition-all text-sm font-bold shadow-inner"
+                                placeholder="Enter your address">
+                            @error('present_address') <p class="text-[10px] text-red-500 font-bold ml-1 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
@@ -75,18 +122,35 @@
                     Security
                 </h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                    <div class="space-y-2">
-                        <label class="text-[11px] font-black text-white/50 uppercase tracking-wider block ml-1">New Password</label>
-                        <input type="password" name="password"
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 focus:bg-white/10 transition-all text-sm font-bold"
-                            placeholder="Leave blank to keep same">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center ml-1">
+                            <label class="text-[11px] font-black text-white/50 uppercase tracking-wider block">New Password</label>
+                            <span class="text-[9px] font-bold text-white/20 uppercase tracking-widest">(Optional)</span>
+                        </div>
+                        <div class="relative group">
+                            <i class="fas fa-key absolute left-6 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"></i>
+                            <input type="password" id="password" name="password"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-12 outline-none focus:border-primary/50 focus:bg-white/10 transition-all text-sm font-bold text-white"
+                                placeholder="Leave blank to keep current" autocomplete="new-password">
+                            <button type="button" onclick="togglePassword('password', 'toggle-icon-1')" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-all">
+                                <i id="toggle-icon-1" class="fas fa-eye text-xs"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-[11px] font-black text-white/50 uppercase tracking-wider block ml-1">Confirm New Password</label>
-                        <input type="password" name="password_confirmation"
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 focus:bg-white/10 transition-all text-sm font-bold"
-                            placeholder="Confirm password">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center ml-1">
+                            <label class="text-[11px] font-black text-white/50 uppercase tracking-wider block">Confirm New Password</label>
+                        </div>
+                        <div class="relative group">
+                            <i class="fas fa-shield-alt absolute left-6 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"></i>
+                            <input type="password" id="password_confirmation" name="password_confirmation"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-12 outline-none focus:border-primary/50 focus:bg-white/10 transition-all text-sm font-bold text-white"
+                                placeholder="Confirm new password" autocomplete="new-password">
+                            <button type="button" onclick="togglePassword('password_confirmation', 'toggle-icon-2')" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-all">
+                                <i id="toggle-icon-2" class="fas fa-eye text-xs"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,6 +184,20 @@ function previewImage(input) {
             }
         }
         reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
     }
 }
 </script>

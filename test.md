@@ -250,3 +250,9 @@ When user buY a ticket then he can paY for three ticket price...alwaYs he can pa
 
 
 I want to all filter of the all dashboard as a dropdown bY date like TodaYs, This week, This month, and make sure here date can be filter custom range This Year and also make sure to add a professional popup when filter the data and also make sure to add a toast message after filter the data...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+On customer menu on the admin dashboard here add filter as a dropdown bY date like TodaY, This Weak, This Month , This Year and make sure here date can be filter custom range bY date....
+
+When clicked view then its showed 404 error page...fix it
+
+I want to add submenu for PaYout menu named as Withdraw Request and Withdraw HistorY,, When organizer request for withdraw then it will be shown in the withdraw request section and when admin approve the withdraw request then it will be shown in the withdraw historY section and also make sure to add a professional popup when admin approve the withdraw request and also make sure to add a toast message after admin approve the withdraw request...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?

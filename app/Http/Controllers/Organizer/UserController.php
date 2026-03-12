@@ -30,6 +30,33 @@ class UserController extends Controller
             });
         }
 
+        // Date filtering
+        if ($request->filled('date_filter')) {
+            $now = now();
+            switch ($request->date_filter) {
+                case 'today':
+                    $query->whereDate('created_at', $now->toDateString());
+                    break;
+                case 'this_week':
+                    $query->whereBetween('created_at', [$now->startOfWeek()->startOfDay(), now()->endOfWeek()->endOfDay()]);
+                    break;
+                case 'this_month':
+                    $query->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year);
+                    break;
+                case 'this_year':
+                    $query->whereYear('created_at', $now->year);
+                    break;
+                case 'custom':
+                    if ($request->filled('date_from')) {
+                        $query->whereDate('created_at', '>=', $request->date_from);
+                    }
+                    if ($request->filled('date_to')) {
+                        $query->whereDate('created_at', '<=', $request->date_to);
+                    }
+                    break;
+            }
+        }
+
         $customers = $query->withCount(['bookings' => function($q) use ($myEventIds) {
             $q->whereIn('event_id', $myEventIds);
         }])

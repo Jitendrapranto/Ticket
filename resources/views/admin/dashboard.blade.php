@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         tailwind.config = {
@@ -105,7 +107,11 @@
                                 </div>
                                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary p-0.5 shadow-premium group-hover:scale-105 transition-transform">
                                     <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
-                                         <i class="fas fa-crown text-primary text-xs"></i>
+                                        @if(Auth::user()->avatar)
+                                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                                        @else
+                                            <i class="fas fa-crown text-primary text-xs"></i>
+                                        @endif
                                     </div>
                                 </div>
                             </button>
@@ -125,6 +131,11 @@
                                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Authenticated via SSL</p>
                                     <p class="text-[11px] font-black text-dark truncate">{{ Auth::user()->email }}</p>
                                 </div>
+
+                                <a href="{{ route('profile') }}" class="flex items-center gap-4 px-8 py-3.5 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all text-xs"><i class="fas fa-user-edit"></i></div>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">Edit Profile</span>
+                                </a>
 
                                 <a href="/" target="_blank" class="flex items-center gap-4 px-8 py-3.5 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group">
                                     <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all text-xs"><i class="fas fa-external-link-alt"></i></div>
@@ -206,5 +217,6 @@
             if (overlay) overlay.addEventListener('click', toggleMenu);
         });
     </script>
+    @stack('scripts')
 </body>
 </html>

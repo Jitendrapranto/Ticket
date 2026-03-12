@@ -99,63 +99,77 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="hidden md:block">
-                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Organizer Overview</h2>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ now()->format('M d, Y • h:i A') }}</p>
+                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight">@yield('header_title', 'Organizer Overview')</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ now()->format('M d, Y • l') }}</p>
                 </div>
             </div>
 
             <!-- Header Actions -->
             <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center relative group">
-                    <i class="fas fa-search absolute left-4 text-slate-400 text-xs"></i>
-                    <input type="text" placeholder="Quick Search..." class="bg-slate-50 border border-slate-100 rounded-2xl pl-10 pr-6 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64">
-                </div>
 
-                <button class="relative w-11 h-11 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-500 hover:bg-primary/5 transition-colors">
-                    <i class="far fa-bell"></i>
-                </button>
-
-                <div class="flex items-center gap-3 pl-4 border-l border-slate-100 ml-2" x-data="{ open: false }">
+                <div class="flex items-center gap-3 ml-2" x-data="{ open: false }">
                     <div class="relative">
-                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 group focus:outline-none">
+                        <button @click="open = !open" class="flex items-center gap-3 group focus:outline-none">
                             <div class="text-right hidden sm:block">
-                                <p class="text-xs font-black text-dark group-hover:text-primary transition-colors">{{ Auth::user()->name }}</p>
-                                <p class="text-[10px] font-bold text-primary uppercase tracking-tighter">Organizer</p>
+                                <p class="text-xs font-black text-dark group-hover:text-primary transition-colors">{{ auth()->user()->name }}</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Organizer Account</p>
                             </div>
-                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium group-hover:scale-105 transition-transform">
-                                <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
-                                     <i class="fas fa-user-tie text-primary text-xs"></i>
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium group-hover:scale-105 transition-transform duration-300">
+                                <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden border border-white">
+                                    @if(auth()->user()->avatar)
+                                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
+                                    @else
+                                        <i class="fas fa-user-tie text-primary text-xs"></i>
+                                    @endif
                                 </div>
                             </div>
+                            <i class="fas fa-chevron-down text-[8px] text-slate-300 transition-transform group-hover:text-primary" :class="open ? 'rotate-180' : ''"></i>
                         </button>
 
                         <!-- Action Dropdown -->
                         <div x-show="open"
+                            @click.away="open = false"
                             x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                            x-transition:enter-start="opacity-0 scale-95 translate-y-3"
                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                             x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
-                            class="absolute right-0 mt-3 w-56 bg-white rounded-3xl shadow-2xl border border-slate-100 py-3 z-50 overflow-hidden"
+                            x-transition:leave-end="opacity-0 scale-95 translate-y-3"
+                            class="absolute right-0 mt-4 w-60 bg-white rounded-[2rem] shadow-2xl border border-slate-100 py-4 z-50 overflow-hidden"
                             style="display: none;">
 
-                            <div class="px-6 py-4 border-b border-slate-50 mb-2">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated As</p>
-                                <p class="text-xs font-bold text-dark truncate">{{ Auth::user()->email }}</p>
+                            <div class="px-6 pb-4 border-b border-slate-50 mb-3 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary text-xs shrink-0">
+                                    <i class="fas fa-id-badge"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-0.5">Organizer ID</p>
+                                    <p class="text-[10px] font-bold text-dark truncate">ID-{{ str_pad(auth()->id(), 5, '0', STR_PAD_LEFT) }}</p>
+                                </div>
                             </div>
 
-                            <a href="/" target="_blank" class="flex items-center gap-4 px-6 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group">
-                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all text-xs"><i class="fas fa-external-link-alt"></i></div>
-                                <span class="text-[11px] font-black uppercase tracking-wider">Live Site</span>
+                            <a href="{{ route('profile') }}" class="flex items-center gap-4 px-6 py-3.5 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group/item">
+                                <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-xs">
+                                    <i class="fas fa-user-edit"></i>
+                                </div>
+                                <span class="text-[10px] font-black uppercase tracking-widest">Manage Profile</span>
                             </a>
 
-                            <div class="mt-2 pt-2 border-t border-slate-50">
+                            <a href="/" target="_blank" class="flex items-center gap-4 px-6 py-3.5 text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 transition-all group/item">
+                                <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-xs">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </div>
+                                <span class="text-[10px] font-black uppercase tracking-widest">Live Preview</span>
+                            </a>
+
+                            <div class="mt-3 pt-3 border-t border-slate-50 px-4">
                                 <form action="{{ route('organizer.logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="w-full flex items-center gap-4 px-6 py-3 text-red-500 hover:bg-red-50 transition-all group">
-                                        <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all text-red-400 text-xs"><i class="fas fa-power-off"></i></div>
-                                        <span class="text-[11px] font-black uppercase tracking-wider">Logout Portal</span>
+                                    <button type="submit" class="w-full flex items-center gap-4 px-4 py-3.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-2xl transition-all group/logout shadow-sm hover:shadow-red-500/20">
+                                        <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center group-hover/logout:bg-white/20 shadow-sm transition-all text-xs">
+                                            <i class="fas fa-power-off"></i>
+                                        </div>
+                                        <span class="text-[10px] font-black uppercase tracking-widest">Sign Out</span>
                                     </button>
                                 </form>
                             </div>

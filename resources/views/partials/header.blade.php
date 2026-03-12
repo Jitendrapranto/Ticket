@@ -81,23 +81,18 @@
                                     <span class="text-xs font-black uppercase tracking-wider">My Profile</span>
                                 </a>
 
-                                <a href="{{ route('bookings.index') }}" class="flex items-center gap-4 px-6 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group">
-                                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all"><i class="fas fa-ticket-alt text-xs"></i></div>
-                                    <span class="text-xs font-black uppercase tracking-wider">My Bookings</span>
+                                @if(Auth::user()->role !== 'organizer' && Auth::user()->role !== 'admin' && Auth::user()->role !== 'pending_organizer' && Auth::user()->organizer_status !== 'pending')
+                                <a href="{{ route('organizer.register') }}" class="flex items-center gap-4 px-6 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group">
+                                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white shadow-sm transition-all"><i class="fas fa-user-tie text-xs"></i></div>
+                                    <span class="text-xs font-black uppercase tracking-wider">Join as Organizer</span>
                                 </a>
+                                @endif
 
                                 @if(Auth::user()->role === 'pending_organizer' || Auth::user()->organizer_status === 'pending')
                                 <div class="px-4 py-2">
                                     <a href="{{ route('organizer.pending') }}" class="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl bg-yellow-50 border border-yellow-200 transition-all">
                                         <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse shrink-0"></span>
                                         <span class="text-xs font-black uppercase tracking-wider text-yellow-700">Approval Pending</span>
-                                    </a>
-                                </div>
-                                @elseif(Auth::user()->role !== 'organizer' && Auth::user()->role !== 'admin')
-                                <div class="px-4 py-2">
-                                    <a href="{{ route('organizer.register') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-white font-black text-xs uppercase tracking-wider transition-all hover:opacity-90" style="background-color: #4F0B67;">
-                                        <i class="fas fa-user-tie text-[10px]"></i>
-                                        Join as Organizer
                                     </a>
                                 </div>
                                 @endif
@@ -160,16 +155,16 @@
                         <div class="grid grid-cols-1 gap-3">
                             <a href="{{ route('login') }}" class="w-full py-4 rounded-2xl bg-slate-50 text-dark font-black text-xs text-center tracking-widest hover:bg-slate-100 transition-all uppercase">Login</a>
                             <a href="{{ route('signup') }}" class="w-full py-4 rounded-2xl bg-primary text-white font-black text-xs text-center tracking-widest shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all uppercase">Sign Up Free</a>
-                            <a href="{{ route('organizer.register') }}" class="w-full py-4 rounded-2xl bg-[#4F0B67] text-white font-black text-xs text-center tracking-widest hover:bg-[#3D0851] transition-all uppercase flex items-center justify-center gap-2">
-                                <i class="fas fa-user-tie text-[10px]"></i> Join as Organizer
+                            <a href="{{ route('bookings.index') }}" class="w-full py-4 rounded-2xl bg-[#FFE700] text-[#4F0B67] font-black text-xs text-center tracking-widest hover:opacity-90 transition-all uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-ticket-alt text-[10px]"></i> My Bookings
                             </a>
                         </div>
                     @else
                         <div class="space-y-4">
                             <p class="text-[11px] font-black text-slate-500 uppercase">Logged in as: {{ Auth::user()->name }}</p>
                             @if(!in_array(Auth::user()->role, ['organizer', 'admin', 'pending_organizer']))
-                            <a href="{{ route('organizer.register') }}" class="w-full py-4 rounded-2xl bg-[#4F0B67] text-white font-black text-xs text-center tracking-widest hover:bg-[#3D0851] transition-all uppercase flex items-center justify-center gap-2">
-                                <i class="fas fa-user-tie text-[10px]"></i> Join as Organizer
+                            <a href="{{ route('bookings.index') }}" class="w-full py-4 rounded-2xl bg-[#FFE700] text-[#4F0B67] font-black text-xs text-center tracking-widest hover:opacity-90 transition-all uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-ticket-alt text-[10px]"></i> My Bookings
                             </a>
                             @elseif(Auth::user()->role === 'pending_organizer')
                             <a href="{{ route('organizer.pending') }}" class="w-full py-4 rounded-2xl bg-[#FFE700]/10 border border-[#FFE700]/40 text-yellow-700 font-black text-xs text-center tracking-widest transition-all uppercase flex items-center justify-center gap-2">
@@ -202,11 +197,11 @@
                 </ul>
             </nav>
 
-            @if(!Auth::check() || !in_array(Auth::user()->role, ['organizer', 'admin', 'pending_organizer']))
-            <a href="{{ route('organizer.register') }}"
-               class="inline-flex items-center gap-2 bg-[#4F0B67] text-white px-5 py-1.5 rounded-lg font-black text-[11px] tracking-widest uppercase hover:bg-[#3D0851] transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
-                <i class="fas fa-user-tie text-[10px] group-hover:scale-110 transition-transform"></i>
-                Join as Organizer
+            @if(!Auth::check() || in_array(Auth::user()->role, ['user', 'organizer', 'admin']))
+            <a href="{{ route('bookings.index') }}"
+               class="inline-flex items-center gap-2 bg-[#FFE700] text-[#4F0B67] px-5 py-1.5 rounded-lg font-black text-[11px] tracking-widest uppercase hover:opacity-90 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
+                <i class="fas fa-ticket-alt text-[10px] group-hover:scale-110 transition-transform"></i>
+                My Bookings
             </a>
             @elseif(Auth::check() && Auth::user()->role === 'pending_organizer')
             <a href="{{ route('organizer.pending') }}"

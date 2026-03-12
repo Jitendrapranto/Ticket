@@ -238,6 +238,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/customers/segmentation/{id}/edit', [\App\Http\Controllers\Admin\UserController::class, 'segmentationEdit'])->name('customers.segmentation.edit');
         Route::put('/customers/segmentation/{id}', [\App\Http\Controllers\Admin\UserController::class, 'segmentationUpdate'])->name('customers.segmentation.update');
         Route::delete('/customers/segmentation/{id}', [\App\Http\Controllers\Admin\UserController::class, 'segmentationDelete'])->name('customers.segmentation.delete');
+        Route::post('/customers/{id}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('customers.reset-password');
         Route::resource('customers', \App\Http\Controllers\Admin\UserController::class)->names('customers')->except(['edit', 'update']);
 
         Route::get('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class, 'index'])->name('finance.commission.index');
@@ -262,6 +263,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/organizer-requests/{id}/approve', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'approve'])->name('organizer-requests.approve');
         Route::post('/organizer-requests/{id}/reject', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'reject'])->name('organizer-requests.reject');
         Route::delete('/organizer-requests/{id}', [\App\Http\Controllers\Admin\OrganizerRequestController::class, 'destroy'])->name('organizer-requests.destroy');
+
+        // Payout Management
+        Route::get('/payout/requests', [\App\Http\Controllers\Admin\PayoutController::class, 'requests'])->name('payout.requests');
+        Route::get('/payout/history', [\App\Http\Controllers\Admin\PayoutController::class, 'history'])->name('payout.history');
+        Route::post('/payout/{id}/approve', [\App\Http\Controllers\Admin\PayoutController::class, 'approve'])->name('payout.approve');
+        Route::post('/payout/{id}/reject', [\App\Http\Controllers\Admin\PayoutController::class, 'reject'])->name('payout.reject');
     });
 });
 
@@ -289,6 +296,11 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
         Route::get('/reports/sales', [\App\Http\Controllers\Organizer\ReportController::class, 'sales'])->name('reports.sales');
         Route::get('/reports/sales/export', [\App\Http\Controllers\Organizer\ReportController::class, 'exportSales'])->name('reports.sales.export');
         Route::get('/bookings/{event_id}', [\App\Http\Controllers\Organizer\EventController::class, 'bookings'])->name('events.bookings');
+
+        // Payout Management
+        Route::get('/payout/requests', [\App\Http\Controllers\Organizer\PayoutController::class, 'requests'])->name('payout.requests');
+        Route::post('/payout/requests', [\App\Http\Controllers\Organizer\PayoutController::class, 'store'])->name('payout.requests.store');
+        Route::get('/payout/history', [\App\Http\Controllers\Organizer\PayoutController::class, 'history'])->name('payout.history');
 
         // Scanner Management
         Route::resource('scanners', \App\Http\Controllers\Organizer\ScannerController::class);

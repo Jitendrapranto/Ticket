@@ -1,306 +1,193 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendee Segmentation | Organizer Dashboard</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        html { visibility: hidden; opacity: 0; }
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@extends('layouts.organizer')
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        secondary: '#1B2B46',
-                        accent: '#FF7D52',
-                        dark: '#0F172A',
-                        'brand-green': '#10B981',
-                        'brand-red': '#EF4444',
-                        'brand-amber': '#F59E0B',
-                    },
-                    fontFamily: {
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 25px 60px -15px rgba(82, 12, 107, 0.08)',
-                        'soft': '0 4px 20px -5px rgba(0, 0, 0, 0.05)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: Arial, Helvetica, sans-serif; background: #F8FAFC; }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
-        [x-cloak] { display: none !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="text-slate-800">
+@section('title', 'Precision Targeting')
+@section('header_title', 'Precision Targeting')
 
-    @include('organizer.sidebar')
+@section('content')
+<div class="p-8 animate-fadeInUp">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div class="max-w-xl">
+            <h1 class="font-outfit text-5xl font-black text-dark tracking-tighter mb-4">Precision Targeting</h1>
+            <p class="text-slate-400 font-medium text-base leading-relaxed">Isolate specific attendee groups by event registration, ticket tiers, and individual data for more effective communication and planning.</p>
+        </div>
+        <div>
+            <a href="{{ route('organizer.customers.segmentation.export', request()->all()) }}" class="bg-dark text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-4 shadow-2xl shadow-dark/10 group text-center">
+                <i class="fas fa-file-csv text-[14px] group-hover:-translate-y-1 transition-transform"></i>
+                <span>Download Segment</span>
+            </a>
+        </div>
+    </div>
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <!-- Topbar -->
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-50">
-            <div class="flex items-center gap-4">
-                <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="flex flex-col">
-                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight leading-none mb-1">Audience Segmentation</h2>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Targeted Attendee Filter</p>
+    <!-- Smart Filter Engine -->
+    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-50 shadow-premium mb-12">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center text-sm">
+                <i class="fas fa-filter"></i>
+            </div>
+            <h3 class="text-[10px] font-black text-dark uppercase tracking-[0.2em]">Active Segment Filters</h3>
+        </div>
+
+        <form action="{{ route('organizer.customers.segmentation') }}" method="GET" id="filterForm" x-data x-ref="filterForm" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            <!-- Event Select -->
+            <div class="md:col-span-5 group">
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-primary transition-colors">By Individual Event</label>
+                <div class="relative">
+                    <select name="event_id" onchange="this.form.submit()" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white outline-none transition-all appearance-none cursor-pointer">
+                        <option value="">All Active Events</option>
+                        @foreach($events as $event)
+                            <option value="{{ $event->id }}" {{ request('event_id') == $event->id ? 'selected' : '' }}>
+                                {{ $event->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <i class="fas fa-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none text-[10px]"></i>
                 </div>
             </div>
 
+            <!-- Search Input -->
+            <div class="md:col-span-7 group">
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-primary transition-colors">Search Attendee Metadata</label>
+                <div class="relative">
+                    <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                    <input type="text" name="search" id="segSearch" value="{{ request('search') }}"
+                        @input.debounce.500ms="$refs.filterForm.submit()"
+                        placeholder="Search by name, email, or phone..."
+                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-14 pr-8 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all outline-none">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Main Data View -->
+    <div class="bg-white rounded-[3rem] shadow-premium border border-white overflow-hidden relative min-h-[600px]">
+        <!-- Data Header -->
+        <div class="p-12 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-slate-50 bg-slate-50/10">
             <div class="flex items-center gap-6">
-                <div class="flex items-center gap-3 pl-6 border-l border-slate-100 mr-4">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs font-black text-dark">{{ Auth::user()->name }}</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Organizer Level</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <main class="p-10 flex-1 max-w-[1600px] mx-auto w-full">
-            <!-- Header Section -->
-            <div class="flex items-center justify-between mb-12">
-                <div class="max-w-xl">
-                    <h1 class="font-outfit text-5xl font-black text-dark tracking-tighter mb-4">Precision Targeting</h1>
-                    <p class="text-slate-400 font-medium text-base leading-relaxed">Isolate specific attendee groups by event registration, ticket tiers, and individual data for more effective communication and planning.</p>
+                <div class="w-16 h-16 rounded-[1.5rem] bg-dark flex items-center justify-center text-white text-2xl shadow-xl shadow-dark/10">
+                    <i class="fas fa-users-viewfinder"></i>
                 </div>
                 <div>
-                    <a href="{{ route('organizer.customers.segmentation.export', request()->all()) }}" class="bg-dark text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-4 shadow-2xl shadow-dark/20 group text-center">
-                        <i class="fas fa-file-csv text-[14px] group-hover:-translate-y-1 transition-transform"></i>
-                        <span>Download Segment</span>
-                    </a>
+                    <h3 class="font-outfit text-3xl font-black text-dark tracking-tighter mb-1">
+                        @if(request('event_id') && $events->find(request('event_id')))
+                            {{ $events->find(request('event_id'))->title }}
+                        @else
+                            Current Audience Segment
+                        @endif
+                    </h3>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">Total Sample Size:</span>
+                        <span class="bg-emerald-50 text-emerald-600 text-[11px] font-black px-3 py-1 rounded-lg">{{ number_format($attendees->total()) }}</span>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Smart Filter Engine -->
-            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-premium mb-12">
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center text-sm">
-                        <i class="fas fa-filter"></i>
-                    </div>
-                    <h3 class="text-xs font-black text-dark uppercase tracking-[0.2em]">Active Segment Filters</h3>
-                </div>
-
-                <form action="{{ route('organizer.customers.segmentation') }}" method="GET" id="filterForm" x-data x-ref="filterForm" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                    <!-- Event Select -->
-                    <div class="md:col-span-5 group">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-primary transition-colors">By Individual Event</label>
-                        <select name="event_id" onchange="this.form.submit()" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white outline-none transition-all appearance-none cursor-pointer">
-                            <option value="">All Active Events</option>
-                            @foreach($events as $event)
-                                <option value="{{ $event->id }}" {{ request('event_id') == $event->id ? 'selected' : '' }}>
-                                    {{ $event->title }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Search Input -->
-                    <div class="md:col-span-7 group">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-primary transition-colors">Search Attendee Metadata</label>
-                        <div class="relative">
-                            <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
-                            <input type="text" name="search" id="segSearch" value="{{ request('search') }}"
-                                @input.debounce.500ms="$refs.filterForm.submit()"
-                                placeholder="Search by name, email, or phone..."
-                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-14 pr-8 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all outline-none">
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Main Data View -->
-            <div class="bg-white rounded-[3rem] shadow-premium border border-white overflow-hidden relative">
-                <!-- Data Header -->
-                <div class="p-12 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-slate-50">
-                    <div class="flex items-center gap-6">
-                        <div class="w-16 h-16 rounded-[1.5rem] bg-dark flex items-center justify-center text-white text-2xl shadow-xl shadow-dark/10">
-                            <i class="fas fa-users-viewfinder"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-outfit text-3xl font-black text-dark tracking-tight mb-1">
-                                @if(request('event_id') && $events->find(request('event_id')))
-                                    {{ $events->find(request('event_id'))->title }}
-                                @else
-                                    Current Audience Segment
-                                @endif
-                            </h3>
-                            <div class="flex items-center gap-3">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">Total Sample Size:</span>
-                                <span class="bg-primary/5 text-primary text-[11px] font-black px-3 py-1 rounded-lg">{{ number_format($attendees->total()) }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modern Table Layout -->
-                <div class="overflow-x-auto no-scrollbar">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50/30 text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase">
-                                <th class="px-12 py-6 font-black w-[35%]">Registration Data</th>
-                                <th class="px-8 py-6 font-black w-[25%] text-center">Ticket Tier</th>
-                                <th class="px-8 py-6 font-black w-[20%] text-center">Payment Status</th>
-                                <th class="px-12 py-6 font-black w-[20%] text-right whitespace-nowrap">Timestamp</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100/50">
-                            @forelse($attendees as $attendee)
-                            <tr class="hover:bg-slate-50/50 transition-all group">
-                                <td class="px-12 py-8">
-                                    <div class="flex items-center gap-5">
-                                        <div class="relative">
-                                            @php
-                                                $customerPhoto = null;
-                                                if ($attendee->booking->form_data && $attendee->booking->event && $attendee->booking->event->formFields) {
-                                                    $fileFields = $attendee->booking->event->formFields->where('type', 'file');
-                                                    foreach ($fileFields as $ff) {
-                                                        $val = $attendee->booking->form_data[$ff->id] ?? null;
-                                                        if ($val && \Storage::disk('public')->exists($val)) {
-                                                            $ext = strtolower(pathinfo($val, PATHINFO_EXTENSION));
-                                                            if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
-                                                                $customerPhoto = asset('storage/' . $val);
-                                                            }
+        <!-- Modern Table Layout -->
+        <div class="overflow-x-auto no-scrollbar">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/30 text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase border-b border-slate-50">
+                        <th class="px-12 py-6">Registration Data</th>
+                        <th class="px-8 py-6 text-center">Ticket Tier</th>
+                        <th class="px-8 py-6 text-center">Payment Status</th>
+                        <th class="px-12 py-6 text-right">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 font-medium">
+                    @forelse($attendees as $attendee)
+                    <tr class="hover:bg-slate-50/50 transition-all group">
+                        <td class="px-12 py-8">
+                            <div class="flex items-center gap-5">
+                                <div class="relative">
+                                    <div class="w-14 h-14 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
+                                        @php
+                                            $customerPhoto = null;
+                                            if ($attendee->booking->form_data && $attendee->booking->event && $attendee->booking->event->formFields) {
+                                                $fileFields = $attendee->booking->event->formFields->where('type', 'file');
+                                                foreach ($fileFields as $ff) {
+                                                    $val = $attendee->booking->form_data[$ff->id] ?? null;
+                                                    if ($val && \Storage::disk('public')->exists($val)) {
+                                                        $ext = strtolower(pathinfo($val, PATHINFO_EXTENSION));
+                                                        if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
+                                                            $customerPhoto = asset('storage/' . $val);
                                                         }
                                                     }
                                                 }
-                                                if (!$customerPhoto && $attendee->booking->user && $attendee->booking->user->profile_picture) {
-                                                    $customerPhoto = asset('storage/' . $attendee->booking->user->profile_picture);
-                                                }
-                                            @endphp
-                                            <div class="w-14 h-14 rounded-2xl bg-white border border-slate-100 shadow-soft flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
-                                                @if($customerPhoto)
-                                                    <img src="{{ $customerPhoto }}" class="w-full h-full object-cover">
-                                                @else
-                                                    @php
-                                                        $initials = substr($attendee->name && $attendee->name !== 'Self' ? $attendee->name : ($attendee->booking->user->name ?? 'U'), 0, 1);
-                                                    @endphp
-                                                    <span class="text-base font-black text-primary/40 uppercase">{{ $initials }}</span>
-                                                @endif
-                                            </div>
-                                            @if($customerPhoto)
-                                            <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-white border border-slate-100 flex items-center justify-center shadow-sm">
-                                                <i class="fas fa-camera text-[8px] text-primary"></i>
-                                            </div>
-                                            @endif
-                                        </div>
-                                        <div class="space-y-1">
-                                            <p class="text-[15px] font-black text-dark tracking-tight leading-none group-hover:text-primary transition-colors">
-                                                @php
-                                                    $finalName = $attendee->name;
-                                                    if ((!$finalName || $finalName === 'Self') && $attendee->booking->user) {
-                                                        $finalName = $attendee->booking->user->name;
-                                                    }
-                                                @endphp
-                                                {{ $finalName ?: 'Guest Attendee' }}
-                                            </p>
-                                            @if($attendee->booking->user)
-                                            <p class="text-[10px] font-bold text-primary active:opacity-70 transition-opacity mb-0.5">{{ $attendee->booking->user->email }}</p>
-                                            @endif
-                                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ $attendee->mobile ?: 'No Mobile' }}</p>
-                                        </div>
+                                            }
+                                            if (!$customerPhoto && $attendee->booking->user && $attendee->booking->user->profile_picture) {
+                                                $customerPhoto = asset('storage/' . $attendee->booking->user->profile_picture);
+                                            }
+                                            $initials = substr($attendee->name && $attendee->name !== 'Self' ? $attendee->name : ($attendee->booking->user->name ?? 'U'), 0, 1);
+                                        @endphp
+                                        @if($customerPhoto)
+                                            <img src="{{ $customerPhoto }}" class="w-full h-full object-cover">
+                                        @else
+                                            <span class="text-base font-black text-primary/30 uppercase">{{ $initials }}</span>
+                                        @endif
                                     </div>
-                                </td>
-                                <td class="px-8 py-8 text-center">
-                                    <div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 bg-white shadow-soft text-slate-600 group-hover:border-primary/20 group-hover:text-primary transition-all">
-                                        <i class="fas fa-ticket-alt text-[11px] opacity-30 group-hover:opacity-100 transition-opacity"></i>
-                                        {{ $attendee->ticketType->name ?? 'Default Tier' }}
-                                    </div>
-                                </td>
-                                <td class="px-8 py-8 text-center">
-                                    <div class="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.1em] border
-                                        @if($attendee->booking->status == 'confirmed') bg-brand-green/10 text-brand-green border-brand-green/20 @else bg-brand-amber/10 text-brand-amber border-brand-amber/20 @endif">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-current shadow-[0_0_8px_currentColor]"></span>
-                                        {{ $attendee->booking->status }}
-                                    </div>
-                                </td>
-                                <td class="px-12 py-8 text-right">
-                                    <div class="text-right">
-                                        <p class="text-xs font-black text-dark tracking-tight">{{ $attendee->created_at->format('M d, Y') }}</p>
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{{ $attendee->created_at->format('h:i A') }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="4" class="px-12 py-24 text-center">
-                                    <div class="flex flex-col items-center gap-4 max-w-sm mx-auto">
-                                        <div class="w-20 h-20 rounded-[2rem] bg-slate-50 flex items-center justify-center text-3xl text-slate-200">
-                                            <i class="fas fa-user-slash"></i>
-                                        </div>
-                                        <h4 class="text-xl font-outfit font-black text-slate-400">Segment Empty</h4>
-                                        <p class="text-xs font-medium text-slate-300">We couldn't find any attendees for the selected parameters under your events.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-dark tracking-tight leading-none group-hover:text-primary transition-colors">
+                                        {{ $attendee->name && $attendee->name !== 'Self' ? $attendee->name : ($attendee->booking->user->name ?? 'Guest Attendee') }}
+                                    </p>
+                                    @if($attendee->booking->user)
+                                        <p class="text-[10px] font-bold text-slate-400 mt-1.5">{{ $attendee->booking->user->email }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-8 text-center">
+                            <span class="px-4 py-1.5 rounded-full border border-slate-100 bg-white text-[10px] font-black text-slate-500 uppercase tracking-widest shadow-sm">
+                                {{ $attendee->ticketType->name ?? 'Standard' }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-8 text-center">
+                            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] 
+                                @if($attendee->booking->status == 'confirmed') bg-emerald-50 text-emerald-500 border border-emerald-100 @else bg-orange-50 text-orange-500 border border-orange-100 @endif">
+                                {{ $attendee->booking->status }}
+                            </div>
+                        </td>
+                        <td class="px-12 py-8 text-right">
+                            <div class="text-right">
+                                <p class="text-xs font-black text-dark tracking-tight">{{ $attendee->created_at->format('M d, Y') }}</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{{ $attendee->created_at->format('h:i A') }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-12 py-24 text-center">
+                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">No matching souls in this segment.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-                <!-- Posh Pagination -->
-                <div class="p-12 bg-slate-50/30 border-t border-slate-50 flex flex-col md:flex-row items-center justify-between gap-8">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                        Found <span class="text-dark">{{ $attendees->total() }}</span> registered souls in this segment.
-                    </p>
-                    <div class="group">
-                        {{ $attendees->links() }}
-                    </div>
-                </div>
+        <!-- Pagination -->
+        <div class="p-12 bg-slate-50/50 border-t border-slate-50 flex flex-col md:flex-row items-center justify-between gap-8">
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                Found <span class="text-dark">{{ $attendees->total() }}</span> registered identities.
+            </p>
+            <div>
+                {{ $attendees->links() }}
             </div>
-        </main>
-
-        <footer class="p-10 text-center">
-            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Precision CRM Module • Ticket Kinun Organizer Platform</p>
-        </footer>
+        </div>
     </div>
+</div>
+@endsection
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('toggle-sidebar');
-            const sidebar = document.getElementById('organizer-sidebar');
-            if(toggleBtn && sidebar) {
-                toggleBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('-translate-x-full');
-                });
-            }
-        });
-
-        // Maintain cursor position for the segmentation search
-        window.addEventListener('load', function() {
-            const input = document.getElementById('segSearch');
-            if (input && "{{ request('search') }}") {
-                input.focus();
-                const length = input.value.length;
-                input.setSelectionRange(length, length);
-            }
-        });
-    </script>
-</body>
-</html>
+@push('scripts')
+<script>
+    window.addEventListener('load', function() {
+        const input = document.getElementById('segSearch');
+        if (input && "{{ request('search') }}") {
+            input.focus();
+            const length = input.value.length;
+            input.setSelectionRange(length, length);
+        }
+    });
+</script>
+@endpush

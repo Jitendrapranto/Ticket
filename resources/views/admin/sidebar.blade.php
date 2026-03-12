@@ -1,12 +1,61 @@
 <aside id="admin-sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#1B2B46] text-white transition-transform duration-300 transform -translate-x-full lg:translate-x-0 z-50 overflow-y-auto no-scrollbar shadow-2xl border-r border-white/5">
     <!-- Sidebar Header -->
-    <div class="p-8 border-b border-white/5">
-        <a href="/" class="flex flex-col items-center gap-4">
-            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-16 w-auto object-contain brightness-0 invert">
-            <div class="text-center">
-                <span class="text-[10px] font-black tracking-[0.4em] text-accent uppercase">Super Admin</span>
-            </div>
+    <div class="p-8 border-b border-white/5 space-y-10">
+        <a href="/" class="flex justify-center">
+            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-12 w-auto object-contain brightness-0 invert">
         </a>
+
+        <div x-data="{ userOpen: false }" class="relative w-full">
+            <button @click="userOpen = !userOpen" class="w-full flex flex-col items-center gap-6 group focus:outline-none">
+                <div class="relative">
+                    <div class="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-primary to-accent p-0.5 shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                        <div class="w-full h-full rounded-[1.8rem] bg-secondary flex items-center justify-center overflow-hidden border-2 border-secondary">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                            @else
+                                <i class="fas fa-user-shield text-slate-400 text-2xl"></i>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-accent text-white flex items-center justify-center shadow-lg border-2 border-secondary group-hover:bg-primary transition-colors">
+                        <i class="fas fa-chevron-down text-[8px] transition-transform" :class="userOpen ? 'rotate-180' : ''"></i>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h4 class="text-white font-black text-sm tracking-tight group-hover:text-accent transition-colors leading-none mb-1.5">{{ Auth::user()->name }}</h4>
+                    <p class="text-[8px] font-black tracking-[0.4em] text-accent uppercase">Super Admin</p>
+                </div>
+            </button>
+
+            <!-- Profile Dropdown Content -->
+            <div x-show="userOpen" 
+                 @click.away="userOpen = false"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 class="absolute left-1/2 -translate-x-1/2 mt-4 w-56 bg-white rounded-[1.5rem] shadow-2xl py-3 z-[60] border border-slate-100 overflow-hidden" 
+                 style="display: none;">
+                
+                <a href="{{ route('profile') }}" class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:text-primary hover:bg-slate-50 transition-all group/item">
+                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-xs">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-widest">View Profile</span>
+                </a>
+
+                <div class="mx-4 my-2 border-t border-slate-50"></div>
+
+                <form action="{{ route('admin.logout') }}" method="POST" class="px-4">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all group/logout">
+                        <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center group-hover/logout:bg-white/20 shadow-sm transition-all text-xs">
+                            <i class="fas fa-power-off"></i>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-widest">Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Navigation Menu -->
@@ -19,6 +68,8 @@
             </div>
             Dashboard
         </a>
+
+
 
         <!-- Marketplace -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">Event Management</span>
@@ -225,12 +276,25 @@
         </a>
 
         <!-- Payouts -->
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all group">
-            <div class="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20">
-                <i class="fa-solid fa-wallet text-blue-400"></i>
+        <div x-data="{ open: {{ request()->routeIs('admin.payout.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none group">
+                <div class="flex items-center gap-4">
+                    <div class="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20">
+                        <i class="fa-solid fa-wallet text-blue-400"></i>
+                    </div>
+                    PaYout
+                </div>
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" class="mt-2 ml-4 space-y-1 border-l border-white/5 pl-4" x-cloak>
+                <a href="{{ route('admin.payout.requests') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.payout.requests') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-medium transition-all">
+                    Withdraw Request
+                </a>
+                <a href="{{ route('admin.payout.history') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.payout.history') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-medium transition-all">
+                    Withdraw HistorY
+                </a>
             </div>
-            Payouts
-        </a>
+        </div>
 
         <!-- Settings -->
         <span class="text-[10px] font-black tracking-widest text-white/30 uppercase px-4 py-2 block mt-6">System</span>

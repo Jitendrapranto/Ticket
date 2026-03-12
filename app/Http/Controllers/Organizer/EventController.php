@@ -20,7 +20,7 @@ class EventController extends Controller
             'total' => Event::where('user_id', Auth::id())->count(),
             'pending' => Event::where('user_id', Auth::id())->where('is_approved', false)->count(),
             'active_today' => Event::where('user_id', Auth::id())->where('status', 'Live')->whereDate('date', now())->count(),
-            'reported' => 0, 
+            'reported' => 0,
         ];
 
         $events = Event::with(['category', 'ticketTypes', 'bookings'])->where('user_id', Auth::id())->latest()->get();
@@ -51,7 +51,10 @@ class EventController extends Controller
             'duration' => 'nullable|string|max:255',
             'you_should_know' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
-            'artists_raw' => 'nullable|string',
+            'artists' => 'nullable|array',
+            'artists.*.name' => 'required_with:artists|string|max:255',
+            'artists.*.role' => 'nullable|string|max:255',
+            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'tickets' => 'nullable|array',
             'tickets.*.name' => 'required|string|max:255',
@@ -60,7 +63,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request) {
-            $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
+            $data = $request->except(['tickets', 'artists', 'form_fields_raw']);
             $data['slug'] = Str::slug($request->title);
             $data['event_code'] = $request->event_code ?? 'EVP-' . strtoupper(Str::random(8));
             $data['user_id'] = Auth::id();
@@ -72,9 +75,22 @@ class EventController extends Controller
                 $data['image'] = $request->file('image')->store('events', 'public');
             }
 
-            if ($request->artists_raw) {
-                $data['artists'] = json_decode($request->artists_raw, true);
+            // Handle Artists
+            $artists = [];
+            if ($request->has('artists')) {
+                foreach ($request->artists as $index => $artistData) {
+                    $artist = [
+                        'name' => $artistData['name'] ?? '',
+                        'role' => $artistData['role'] ?? '',
+                        'image' => null,
+                    ];
+                    if ($request->hasFile("artists.$index.image")) {
+                        $artist['image'] = $request->file("artists.$index.image")->store('artists', 'public');
+                    }
+                    $artists[] = $artist;
+                }
             }
+            $data['artists'] = $artists;
 
             $event = Event::create($data);
 
@@ -119,21 +135,23 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
-        if ($event->user_id !== Auth::id()) abort(403);
-        
+        if ($event->user_id !== Auth::id())
+            abort(403);
+
         $categories = EventCategory::all();
         return view('organizer.events.edit', compact('event', 'categories'));
     }
 
     public function update(Request $request, Event $event)
     {
-        if ($event->user_id !== Auth::id()) abort(403);
+        if ($event->user_id !== Auth::id())
+            abort(403);
 
         $request->validate([
             'category_id' => 'required|exists:event_categories,id',
             'organizer' => 'required|string|max:255',
             'title' => 'required|string|max:255',
-            'event_code' => 'required|string|unique:events,event_code,'.$event->id,
+            'event_code' => 'required|string|unique:events,event_code,' . $event->id,
             'date' => 'required|date',
             'registration_deadline' => 'required|date',
             'location' => 'required|string',
@@ -146,7 +164,11 @@ class EventController extends Controller
             'duration' => 'nullable|string|max:255',
             'you_should_know' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
-            'artists_raw' => 'nullable|string',
+            'artists' => 'nullable|array',
+            'artists.*.name' => 'required_with:artists|string|max:255',
+            'artists.*.role' => 'nullable|string|max:255',
+            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'artists.*.old_image' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'tickets' => 'nullable|array',
             'tickets.*.name' => 'required|string|max:255',
@@ -155,8 +177,8 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request, $event) {
-            $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
-            
+            $data = $request->except(['tickets', 'artists', 'form_fields_raw']);
+
             if ($request->title !== $event->title) {
                 $data['slug'] = Str::slug($request->title);
             }
@@ -168,12 +190,29 @@ class EventController extends Controller
                 $data['image'] = $request->file('image')->store('events', 'public');
             }
 
-            if ($request->artists_raw) {
-                $data['artists'] = json_decode($request->artists_raw, true);
+            // Handle Artists
+            $artists = [];
+            if ($request->has('artists')) {
+                foreach ($request->artists as $index => $artistData) {
+                    $artist = [
+                        'name' => $artistData['name'] ?? '',
+                        'role' => $artistData['role'] ?? '',
+                        'image' => $artistData['old_image'] ?? null,
+                    ];
+
+                    if ($request->hasFile("artists.$index.image")) {
+                        if (!empty($artistData['old_image'])) {
+                            Storage::disk('public')->delete($artistData['old_image']);
+                        }
+                        $artist['image'] = $request->file("artists.$index.image")->store('artists', 'public');
+                    }
+                    $artists[] = $artist;
+                }
             }
+            $data['artists'] = $artists;
 
             // On edit, maybe set is_approved false to require re-approval? User didn't specify. We'll leave it as is or reset if they want. Let's keep it approved unless super admin edits.
-            
+
             $event->update($data);
 
             $event->ticketTypes()->delete();
@@ -191,8 +230,9 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
-        if ($event->user_id !== Auth::id()) abort(403);
-        
+        if ($event->user_id !== Auth::id())
+            abort(403);
+
         if ($event->image) {
             Storage::disk('public')->delete($event->image);
         }
@@ -204,7 +244,8 @@ class EventController extends Controller
     public function bookings($event_id)
     {
         $event = Event::findOrFail($event_id);
-        if ($event->user_id !== Auth::id()) abort(403);
+        if ($event->user_id !== Auth::id())
+            abort(403);
 
         $bookings = Booking::with(['user', 'attendees'])->where('event_id', $event_id)->latest()->paginate(20);
         return view('organizer.events.bookings', compact('event', 'bookings'));

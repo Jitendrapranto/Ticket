@@ -1,554 +1,233 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Event | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        html { visibility: hidden; opacity: 0; }
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                    boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
-                }
-            }
-        }
-    </script>
-    <style>
-        [x-cloak] { display: none !important; }
-        .form-input { @apply w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm; }
-        .form-label { @apply text-xs font-bold text-slate-500 mb-2 block; }
-    </style>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus overflow-x-hidden">
-    @include('organizer.sidebar')
+@extends('layouts.organizer')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <form action="{{ route('organizer.events.store') }}" method="POST" enctype="multipart/form-data" x-data="{
-            tickets: [{ name: 'General Admission', price: '25', quantity: '100' }],
-            artists: [],
-            formFields: [],
-            addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
-            removeTicket(index) { this.tickets.splice(index, 1) },
-            addArtist() { this.artists.push({ name: '', role: '', image: '' }) },
-            removeArtist(index) { this.artists.splice(index, 1) },
-            addFormField() { this.formFields.push({ label: '', type: 'text', options: [], is_required: false }) },
-            removeFormField(index) { this.formFields.splice(index, 1) },
-            addOption(fieldIndex) { this.formFields[fieldIndex].options.push('') },
-            removeOption(fieldIndex, optIndex) { this.formFields[fieldIndex].options.splice(optIndex, 1) }
-        }">
-            @csrf
+@section('title', 'Create New Event')
+@section('header_title', 'Create New Event')
 
-            <!-- Header Section -->
-            <header class="h-24 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-12 sticky top-0 z-40">
-                <div class="flex items-center gap-6">
-                    <a href="{{ route('organizer.events.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark hover:bg-white transition-all border border-slate-100 shadow-sm">
-                        <i class="fas fa-arrow-left text-xs"></i>
-                    </a>
-                    <div>
-                        <h2 class="font-outfit text-2xl font-black text-dark tracking-tight">Create New Event</h2>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Launch a new experience or save it for later review.</p>
+@section('content')
+<div class="p-8 animate-fadeInUp">
+    <form action="{{ route('organizer.events.store') }}" method="POST" enctype="multipart/form-data" x-data="{
+        tickets: [{ name: 'General Admission', price: '25', quantity: '100' }],
+        artists: [],
+        formFields: [],
+        addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
+        removeTicket(index) { this.tickets.splice(index, 1) },
+        addArtist() { this.artists.push({ name: '', role: '', image: '', preview: null, imageName: '' }) },
+        removeArtist(index) { this.artists.splice(index, 1) },
+        addFormField() { this.formFields.push({ label: '', type: 'text', options: [], is_required: false }) },
+        removeFormField(index) { this.formFields.splice(index, 1) },
+        addOption(fieldIndex) { this.formFields[fieldIndex].options.push('') },
+        removeOption(fieldIndex, optIndex) { this.formFields[fieldIndex].options.splice(optIndex, 1) }
+    }">
+        @csrf
+
+        <!-- Stats Overview Placeholder / Action Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div>
+                <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Experience Configuration</h3>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Launch a new experience or save it for later review.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button type="submit" name="status" value="Draft" class="px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-all">Save as Draft</button>
+                <button type="submit" name="status" value="Live" class="bg-primary text-white px-8 py-3.5 rounded-xl text-[10px] font-black tracking-widest hover:bg-primary-dark transition-all uppercase shadow-xl shadow-primary/20 flex items-center gap-3">
+                    <i class="fas fa-rocket text-[10px]"></i> Launch Event
+                </button>
+            </div>
+        </div>
+
+        @if(session('error') || $errors->any())
+            <div class="mb-10 bg-red-50 border border-red-100 rounded-2xl p-6 text-red-600">
+                <div class="flex items-center gap-4 mb-3">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4 class="text-sm font-black uppercase tracking-tight">Action Required</h4>
+                </div>
+                <ul class="space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li class="text-[11px] font-medium">• {{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="space-y-8 max-w-5xl">
+            <!-- Basic Information -->
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center text-xl">
+                        <i class="fas fa-info-circle"></i>
                     </div>
+                    <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Basic Information</h3>
                 </div>
-                <div class="flex items-center gap-6">
-                    <button type="submit" name="status" value="Draft" class="text-xs font-bold text-slate-500 hover:text-primary transition-colors uppercase tracking-widest">Save as Draft</button>
-                    <button type="submit" name="status" value="Live" class="bg-primary text-white px-8 py-3.5 rounded-xl text-xs font-black tracking-widest hover:bg-primary-dark transition-all uppercase shadow-xl shadow-primary/20 flex items-center gap-3">
-                        <i class="fas fa-rocket text-[10px]"></i> Launch Event
-                    </button>
-                </div>
-            </header>
 
-            @if(session('error') || $errors->any())
-                <!-- Error Notification -->
-                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 10000)" x-show="show"
-                     x-transition:enter="transition ease-out duration-500"
-                     x-transition:enter-start="translate-x-full opacity-0"
-                     x-transition:enter-end="translate-x-0 opacity-100"
-                     x-transition:leave="transition ease-in duration-300"
-                     x-transition:leave-end="translate-x-full opacity-0"
-                     class="fixed top-8 right-8 z-[150] max-w-sm w-full">
-                    <div class="bg-red-950 rounded-[2rem] shadow-2xl p-6 flex flex-col gap-4 relative overflow-hidden text-white border border-red-500/20">
-                        <div class="absolute left-0 top-0 bottom-0 w-2 bg-red-500"></div>
-                        <div class="flex items-center gap-6">
-                            <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center text-xl shadow-inner text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
-                            <div class="flex-1 text-left">
-                                <h4 class="text-sm font-black tracking-tight uppercase">Action Required</h4>
-                                <p class="text-[10px] text-red-200/60 mt-0.5 leading-tight font-bold tracking-widest">Verification failed</p>
-                            </div>
-                        </div>
-                        <div class="space-y-1 bg-black/20 p-4 rounded-xl">
-                            @if(session('error'))
-                                <p class="text-[11px] text-red-100 font-medium">{{ session('error') }}</p>
-                            @endif
-                            @foreach ($errors->all() as $error)
-                                <p class="text-[10px] text-red-100/80 font-medium flex items-center gap-2">
-                                    <span class="w-1 h-1 bg-red-400 rounded-full"></span>
-                                    {{ $error }}
-                                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Code</label>
+                        <input type="text" name="event_code" value="EVP-{{ strtoupper(Str::random(10)) }}" readonly class="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 outline-none text-primary font-black text-sm cursor-not-allowed tracking-widest shadow-inner">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Name</label>
+                        <input type="text" name="title" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Summer Music Festival">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Organizer Name</label>
+                        <input type="text" name="organizer" value="{{ Auth::user()->name }}" readonly class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none text-slate-400 font-bold text-sm cursor-not-allowed shadow-inner">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
+                        <select name="category_id" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm appearance-none cursor-pointer">
+                            <option value="" disabled selected>Select event category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
-                        </div>
+                        </select>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Venue Name</label>
+                        <input type="text" name="venue_name" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Grand Ballroom">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">City / Area</label>
+                        <input type="text" name="location" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Dhaka, Bangladesh">
+                    </div>
+
+                    <div class="md:col-span-2 space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Description</label>
+                        <textarea name="description" rows="5" class="w-full bg-slate-50 border border-slate-100 rounded-[2rem] p-8 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Provide a detailed overview..."></textarea>
                     </div>
                 </div>
-            @endif
+            </div>
 
-            <main class="p-12 max-w-6xl mx-auto space-y-8">
-
-                <!-- Basic Information -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Basic Information</h3>
+            <!-- Media Section -->
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50" x-data="{ preview: null }">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center text-xl">
+                        <i class="fas fa-image"></i>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-4">
-                            <label class="form-label">Event ID</label>
-                            @php $randomId = 'EVP-' . strtoupper(Str::random(10)); @endphp
-                            <input type="text" name="event_code" value="{{ $randomId }}" readonly class="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-primary font-black text-sm cursor-not-allowed tracking-widest shadow-inner">
-                        </div>
-                        <div class="space-y-4">
-                            <label class="form-label">Event Name</label>
-                            <input type="text" name="title" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Summer Music Festival">
-                        </div>
-                        <div class="space-y-4">
-                            <label class="form-label">Organizer Name</label>
-                            <input type="text" name="organizer" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="Enter Organizer Name">
-                        </div>
-                        <div class="space-y-4">
-                            <label class="form-label">Category</label>
-                            <select name="category_id" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm appearance-none">
-                                <option value="" disabled selected>Select event category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="md:col-span-1 space-y-4">
-                            <label class="form-label">Venue Name</label>
-                            <input type="text" name="venue_name" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Grand Ballroom">
-                        </div>
-                        <div class="md:col-span-1 space-y-4">
-                            <label class="form-label">City / Area</label>
-                            <div class="relative group">
-                                <i class="fas fa-map-marker-alt absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors"></i>
-                                <input type="text" name="location" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-14 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Dhaka, Bangladesh">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:col-span-2">
-                            <div class="space-y-4">
-                                <label class="form-label">Language</label>
-                                <input type="text" name="language" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. English, Bangla">
-                            </div>
-                            <div class="space-y-4">
-                                <label class="form-label">Age Limit</label>
-                                <input type="text" name="age_limit" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 18+ Only">
-                            </div>
-                            <div class="space-y-4">
-                                <label class="form-label">Duration</label>
-                                <input type="text" name="duration" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 3 Hours">
-                            </div>
-                        </div>
-                        <div class="md:col-span-2 space-y-4">
-                            <label class="form-label">Event Description</label>
-                            <textarea name="description" rows="5" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Provide a detailed overview of what attendees can expect..."></textarea>
-                        </div>
-                        <div class="md:col-span-2 space-y-4">
-                            <label class="form-label">You Should Know</label>
-                            <textarea name="you_should_know" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Important instructions for attendees..."></textarea>
-                        </div>
-                        <div class="md:col-span-2 space-y-4">
-                            <label class="form-label">Terms & Conditions</label>
-                            <textarea name="terms_conditions" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Legal terms, refund policy, etc..."></textarea>
-                        </div>
-                    </div>
+                    <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Gallery & Media</h3>
                 </div>
 
-                <!-- Artist Lineup -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
-                    <div class="flex items-center justify-between mb-8">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Artist Lineup</h3>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Manage personalities performing at this event.</p>
-                            </div>
-                        </div>
-                        <button type="button" @click="addArtist()" class="bg-primary-dark text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-lg shadow-black/10">
-                            <i class="fas fa-plus"></i> Add Artist
-                        </button>
-                    </div>
-
-                    <div class="space-y-4">
-                        <template x-for="(artist, index) in artists" :key="index">
-                            <div class="grid grid-cols-12 gap-6 items-end group animate-fadeInUp">
-                                <div class="col-span-5 space-y-3">
-                                    <label class="form-label text-[10px]">Artist Name</label>
-                                    <input type="text" x-model="artist.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold opacity-80 focus:opacity-100 transition-all shadow-inner" placeholder="Artist Name">
-                                </div>
-                                <div class="col-span-3 space-y-3">
-                                    <label class="form-label text-[10px]">Role / Talent</label>
-                                    <input type="text" x-model="artist.role" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-black tracking-tighter shadow-inner" placeholder="e.g. Guest Comedian">
-                                </div>
-                                <div class="col-span-3 space-y-3">
-                                    <label class="form-label text-[10px]">Image URL (Optional)</label>
-                                    <input type="text" x-model="artist.image" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold shadow-inner" placeholder="https://...">
-                                </div>
-                                <div class="col-span-1 pb-1">
-                                    <button type="button" @click="removeArtist(index)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50 text-red-400 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                                        <i class="fas fa-trash-alt text-[10px]"></i>
-                                    </button>
-                                </div>
+                <div class="space-y-6">
+                    <div class="relative w-full aspect-video bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden transition-all group hover:border-primary/30">
+                        <template x-if="preview">
+                            <img :src="preview" class="w-full h-full object-cover">
+                        </template>
+                        <template x-if="!preview">
+                            <div class="text-center">
+                                <i class="fas fa-image text-4xl text-slate-200 mb-4 transition-transform group-hover:scale-110"></i>
+                                <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Select Banner Photo</p>
                             </div>
                         </template>
-                        <input type="hidden" name="artists_raw" :value="JSON.stringify(artists)">
+                        <input type="file" name="image" class="absolute inset-0 opacity-0 cursor-pointer" @change="const file = $event.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => preview = e.target.result; reader.readAsDataURL(file); }">
                     </div>
                 </div>
+            </div>
 
-                <!-- Media & Branding -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100"
-                     x-data="{
-                        preview: null,
-                        imageError: null,
-                        imageMeta: { size: 0, w: 0, h: 0 },
-                        handleFile(e) {
-                            const file = e.target.files[0];
-                            if (!file) return;
-
-                            this.imageError = null;
-                            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                            this.imageMeta.size = sizeMB;
-
-                            if (sizeMB > 5) {
-                                this.imageError = 'File size (' + sizeMB + 'MB) exceeds the 5MB limit';
-                                this.preview = null;
-                                e.target.value = '';
-                                return;
-                            }
-
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                                const img = new Image();
-                                img.onload = () => {
-                                    this.imageMeta.w = img.width;
-                                    this.imageMeta.h = img.height;
-                                    this.preview = event.target.result;
-                                };
-                                img.src = event.target.result;
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                     }">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Media & Branding</h3>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <label class="form-label">Event Banner</label>
-                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • < 5MB</span>
-                            </div>
-
-                            <div class="flex gap-4">
-                                <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 flex items-center justify-between overflow-hidden">
-                                    <span class="text-xs font-bold text-slate-400 truncate" x-text="imageError ? 'Invalid File' : (preview ? 'Image selected' : 'No file chosen')"></span>
-                                    <div x-show="preview && !imageError" class="flex gap-4 items-center pl-4 bg-slate-50 ml-auto" x-cloak>
-                                        <span class="text-[9px] font-black text-dark bg-white px-2 py-1 rounded-md border border-slate-100 transition-all" x-text="imageMeta.w + 'x' + imageMeta.h + 'px'"></span>
-                                        <span class="text-[9px] font-black text-primary bg-primary/5 px-2 py-1 rounded-md transition-all" x-text="imageMeta.size + ' MB'"></span>
-                                    </div>
-                                </div>
-                                <label class="bg-primary-dark text-white px-8 py-4 rounded-xl text-[10px] font-black tracking-widest cursor-pointer hover:bg-black transition-all flex items-center gap-3 shadow-lg shadow-primary/10">
-                                    <i class="fas fa-camera"></i> Select Photo
-                                    <input type="file" name="image" class="hidden" accept="image/*" @change="handleFile($event)">
-                                </label>
-                            </div>
-
-                            <template x-if="imageError">
-                                <div class="flex items-center gap-3 py-3 px-5 bg-red-50 border border-red-100 rounded-xl text-red-500 animate-fadeInUp">
-                                    <i class="fas fa-exclamation-circle text-xs"></i>
-                                    <span class="text-[10px] font-black uppercase tracking-tight" x-text="imageError"></span>
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- Preview Window -->
-                        <div class="w-full aspect-video bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 flex items-center justify-center relative overflow-hidden group shadow-inner transition-all duration-500"
-                             :class="imageError ? 'border-red-200 bg-red-50/10' : (preview ? 'border-primary/20' : 'border-slate-200')">
-                            <template x-if="preview">
-                                <img :src="preview" class="w-full h-full object-cover animate-fadeInUp">
-                            </template>
-                            <template x-if="!preview">
-                                <div class="text-center">
-                                    <i class="fas fa-image text-4xl text-slate-200 mb-4 transition-transform group-hover:scale-110 duration-500"></i>
-                                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Awaiting Media Asset</p>
-                                </div>
-                            </template>
-
-                            <!-- Floating Overlay Info -->
-                            <div x-show="preview" x-cloak class="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
-                                <div class="bg-dark/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10">
-                                    <p class="text-[8px] font-black text-white/40 uppercase tracking-[0.2em] mb-0.5">Specifications</p>
-                                    <p class="text-[10px] font-bold text-white tracking-widest">Vivid Capture • High Fidelity</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Ticketing & Scheduling Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Scheduling -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-2">
-                        <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
                         <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Scheduling</h3>
                     </div>
-                    <p class="text-[10px] text-slate-400 font-bold mb-8 uppercase tracking-widest">Set the dates and times for your event and registration period.</p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-4">
-                            <label class="form-label">Event Start Date & Time</label>
-                            <div class="relative group">
-                                <i class="fas fa-calendar absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors"></i>
-                                <input type="datetime-local" name="date" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
-                            </div>
+                    <div class="space-y-6">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Date & Time</label>
+                            <input type="datetime-local" name="date" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:border-primary/30 transition-all">
                         </div>
-                        <div class="space-y-4">
-                            <label class="form-label">Registration Last Date</label>
-                            <div class="relative group">
-                                <i class="fas fa-calendar absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors"></i>
-                                <input type="datetime-local" name="registration_deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
-                            </div>
-                            <p class="text-[10px] text-slate-400 font-medium">When will ticket sales close for this event?</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Experience Settings -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-4 mb-2">
-                        <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-                            <i class="fas fa-sliders-h"></i>
-                        </div>
-                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Experience Settings</h3>
-                    </div>
-                    <p class="text-[10px] text-slate-400 font-bold mb-8 uppercase tracking-widest">Configure how this event appears in the gallery and listing views.</p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-4">
-                            <label class="form-label">Presentation Order</label>
-                            <div class="relative group">
-                                <i class="fas fa-sort-numeric-down absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors"></i>
-                                <input type="number" name="sort_order" value="0" min="0" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-14 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. 1">
-                            </div>
-                            <p class="text-[10px] text-slate-400 font-medium">Lower numbers appear first in the listing.</p>
-                        </div>
-                        <div class="space-y-4">
-                            <label class="form-label">Featured Experience</label>
-                            <label class="relative inline-flex items-center cursor-pointer group">
-                                <input type="checkbox" name="is_featured" value="1" class="sr-only peer">
-                                <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
-                                <span class="ms-4 text-xs font-bold text-slate-500 group-hover:text-dark transition-colors">Mark as Featured</span>
-                            </label>
-                            <p class="text-[10px] text-slate-400 font-medium">Featured events are highlighted in the hero or spotlight sections.</p>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Registration Last Date</label>
+                            <input type="datetime-local" name="registration_deadline" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:border-primary/30 transition-all">
                         </div>
                     </div>
                 </div>
 
                 <!-- Ticketing -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50">
                     <div class="flex items-center justify-between mb-8">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-500 flex items-center justify-center">
                                 <i class="fas fa-ticket-alt"></i>
                             </div>
-                            <div>
-                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Ticketing</h3>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Add different ticket types for your event.</p>
-                            </div>
+                            <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Ticket Types</h3>
                         </div>
-                        <button type="button" @click="addTicket()" class="bg-primary-dark text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3">
-                            <i class="fas fa-plus"></i> Add Ticket Type
-                        </button>
+                        <button type="button" @click="addTicket()" class="text-[10px] font-black uppercase text-primary tracking-widest">+ Add</button>
                     </div>
-
                     <div class="space-y-4">
                         <template x-for="(ticket, index) in tickets" :key="index">
-                            <div class="grid grid-cols-12 gap-6 items-end group animate-fadeInUp">
-                                <div class="col-span-5 space-y-3">
-                                    <label class="form-label text-[10px]">Ticket Name</label>
-                                    <input type="text" :name="'tickets['+index+'][name]'" x-model="ticket.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold opacity-80 focus:opacity-100 transition-all shadow-inner" placeholder="General Admission">
+                            <div class="grid grid-cols-12 gap-3 items-end p-2 bg-slate-50/50 rounded-2xl border border-slate-100 animate-fadeInUp">
+                                <div class="col-span-12">
+                                    <input type="text" :name="'tickets['+index+'][name]'" x-model="ticket.name" placeholder="Name" class="w-full bg-white px-4 py-3 rounded-xl border border-slate-100 text-xs font-bold">
                                 </div>
-                                <div class="col-span-3 space-y-3">
-                                    <label class="form-label text-[10px]">Price ($)</label>
-                                    <input type="number" :name="'tickets['+index+'][price]'" x-model="ticket.price" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-black tracking-tighter shadow-inner">
+                                <div class="col-span-5">
+                                    <input type="number" :name="'tickets['+index+'][price]'" x-model="ticket.price" placeholder="Price" class="w-full bg-white px-4 py-3 rounded-xl border border-slate-100 text-xs font-black">
                                 </div>
-                                <div class="col-span-3 space-y-3">
-                                    <label class="form-label text-[10px]">Quantity</label>
-                                    <input type="number" :name="'tickets['+index+'][quantity]'" x-model="ticket.quantity" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold shadow-inner">
+                                <div class="col-span-5">
+                                    <input type="number" :name="'tickets['+index+'][quantity]'" x-model="ticket.quantity" placeholder="Qty" class="w-full bg-white px-4 py-3 rounded-xl border border-slate-100 text-xs font-bold">
                                 </div>
-                                <div class="col-span-1 pb-1">
-                                    <button type="button" @click="removeTicket(index)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50 text-red-400 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                                        <i class="fas fa-trash-alt text-[10px]"></i>
-                                    </button>
+                                <div class="col-span-2">
+                                    <button type="button" @click="removeTicket(index)" class="w-full h-10 bg-red-50 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-trash text-[10px]"></i></button>
                                 </div>
                             </div>
                         </template>
                     </div>
+                    <input type="hidden" name="price" :value="tickets[0] ? tickets[0].price : 0">
                 </div>
+            </div>
 
-                <!-- Registration Form Builder -->
-                <div class="bg-white rounded-[2rem] p-10 shadow-sm border border-slate-100">
-                    <div class="flex items-center justify-between mb-8">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-                                <i class="fas fa-list-check"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Registration Form Builder</h3>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Configure dynamic fields for the booking form.</p>
-                            </div>
+            <!-- Artists Section -->
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center">
+                            <i class="fas fa-users"></i>
                         </div>
-                        <button type="button" @click="addFormField()" class="bg-primary-dark text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-lg shadow-black/10">
-                            <i class="fas fa-plus"></i> Add Field
-                        </button>
+                        <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Artist Lineup</h3>
                     </div>
-
-                    <div class="space-y-6">
-                        <!-- Default Fields (Static) -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 border-b border-dashed border-slate-100">
-                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
-                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark">Name</p>
-                            </div>
-                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
-                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark">Email</p>
-                            </div>
-                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
-                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark">Phone</p>
-                            </div>
-                            <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
-                                <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
-                                <p class="text-[13px] font-bold text-dark">Address</p>
-                            </div>
+                    <button type="button" @click="addArtist()" class="text-[10px] font-black uppercase text-primary tracking-widest">+ Add Artist</button>
+                </div>
+            <div class="space-y-4">
+                <template x-for="(artist, index) in artists" :key="index">
+                    <div class="grid grid-cols-12 gap-6 p-4 bg-slate-50/50 rounded-2xl border border-slate-100 animate-fadeInUp relative group">
+                        <button type="button" @click="removeArtist(index)" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-[8px] flex items-center justify-center shadow-lg"><i class="fas fa-times"></i></button>
+                        
+                        <div class="col-span-12 md:col-span-4 space-y-2">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Artist Name</label>
+                            <input type="text" :name="'artists['+index+'][name]'" x-model="artist.name" placeholder="Name" class="w-full bg-white px-4 py-3 rounded-xl border border-slate-100 text-xs font-bold">
                         </div>
-
-                        <!-- Custom Dynamic Fields -->
-                        <div class="space-y-4">
-                            <template x-for="(field, index) in formFields" :key="index">
-                                <div class="bg-slate-50/30 border border-slate-100 rounded-2xl p-6 group animate-fadeInUp relative">
-                                    <button type="button" @click="removeFormField(index)" class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white border border-red-100 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                                        <i class="fas fa-times text-[10px]"></i>
-                                    </button>
-
-                                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
-                                        <div class="space-y-2">
-                                            <label class="form-label text-[10px]">Field Name</label>
-                                            <input type="text" x-model="field.label" placeholder="e.g. Identity Card Number" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 outline-none text-[13px] font-bold focus:border-primary/30 transition-all">
-                                        </div>
-
-                                        <div class="space-y-2">
-                                            <label class="form-label text-[10px]">Field Type</label>
-                                            <select x-model="field.type" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 outline-none text-[13px] font-bold focus:border-primary/30 transition-all cursor-pointer">
-                                                <option value="text">Text Input</option>
-                                                <option value="email">Email Input</option>
-                                                <option value="number">Number Input</option>
-                                                <option value="select">Dropdown Menu</option>
-                                                <option value="textarea">Long Text / Textarea</option>
-                                                <option value="date">Date Picker</option>
-                                                <option value="checkbox">Single Checkbox</option>
-                                                <option value="file">File Upload</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="space-y-2">
-                                            <label class="form-label text-[10px]">Required?</label>
-                                            <div class="flex items-center h-[46px]">
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" x-model="field.is_required" class="sr-only peer">
-                                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <!-- Options for Dropdown -->
-                                        <div class="md:col-span-3 lg:col-span-1 space-y-2" x-show="field.type === 'select'">
-                                            <div class="flex items-center justify-between">
-                                                <label class="form-label text-[10px]">Options</label>
-                                                <button type="button" @click="addOption(index)" class="text-[9px] font-black text-primary uppercase">+ Add</button>
-                                            </div>
-                                            <div class="space-y-2">
-                                                <template x-for="(opt, optIndex) in field.options" :key="optIndex">
-                                                    <div class="flex gap-2">
-                                                        <input type="text" x-model="field.options[optIndex]" placeholder="Option val" class="flex-1 bg-white border border-slate-100 rounded-lg py-1.5 px-3 outline-none text-[11px] font-bold">
-                                                        <button type="button" @click="removeOption(index, optIndex)" class="text-red-400"><i class="fas fa-trash-alt text-[9px]"></i></button>
-                                                    </div>
-                                                </template>
-                                            </div>
-                                        </div>
-                                    </div>
+                        
+                        <div class="col-span-12 md:col-span-3 space-y-2">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Role / Talent</label>
+                            <input type="text" :name="'artists['+index+'][role]'" x-model="artist.role" placeholder="Role (e.g. Lead Singer)" class="w-full bg-white px-4 py-3 rounded-xl border border-slate-100 text-xs font-bold">
+                        </div>
+                        
+                        <div class="col-span-12 md:col-span-5 space-y-2">
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Artist Photo</label>
+                                <div x-show="artist.preview" class="w-6 h-6 rounded-lg overflow-hidden border border-slate-100 shadow-sm">
+                                    <img :src="artist.preview" class="w-full h-full object-cover">
                                 </div>
-                            </template>
-                        </div>
-
-                        <div x-show="formFields.length === 0" class="text-center py-12 bg-slate-50/50 rounded-[2rem] border-2 border-dashed border-slate-100">
-                            <i class="fas fa-wand-magic-sparkles text-2xl text-slate-200 mb-3 block"></i>
-                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Add custom fields to build your form</p>
+                            </div>
+                            <label class="w-full h-[46px] bg-white border border-slate-100 rounded-xl flex items-center px-4 cursor-pointer hover:bg-slate-50 transition-all overflow-hidden relative group/file">
+                                <i class="fas fa-camera text-slate-300 mr-2 group-hover/file:text-primary transition-colors"></i>
+                                <span class="text-[10px] font-bold text-slate-400 truncate" x-text="artist.imageName || 'Select Artist Photo'"></span>
+                                <input type="file" :name="'artists['+index+'][image]'" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" 
+                                    @change="const file = $event.target.files[0]; if(file) { artist.imageName = file.name; const reader = new FileReader(); reader.onload = (e) => artist.preview = e.target.result; reader.readAsDataURL(file); }">
+                            </label>
                         </div>
                     </div>
-                    <input type="hidden" name="form_fields_raw" :value="JSON.stringify(formFields)">
-                </div>
+                </template>
+            </div>
+            </div>
 
-                <!-- Footer Actions -->
-                <div class="pt-12 flex items-center justify-between">
-                    <a href="{{ route('organizer.events.index') }}" class="text-xs font-bold text-slate-500 hover:text-dark transition-colors uppercase tracking-widest">Cancel</a>
-                    <div class="flex items-center gap-6">
-                        <button type="submit" name="status" value="Draft" class="bg-slate-100 text-slate-600 px-8 py-4 rounded-2xl text-xs font-black tracking-[0.2em] hover:bg-slate-200 transition-all uppercase flex items-center gap-3">
-                            <i class="fas fa-save text-[10px]"></i> Save as Draft
-                        </button>
-                        <!-- Added hidden price for main event if needed by back-end schema, taking from first ticket -->
-                        <input type="hidden" name="price" :value="tickets[0] ? tickets[0].price : 0">
-                        <button type="submit" name="status" value="Live" class="bg-primary-dark text-white px-12 py-4 rounded-2xl font-black text-xs tracking-[0.3em] shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all active:scale-95 uppercase flex items-center gap-3">
-                             <i class="fas fa-paper-plane text-[10px]"></i> Launch Event
-                        </button>
-                    </div>
-                </div>
-            </main>
-        </form>
-    </div>
-
-    <style>
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeInUp { animation: fadeInUp 0.4s ease forwards; }
-    </style>
-</body>
-</html>
+            <!-- Action Bar -->
+            <div class="pt-10 flex items-center justify-end gap-6">
+                <a href="{{ route('organizer.events.index') }}" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cancel</a>
+                <button type="submit" name="status" value="Live" class="bg-dark text-white px-12 py-5 rounded-3xl font-black text-xs tracking-[0.3em] uppercase hover:bg-primary transition-all shadow-2xl active:scale-95">Launch Project</button>
+            </div>
+        </div>
+    </form>
+</div>
+@endsection

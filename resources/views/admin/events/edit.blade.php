@@ -43,11 +43,17 @@
     <div class="lg:ml-72 min-h-screen flex flex-col">
         <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" x-data="{
             tickets: {{ $event->ticketTypes->map(fn($t) => ['name' => $t->name, 'price' => $t->price, 'quantity' => $t->quantity])->toJson() }},
-            artists: {{ json_encode($event->artists ?? []) }},
+            artists: {{ json_encode($event->artists ?? []) }}.map(a => ({
+                name: a.name || '',
+                role: a.role || '',
+                image: a.image || '',
+                preview: a.image ? '{{ asset('storage') }}/' + a.image : null,
+                imageName: a.image ? a.image.split('/').pop() : ''
+            })),
             formFields: {{ json_encode($event->formFields->where('is_default', false)->map(fn($f) => ['label' => $f->label, 'type' => $f->type, 'options' => $f->options ?? [], 'is_required' => $f->is_required])->values()) }},
             addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
             removeTicket(index) { this.tickets.splice(index, 1) },
-            addArtist() { this.artists.push({ name: '', role: '', image: '' }) },
+            addArtist() { this.artists.push({ name: '', role: '', image: '', preview: null, imageName: '' }) },
             removeArtist(index) { this.artists.splice(index, 1) },
             addFormField() { this.formFields.push({ label: '', type: 'text', options: [], is_required: false }) },
             removeFormField(index) { this.formFields.splice(index, 1) },
@@ -210,17 +216,28 @@
                     <div class="space-y-4">
                         <template x-for="(artist, index) in artists" :key="index">
                             <div class="grid grid-cols-12 gap-6 items-end group animate-fadeInUp">
-                                <div class="col-span-5 space-y-3">
+                                <input type="hidden" :name="'artists['+index+'][old_image]'" x-model="artist.image">
+                                <div class="col-span-4 space-y-3">
                                     <label class="form-label text-[10px]">Artist Name</label>
-                                    <input type="text" x-model="artist.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold opacity-80 focus:opacity-100 transition-all shadow-inner">
+                                    <input type="text" :name="'artists['+index+'][name]'" x-model="artist.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold opacity-80 focus:opacity-100 transition-all shadow-inner" placeholder="Artist Name">
                                 </div>
                                 <div class="col-span-3 space-y-3">
                                     <label class="form-label text-[10px]">Role / Talent</label>
-                                    <input type="text" x-model="artist.role" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-black tracking-tighter shadow-inner" placeholder="e.g. Lead Singer">
+                                    <input type="text" :name="'artists['+index+'][role]'" x-model="artist.role" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-black tracking-tighter shadow-inner" placeholder="e.g. Lead Singer">
                                 </div>
-                                <div class="col-span-3 space-y-3">
-                                    <label class="form-label text-[10px]">Image URL (Optional)</label>
-                                    <input type="text" x-model="artist.image" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold shadow-inner">
+                                <div class="col-span-4 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <label class="form-label text-[10px]">Artist Photo</label>
+                                        <div x-show="artist.preview" class="w-6 h-6 rounded-md overflow-hidden border border-slate-100">
+                                            <img :src="artist.preview" class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+                                    <label class="w-full h-[52px] bg-slate-50 border border-slate-100 rounded-xl flex items-center px-4 cursor-pointer hover:bg-slate-100 transition-all overflow-hidden relative group/file">
+                                        <i class="fas fa-camera text-slate-300 mr-2 group-hover/file:text-primary transition-colors"></i>
+                                        <span class="text-[10px] font-bold text-slate-400 truncate" x-text="artist.imageName || (artist.image ? 'Change Photo' : 'Select Photo')"></span>
+                                        <input type="file" :name="'artists['+index+'][image]'" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" 
+                                            @change="const file = $event.target.files[0]; if(file) { artist.imageName = file.name; const reader = new FileReader(); reader.onload = (e) => artist.preview = e.target.result; reader.readAsDataURL(file); }">
+                                    </label>
                                 </div>
                                 <div class="col-span-1 pb-1">
                                     <button type="button" @click="removeArtist(index)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50 text-red-400 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm">
@@ -229,7 +246,6 @@
                                 </div>
                             </div>
                         </template>
-                        <input type="hidden" name="artists_raw" :value="JSON.stringify(artists)">
                     </div>
                 </div>
 

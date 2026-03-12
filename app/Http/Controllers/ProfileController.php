@@ -21,18 +21,27 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users,email,' . $user->id, 'regex:/^.+@.+\..+$/'],
+            'phone' => 'nullable|string|max:20',
+            'present_address' => 'nullable|string|max:500',
+            'avatar' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
+
+        if ($request->has('avatar') && !$request->hasFile('avatar') && $request->file('avatar') === null) {
+             // This happens if the file exceeds PHP's upload_max_filesize
+             return back()->withErrors(['avatar' => 'The uploaded file is too large for the server configuration.'])->withInput();
+        }
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'present_address' => $request->present_address,
         ];
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
             $data['avatar'] = $request->file('avatar')->store('avatars', 'public');

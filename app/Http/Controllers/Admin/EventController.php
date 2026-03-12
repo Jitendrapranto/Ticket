@@ -22,7 +22,7 @@ class EventController extends Controller
         ];
 
         $events = Event::with(['category', 'ticketTypes', 'bookings'])->latest()->get();
-        
+
         return view('admin.events.index', compact('events', 'stats'));
     }
 
@@ -70,7 +70,10 @@ class EventController extends Controller
             'duration' => 'nullable|string|max:255',
             'you_should_know' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
-            'artists_raw' => 'nullable|string',
+            'artists' => 'nullable|array',
+            'artists.*.name' => 'required_with:artists|string|max:255',
+            'artists.*.role' => 'nullable|string|max:255',
+            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'sort_order' => 'required|integer|min:0',
             'is_featured' => 'nullable|boolean',
@@ -81,7 +84,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request) {
-            $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
+            $data = $request->except(['tickets', 'artists', 'form_fields_raw']);
             $data['slug'] = Str::slug($request->title);
             $data['is_approved'] = true;
 
@@ -96,10 +99,23 @@ class EventController extends Controller
             }
 
             $data['is_featured'] = $request->has('is_featured');
-            
-            if ($request->artists_raw) {
-                $data['artists'] = json_decode($request->artists_raw, true);
+
+            // Handle Artists
+            $artists = [];
+            if ($request->has('artists')) {
+                foreach ($request->artists as $index => $artistData) {
+                    $artist = [
+                        'name' => $artistData['name'] ?? '',
+                        'role' => $artistData['role'] ?? '',
+                        'image' => null,
+                    ];
+                    if ($request->hasFile("artists.$index.image")) {
+                        $artist['image'] = $request->file("artists.$index.image")->store('artists', 'public');
+                    }
+                    $artists[] = $artist;
+                }
             }
+            $data['artists'] = $artists;
 
             $event = Event::create($data);
 
@@ -147,7 +163,11 @@ class EventController extends Controller
             'duration' => 'nullable|string|max:255',
             'you_should_know' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
-            'artists_raw' => 'nullable|string',
+            'artists' => 'nullable|array',
+            'artists.*.name' => 'required_with:artists|string|max:255',
+            'artists.*.role' => 'nullable|string|max:255',
+            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'artists.*.old_image' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'sort_order' => 'required|integer|min:0',
             'is_featured' => 'nullable|boolean',
@@ -158,7 +178,7 @@ class EventController extends Controller
         ]);
 
         \DB::transaction(function () use ($request, $event) {
-            $data = $request->except(['tickets', 'artists_raw', 'form_fields_raw']);
+            $data = $request->except(['tickets', 'artists', 'form_fields_raw']);
             $data['slug'] = Str::slug($request->title);
 
             // Automatically set organizer name if user is selected and organizer name is empty
@@ -175,10 +195,27 @@ class EventController extends Controller
             }
 
             $data['is_featured'] = $request->has('is_featured');
-            
-            if ($request->artists_raw) {
-                $data['artists'] = json_decode($request->artists_raw, true);
+
+            // Handle Artists
+            $artists = [];
+            if ($request->has('artists')) {
+                foreach ($request->artists as $index => $artistData) {
+                    $artist = [
+                        'name' => $artistData['name'] ?? '',
+                        'role' => $artistData['role'] ?? '',
+                        'image' => $artistData['old_image'] ?? null,
+                    ];
+
+                    if ($request->hasFile("artists.$index.image")) {
+                        if (!empty($artistData['old_image'])) {
+                            Storage::disk('public')->delete($artistData['old_image']);
+                        }
+                        $artist['image'] = $request->file("artists.$index.image")->store('artists', 'public');
+                    }
+                    $artists[] = $artist;
+                }
             }
+            $data['artists'] = $artists;
 
             $event->update($data);
 
@@ -211,17 +248,17 @@ class EventController extends Controller
             'orientation' => 'landscape',
             'pageSizeW' => \PhpOffice\PhpWord\Shared\Converter::cmToEmu(35),
             'pageSizeH' => \PhpOffice\PhpWord\Shared\Converter::cmToEmu(21),
-            'marginTop'    => 800,
+            'marginTop' => 800,
             'marginBottom' => 800,
-            'marginLeft'   => 800,
-            'marginRight'  => 800,
+            'marginLeft' => 800,
+            'marginRight' => 800,
         ]);
 
         // Title
         $section->addText(
             'Platform Verified Event Master List — ' . date('Y-M-d'),
-            ['bold' => true, 'size' => 16, 'color' => '1B2B46'],
-            ['spaceAfter' => 400, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        ['bold' => true, 'size' => 16, 'color' => '1B2B46'],
+        ['spaceAfter' => 400, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
 
         // Table style
@@ -234,7 +271,7 @@ class EventController extends Controller
         // Header row
         $headers = ['ID', 'Photo', 'Event Title', 'Category', 'Organizer', 'Date', 'Venue', 'Status', 'Sales'];
         $colWidths = [1000, 2000, 3500, 2000, 2500, 2500, 3000, 1500, 1000];
-        
+
         $table->addRow(600);
         foreach ($headers as $i => $hdr) {
             $table->addCell($colWidths[$i])->addText($hdr, ['bold' => true, 'color' => 'FFFFFF', 'size' => 10]);
@@ -252,7 +289,7 @@ class EventController extends Controller
 
             // ID
             $table->addCell($colWidths[0], $cellStyle)->addText((string)$event->id, $textStyle);
-            
+
             // PHOTO
             $photoCell = $table->addCell($colWidths[1], $cellStyle);
             if ($event->image) {
@@ -260,13 +297,16 @@ class EventController extends Controller
                 if (file_exists($absolutePath)) {
                     try {
                         $photoCell->addImage($absolutePath, ['width' => 60, 'height' => 45, 'wrappingStyle' => 'inline']);
-                    } catch (\Exception $e) {
+                    }
+                    catch (\Exception $e) {
                         $photoCell->addText('(img err)', $textStyle);
                     }
-                } else {
+                }
+                else {
                     $photoCell->addText('N/A', $textStyle);
                 }
-            } else {
+            }
+            else {
                 $photoCell->addText('N/A', $textStyle);
             }
 
@@ -275,8 +315,8 @@ class EventController extends Controller
             $table->addCell($colWidths[4], $cellStyle)->addText($event->organizer, $textStyle);
             $table->addCell($colWidths[5], $cellStyle)->addText($event->date->format('M d, Y'), $textStyle);
             $table->addCell($colWidths[6], $cellStyle)->addText($event->venue_name ?? $event->location, $textStyle);
-            $table->addCell($colWidths[7], $cellStyle)->addText($event->is_approved ? 'APPROVED' : 'PENDING', 
-                ['bold' => true, 'color' => $event->is_approved ? '10B981' : 'F59E0B', 'size' => 9]);
+            $table->addCell($colWidths[7], $cellStyle)->addText($event->is_approved ? 'APPROVED' : 'PENDING',
+            ['bold' => true, 'color' => $event->is_approved ? '10B981' : 'F59E0B', 'size' => 9]);
             $table->addCell($colWidths[8], $cellStyle)->addText($salesPercent . '%', $textStyle);
         }
 

@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::where('role', 'user');
+        $query = User::where('role', '!=', 'admin');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -20,14 +20,45 @@ class UserController extends Controller
             });
         }
 
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Date filtering
+        if ($request->filled('date_filter')) {
+            $now = now();
+            switch ($request->date_filter) {
+                case 'today':
+                    $query->whereDate('created_at', $now->toDateString());
+                    break;
+                case 'this_week':
+                    $query->whereBetween('created_at', [$now->startOfWeek()->startOfDay(), now()->endOfWeek()->endOfDay()]);
+                    break;
+                case 'this_month':
+                    $query->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year);
+                    break;
+                case 'this_year':
+                    $query->whereYear('created_at', $now->year);
+                    break;
+                case 'custom':
+                    if ($request->filled('date_from')) {
+                        $query->whereDate('created_at', '>=', $request->date_from);
+                    }
+                    if ($request->filled('date_to')) {
+                        $query->whereDate('created_at', '<=', $request->date_to);
+                    }
+                    break;
+            }
+        }
+
         $customers = $query->with(['bookings'])
             ->withCount(['bookings as tickets_count'])
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        $totalCustomers = User::where('role', 'user')->count();
-        $activeSessions = User::where('role', 'user')->count(); // Mocking as total users for now
+        $totalCustomers = User::where('role', '!=', 'admin')->count();
+        $activeSessions = User::where('role', '!=', 'admin')->count(); // Mocking as total users for now
         $totalRevenue = \App\Models\Booking::where('status', 'confirmed')->sum('total_amount');
         $averageLTV = $totalCustomers > 0 ? $totalRevenue / $totalCustomers : 0;
 
@@ -59,7 +90,7 @@ class UserController extends Controller
 
     public function show(User $customer)
     {
-        if ($customer->role !== 'user') abort(403);
+        if ($customer->role === 'admin') abort(403);
         return view('admin.users.show', ['user' => $customer]);
     }
 
@@ -289,9 +320,25 @@ class UserController extends Controller
         return redirect()->route('admin.customers.segmentation')->with('success', 'Attendee removed from segment successfully!');
     }
 
+    public function resetPassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->role === 'admin') abort(403);
+
+        $request->validate([
+            'password' => 'required|string|min:8'
+        ]);
+
+        $user->update([
+            'password' => \Hash::make($request->password)
+        ]);
+
+        return back()->with('success', "Password for {$user->name} has been updated successfully.");
+    }
+
     public function destroy(User $customer)
     {
-        if ($customer->role !== 'user') abort(403);
+        if ($customer->role === 'admin') abort(403);
         $customer->delete();
         return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully!');
     }
