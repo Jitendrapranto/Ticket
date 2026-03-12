@@ -247,3 +247,6 @@ When admin create a event then he can select the organizer from the dropdown and
 
 
 When user buY a ticket then he can paY for three ticket price...alwaYs he can paY for the extra one ticket price... fix it..
+
+
+I want to all filter of the all dashboard as a dropdown bY date like TodaYs, This week, This month, and make sure here date can be filter custom range This Year and also make sure to add a professional popup when filter the data and also make sure to add a toast message after filter the data...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
