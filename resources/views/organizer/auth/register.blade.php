@@ -25,7 +25,7 @@
             
             <div class="relative z-10">
                 <a href="/">
-                    <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-14 brightness-0 invert">
+                    <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-14 brightness-0 invert">
                 </a>
                 <div class="mt-12 space-y-5">
                     <h2 class="font-outfit text-3xl font-black leading-tight tracking-tight">
@@ -75,7 +75,7 @@
         <!-- Right Side: Form (3 columns) -->
         <div class="lg:col-span-3 p-8 md:p-10">
             <div class="lg:hidden text-center mb-8">
-                <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="mx-auto h-10">
+                <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="mx-auto h-10">
             </div>
 
             <div class="mb-8">

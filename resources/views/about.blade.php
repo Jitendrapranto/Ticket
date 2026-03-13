@@ -4,25 +4,25 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[450px] flex items-center">
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
+    <section class="relative pt-10 pb-16 md:pt-12 md:pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[340px] md:min-h-[450px] flex items-center">
+        <div class="absolute top-0 right-0 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-primary/10 rounded-full blur-[80px] md:blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+        <div class="absolute bottom-0 left-0 w-[150px] md:w-[300px] h-[150px] md:h-[300px] bg-accent/5 rounded-full blur-[60px] md:blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
 
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
+            <h1 class="font-outfit text-4xl md:text-6xl lg:text-8xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter">
                 {{ $hero->title_main ?? 'The Story' }}<br>
                 <span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Behind Kinun.' }}</span>
             </h1>
-            <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+            <p class="text-slate-400 text-sm md:text-lg lg:text-xl mb-8 md:mb-12 max-w-2xl mx-auto font-light leading-relaxed px-2">
                 {{ $hero->subtitle ?? 'We are a passionate team dedicated to transforming the way the world experiences live events.' }}
             </p>
         </div>
     </section>
 
     <!-- Statistics Section -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+    <section class="py-10 md:py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
 
                 @forelse($statistics as $stat)
                 <div class="bg-white rounded-[2rem] py-10 px-6 text-center flex flex-col items-center justify-center border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
@@ -77,14 +77,14 @@
     </section>
 
     <!-- Hero / Mission Section -->
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+    <section class="py-12 md:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 items-center">
                 <!-- Image -->
                 <div class="relative w-full">
                     <div class="rounded-3xl overflow-hidden shadow-2xl relative">
                         <!-- Bridge image -->
-                        <img src="{{ $story->image ?? 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' }}" alt="Our Story" class="w-full h-auto object-cover aspect-[4/3] brightness-75">
+                        <img loading="lazy" src="{{ $story->image ?? 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' }}" alt="Our Story" class="w-full h-auto object-cover aspect-[4/3] brightness-75">
                     </div>
                 </div>
 
@@ -96,7 +96,7 @@
                         </h3>
                     </div>
                     
-                    <h2 class="font-outfit text-5xl md:text-[3.5rem] font-black text-[#1e293b] leading-[1.1] mb-2 tracking-tighter">
+                    <h2 class="font-outfit text-3xl md:text-5xl lg:text-[3.5rem] font-black text-[#1e293b] leading-[1.1] mb-2 tracking-tighter">
                         {{ $story->title_main ?? 'Reimagining the' }} <br>
                         <span class="text-slate-400">{{ $story->title_highlight ?? 'Fan Journey' }}</span>
                     </h2>
@@ -140,11 +140,11 @@
     </section>
 
     <!-- The Kinun Advantage Section -->
-    <section class="py-24 bg-[#f8fafc]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="font-outfit text-4xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-4">The Kinun Advantage</h2>
-                <p class="text-slate-500 text-[15px] font-medium">Built on a foundation of technology and a passion for live events.</p>
+    <section class="py-12 md:py-24 bg-[#f8fafc]">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="text-center mb-10 md:mb-16">
+                <h2 class="font-outfit text-3xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-3 md:mb-4">The Kinun Advantage</h2>
+                <p class="text-slate-500 text-sm md:text-[15px] font-medium">Built on a foundation of technology and a passion for live events.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -169,10 +169,10 @@
     </section>
 
     <!-- Call to Action Section -->
-    <section class="py-24 bg-white">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="font-outfit text-4xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-4">{{ $cta->title ?? 'Ready to partner?' }}</h2>
-            <p class="text-slate-500 text-[15px] mb-10 font-medium">{{ $cta->subtitle ?? 'Join our global network of organizers and bring your events to millions.' }}</p>
+    <section class="py-12 md:py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 md:px-6 text-center">
+            <h2 class="font-outfit text-3xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-3 md:mb-4">{{ $cta->title ?? 'Ready to partner?' }}</h2>
+            <p class="text-slate-500 text-sm md:text-[15px] mb-8 md:mb-10 font-medium">{{ $cta->subtitle ?? 'Join our global network of organizers and bring your events to millions.' }}</p>
             
             <a href="{{ $cta->button_url ?? '#' }}" class="inline-flex items-center justify-center gap-3 bg-[#111827] text-white px-10 py-4 rounded-full font-bold text-sm tracking-wide hover:bg-[#1f2937] transition-all shadow-lg shadow-gray-900/30">
                 {{ $cta->button_text ?? 'CONTACT US TODAY' }}

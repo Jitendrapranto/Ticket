@@ -6,7 +6,7 @@
     <title>Edit Event Experience | Ticket Kinun Admin</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -229,7 +229,7 @@
                                     <div class="flex items-center justify-between">
                                         <label class="form-label text-[10px]">Artist Photo</label>
                                         <div x-show="artist.preview" class="w-6 h-6 rounded-md overflow-hidden border border-slate-100">
-                                            <img :src="artist.preview" class="w-full h-full object-cover">
+                                            <img loading="lazy" :src="artist.preview" class="w-full h-full object-cover">
                                         </div>
                                     </div>
                                     <label class="w-full h-[52px] bg-slate-50 border border-slate-100 rounded-xl flex items-center px-4 cursor-pointer hover:bg-slate-100 transition-all overflow-hidden relative group/file">
@@ -323,7 +323,7 @@
                         <div class="w-full aspect-video bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 flex items-center justify-center relative overflow-hidden group shadow-inner transition-all duration-300"
                              :class="imageError ? 'border-red-200 bg-red-50/10' : (preview ? 'border-primary/20' : 'border-slate-200')">
                             <template x-if="preview">
-                                <img :src="preview" class="w-full h-full object-cover animate-fadeInUp">
+                                <img loading="lazy" :src="preview" class="w-full h-full object-cover animate-fadeInUp">
                             </template>
                             <template x-if="!preview">
                                 <div class="text-center">

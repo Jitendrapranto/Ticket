@@ -6,7 +6,7 @@
     <title>Customer Database | Ticket Kinun</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <!-- Tailwind & Fonts -->
@@ -82,7 +82,7 @@
                         <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
                     </div>
                     <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>
@@ -255,7 +255,7 @@
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 rounded-2xl bg-slate-100 border-2 border-white shadow-soft flex items-center justify-center overflow-hidden">
                                             @if($customer->avatar)
-                                                <img src="{{ asset('storage/' . $customer->avatar) }}" class="w-full h-full object-cover">
+                                                <img loading="lazy" src="{{ asset('storage/' . $customer->avatar) }}" class="w-full h-full object-cover">
                                             @else
                                                 <div class="w-full h-full bg-primary/5 flex items-center justify-center">
                                                     <span class="text-sm font-black text-primary uppercase">{{ substr($customer->name, 0, 1) }}</span>

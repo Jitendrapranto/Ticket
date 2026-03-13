@@ -1,8 +1,16 @@
-<aside id="scanner-sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#1B2B46] text-white transition-transform duration-300 transform -translate-x-full lg:translate-x-0 z-50 overflow-y-auto no-scrollbar shadow-2xl">
+<aside id="scanner-sidebar" 
+    class="fixed top-0 left-0 h-full w-72 bg-[#1B2B46] text-white transition-transform duration-300 transform z-50 overflow-y-auto no-scrollbar shadow-2xl lg:translate-x-0"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    
+    <!-- Mobile Close Button -->
+    <button @click="sidebarOpen = false" class="lg:hidden absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+        <i class="fas fa-times text-white/50"></i>
+    </button>
+
     <!-- Sidebar Header -->
     <div class="p-8 border-b border-white/5 text-center">
         <a href="/" class="flex flex-col items-center gap-4">
-            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-16 w-auto object-contain brightness-0 invert">
+            <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-16 w-auto object-contain brightness-0 invert">
             <div>
                 <span class="text-[10px] font-black tracking-[0.4em] text-accent uppercase">On-Site Scanner</span>
             </div>

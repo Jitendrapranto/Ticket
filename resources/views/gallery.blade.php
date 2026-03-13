@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[400px] flex items-center">
+    <section class="relative pt-10 pb-16 md:pt-12 md:pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
         <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center">
@@ -60,7 +60,7 @@
 
                         <!-- Image -->
                         <div class="relative overflow-hidden">
-                            <img src="{{ $imgSrc }}"
+                            <img loading="lazy" src="{{ $imgSrc }}"
                                  alt="{{ $img->title }}"
                                  class="w-full object-cover aspect-[4/3] transition-transform duration-500 group-hover:scale-105">
 
@@ -187,7 +187,7 @@
 
             <!-- Image -->
             <div class="relative bg-black flex items-center justify-center overflow-hidden" style="max-height:65vh;">
-                <img id="modalImage" src="" alt=""
+                <img loading="lazy" id="modalImage" src="" alt=""
                      class="w-full object-contain transition-opacity duration-300"
                      style="max-height:65vh;">
             </div>

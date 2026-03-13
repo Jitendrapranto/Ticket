@@ -6,7 +6,7 @@
     <title>Edit Attendee | Ticket Kinun</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <!-- Tailwind & Fonts -->

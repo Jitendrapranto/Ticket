@@ -6,7 +6,7 @@
     <title>Edit Our Story | Ticket Kinun Admin</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -97,7 +97,7 @@
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Upload Image</label>
                             <input type="file" name="image_file" class="w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:tracking-widest file:uppercase file:bg-slate-50 file:text-primary hover:file:bg-slate-100 transition-all">
                             @if($story->image)
-                                <img src="{{ $story->image }}" class="w-32 h-20 object-cover mt-4 rounded-xl border border-slate-200">
+                                <img loading="lazy" src="{{ $story->image }}" class="w-32 h-20 object-cover mt-4 rounded-xl border border-slate-200">
                             @endif
                         </div>
 

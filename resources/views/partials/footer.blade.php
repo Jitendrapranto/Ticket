@@ -22,13 +22,13 @@
     $fTerms            = $f->terms_url ?? '#';
     $fCookies          = $f->cookies_url ?? '#';
 @endphp
-<footer class="bg-gradient-to-r from-[#520C6B] to-[#1B2B46] text-white pt-24 pb-12 shadow-[0_-10px_40px_-15px_rgba(82,12,107,0.3)]">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+<footer class="bg-gradient-to-r from-[#520C6B] to-[#1B2B46] text-white pt-16 md:pt-24 pb-12 shadow-[0_-10px_40px_-15px_rgba(82,12,107,0.3)]">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 mb-16 md:mb-20">
             <!-- Branding -->
             <div class="col-span-1">
                 <a href="/" class="flex-shrink-0 mb-8 block">
-                    <img src="{{ $fLogoSrc }}" alt="Ticket Kinun Logo" class="h-16 w-auto object-contain brightness-0 invert">
+                    <img loading="lazy" src="{{ $fLogoSrc }}" alt="Ticket Kinun Logo" class="h-16 w-auto object-contain brightness-0 invert">
                 </a>
                 <p class="text-slate-400 leading-relaxed mb-8 max-w-xs font-light">
                     {{ $fDescription }}

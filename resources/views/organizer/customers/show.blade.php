@@ -12,7 +12,7 @@
                 <div class="relative inline-block mb-8">
                     <div class="w-36 h-36 rounded-[2.5rem] bg-gradient-to-br from-slate-50 to-slate-100 border-8 border-white shadow-2xl mx-auto flex items-center justify-center overflow-hidden">
                         @if($user->profile_picture)
-                            <img src="{{ asset('storage/' . $user->profile_picture) }}" class="w-full h-full object-cover">
+                            <img loading="lazy" src="{{ asset('storage/' . $user->profile_picture) }}" class="w-full h-full object-cover">
                         @else
                             <span class="text-5xl font-black text-primary/40 uppercase">{{ substr($user->name, 0, 1) }}</span>
                         @endif

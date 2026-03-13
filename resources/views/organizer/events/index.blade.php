@@ -101,7 +101,7 @@
                             <div class="flex items-center gap-4 min-w-[300px]">
                                 <div class="w-16 h-12 rounded-xl bg-slate-100 flex-shrink-0 overflow-hidden shadow-inner border border-slate-100">
                                     @if($event->image)
-                                        <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
+                                        <img loading="lazy" src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-slate-200 uppercase text-[10px] font-black">N/A</div>
                                     @endif

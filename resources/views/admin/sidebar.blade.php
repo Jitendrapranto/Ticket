@@ -1,8 +1,12 @@
 <aside id="admin-sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#1B2B46] text-white transition-transform duration-300 transform -translate-x-full lg:translate-x-0 z-50 overflow-y-auto no-scrollbar shadow-2xl border-r border-white/5">
+    <!-- Close Button (Mobile) -->
+    <button onclick="document.getElementById('toggle-sidebar').click()" class="lg:hidden absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-all z-[60]">
+        <i class="fas fa-xmark"></i>
+    </button>
     <!-- Sidebar Header -->
     <div class="p-8 border-b border-white/5 space-y-10">
         <a href="/" class="flex justify-center">
-            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-12 w-auto object-contain brightness-0 invert">
+            <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-12 w-auto object-contain brightness-0 invert">
         </a>
 
         <div x-data="{ userOpen: false }" class="relative w-full">
@@ -11,7 +15,7 @@
                     <div class="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-primary to-accent p-0.5 shadow-2xl group-hover:scale-105 transition-transform duration-500">
                         <div class="w-full h-full rounded-[1.8rem] bg-secondary flex items-center justify-center overflow-hidden border-2 border-secondary">
                             @if(Auth::user()->avatar)
-                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                                <img loading="lazy" src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
                             @else
                                 <i class="fas fa-user-shield text-slate-400 text-2xl"></i>
                             @endif

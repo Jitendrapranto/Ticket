@@ -121,7 +121,7 @@
                                             $initials = substr($attendee->name && $attendee->name !== 'Self' ? $attendee->name : ($attendee->booking->user->name ?? 'U'), 0, 1);
                                         @endphp
                                         @if($customerPhoto)
-                                            <img src="{{ $customerPhoto }}" class="w-full h-full object-cover">
+                                            <img loading="lazy" src="{{ $customerPhoto }}" class="w-full h-full object-cover">
                                         @else
                                             <span class="text-base font-black text-primary/30 uppercase">{{ $initials }}</span>
                                         @endif

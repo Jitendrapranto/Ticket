@@ -53,7 +53,7 @@
                         <!-- Event Image -->
                         <div class="w-full lg:w-64 h-48 lg:h-auto relative overflow-hidden">
                             @if($booking->event->image)
-                                <img src="{{ asset('storage/' . $booking->event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                <img loading="lazy" src="{{ asset('storage/' . $booking->event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                             @else
                                 <div class="w-full h-full bg-primary/5 flex items-center justify-center font-black text-primary/10">TICKET</div>
                             @endif

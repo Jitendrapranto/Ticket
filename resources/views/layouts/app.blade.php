@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x:hidden;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Ticket Kinun - Your Ultimate Event Ticketing Platform')</title>
 
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        html { visibility: hidden; opacity: 0; }
-    </style>
+    <!-- Removed Blocking FOUC style to improve TTI/LCP loading speed -->
 
     <!-- Tailwind & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,6 +86,16 @@
             animation-play-state: paused;
         }
 
+        /* ── Global horizontal overflow guard ── */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw;
+        }
+        section, .section-wrap {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         /* Reveal once ready */
         html.ready {
             visibility: visible;
@@ -110,52 +117,71 @@
 
     @yield('styles')
 </head>
-<body class="font-sans bg-[#fdfdfc] text-slate-900 leading-relaxed overflow-x-hidden">
+<body class="font-sans bg-[#fdfdfc] text-slate-900 leading-relaxed overflow-x-hidden max-w-full">
 
     @include('partials.header')
 
-    <main class="pt-40">
+    <main class="pt-20 md:pt-36 lg:pt-40">
         @yield('content')
     </main>
 
     @include('partials.footer')
 
     <script>
-        // Header scroll behavior
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (header) {
-                if (window.scrollY > 50) {
-                    header.classList.add('py-1', 'bg-white/95', 'shadow-sm');
-                    header.classList.remove('bg-white/80');
-                } else {
-                    header.classList.remove('py-1', 'bg-white/95', 'shadow-sm');
-                    header.classList.add('bg-white/80');
-                }
-            }
+        // ── Header scroll behavior ──
+        window.addEventListener('scroll', function () {
+            var header = document.querySelector('header');
+            if (!header) return;
+            if (window.scrollY > 50) { header.classList.add('shadow-md'); }
+            else { header.classList.remove('shadow-md'); }
         });
 
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const closeDrawerBtn = document.getElementById('close-drawer');
-        const mobileDrawer = document.getElementById('mobile-drawer');
-        const overlay = document.getElementById('mobile-drawer-overlay');
+        // ── Mobile Menu & Search ──
+        // This script runs at the BOTTOM of body - DOM is already fully parsed.
+        // DOMContentLoaded has already fired, so we use an IIFE instead.
+        (function () {
+            var menuBtn   = document.getElementById('mobile-menu-btn');
+            var closeBtn  = document.getElementById('close-drawer');
+            var drawer    = document.getElementById('mobile-drawer');
+            var overlay   = document.getElementById('mobile-drawer-overlay');
+            var srchBtn   = document.getElementById('mobile-search-btn');
+            var srchBar   = document.getElementById('mobile-search-bar');
 
-        function toggleMenu(isOpen) {
-            if (isOpen) {
-                mobileDrawer.classList.remove('translate-x-full');
+            function open() {
+                if (!drawer || !overlay) return;
+                drawer.classList.remove('translate-x-full');
                 overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100');
                 document.body.style.overflow = 'hidden';
-            } else {
-                mobileDrawer.classList.add('translate-x-full');
-                overlay.classList.add('opacity-0', 'pointer-events-none');
-                document.body.style.overflow = 'auto';
             }
-        }
+            function close() {
+                if (!drawer || !overlay) return;
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.classList.remove('opacity-100');
+                document.body.style.overflow = '';
+            }
 
-        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => toggleMenu(true));
-        if(closeDrawerBtn) closeDrawerBtn.addEventListener('click', () => toggleMenu(false));
-        if(overlay) overlay.addEventListener('click', () => toggleMenu(false));
+            if (menuBtn)  menuBtn.addEventListener('click', open);
+            if (closeBtn) closeBtn.addEventListener('click', close);
+            if (overlay)  overlay.addEventListener('click', close);
+
+            if (drawer) {
+                drawer.querySelectorAll('a').forEach(function (a) {
+                    a.addEventListener('click', close);
+                });
+            }
+
+            if (srchBtn && srchBar) {
+                srchBtn.addEventListener('click', function () {
+                    srchBar.classList.toggle('hidden');
+                    if (!srchBar.classList.contains('hidden')) {
+                        var inp = srchBar.querySelector('input');
+                        if (inp) inp.focus();
+                    }
+                });
+            }
+        })();
     </script>
     @yield('scripts')
 </body>

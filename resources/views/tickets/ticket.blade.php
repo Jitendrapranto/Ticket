@@ -331,7 +331,7 @@
     <!-- ========== EVENT BANNER ========== -->
     <div class="event-banner">
         @if($eventImage)
-            <img src="{{ $eventImage }}" alt="Event Banner">
+            <img loading="lazy" src="{{ $eventImage }}" alt="Event Banner">
         @else
             <div style="width: 100%; height: 220px; background: linear-gradient(135deg, #520C6B 0%, #1B2B46 100%);"></div>
         @endif
@@ -384,7 +384,7 @@
                     
                     @if($userAvatar)
                         <div class="user-avatar-box">
-                            <img src="{{ $userAvatar }}" alt="User Picture">
+                            <img loading="lazy" src="{{ $userAvatar }}" alt="User Picture">
                         </div>
                     @endif
 
@@ -403,7 +403,7 @@
                                 <span class="info-value">
                                     @if($field->type === 'file')
                                         @if(isset($formImages[$field->id]))
-                                            <img src="{{ $formImages[$field->id] }}" class="form-uploaded-image" alt="Uploaded File">
+                                            <img loading="lazy" src="{{ $formImages[$field->id] }}" class="form-uploaded-image" alt="Uploaded File">
                                         @else
                                             [Attachment: {{ basename($formData[$field->id]) }}]
                                         @endif
@@ -434,7 +434,7 @@
                     <p class="section-heading" style="text-align: center;">Scan to Verify</p>
                     <div class="qr-container">
                         @if($qrcode)
-                            <img src="{{ $qrcode }}" alt="QR Code">
+                            <img loading="lazy" src="{{ $qrcode }}" alt="QR Code">
                         @else
                             <p style="padding: 40px 0; font-size: 10px; color: #94a3b8;">QR Unavailable</p>
                         @endif
@@ -512,7 +512,7 @@
         <!-- ========== REDUNDANT LOGO / BRANDING ========== -->
         @if($siteLogo)
             <div style="text-align: center; margin-top: 15px; margin-bottom: 10px;">
-                <img src="{{ $siteLogo }}" alt="Logo" style="height: 45px; width: auto; opacity: 0.8;">
+                <img loading="lazy" src="{{ $siteLogo }}" alt="Logo" style="height: 45px; width: auto; opacity: 0.8;">
             </div>
         @endif
     </div>

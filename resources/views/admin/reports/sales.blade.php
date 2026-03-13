@@ -6,7 +6,7 @@
     <title>Platform Sales Reports | Admin Control Center</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -228,7 +228,7 @@
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-10 rounded-xl bg-slate-100 overflow-hidden shadow-inner border border-slate-100">
                                             @if($event->image)
-                                                <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
+                                                <img loading="lazy" src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center text-[10px] text-slate-200 font-black">EV</div>
                                             @endif

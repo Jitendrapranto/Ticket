@@ -51,7 +51,7 @@
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Gateway Logo</label>
                     @if($paymentMethod->icon)
                     <div class="mb-4 flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <img src="{{ asset('storage/' . $paymentMethod->icon) }}" class="w-12 h-12 object-contain">
+                        <img loading="lazy" src="{{ asset('storage/' . $paymentMethod->icon) }}" class="w-12 h-12 object-contain">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Current Icon</span>
                     </div>
                     @endif
@@ -67,7 +67,7 @@
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Payment QR Code</label>
                     @if($paymentMethod->qr_code)
                     <div class="mb-4 flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <img src="{{ asset('storage/' . $paymentMethod->qr_code) }}" class="w-12 h-12 object-contain">
+                        <img loading="lazy" src="{{ asset('storage/' . $paymentMethod->qr_code) }}" class="w-12 h-12 object-contain">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Current QR</span>
                     </div>
                     @endif

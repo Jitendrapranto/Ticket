@@ -6,7 +6,7 @@
     <title>Customer Profile | Ticket Kinun</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <!-- Tailwind & Fonts -->
@@ -60,7 +60,7 @@
                     <div class="bg-white rounded-[2.5rem] p-8 shadow-premium border border-slate-50 text-center">
                         <div class="w-32 h-32 rounded-[2.5rem] bg-slate-50 border-8 border-white shadow-2xl mx-auto mb-6 flex items-center justify-center overflow-hidden">
                             @if($user->avatar)
-                                <img src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover">
+                                <img loading="lazy" src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover">
                             @else
                                 <span class="text-4xl font-black text-primary">{{ substr($user->name, 0, 1) }}</span>
                             @endif

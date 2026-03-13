@@ -24,7 +24,7 @@
             
             <div class="relative z-10">
                 <a href="/">
-                    <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-16 brightness-0 invert">
+                    <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-16 brightness-0 invert">
                 </a>
                 <div class="mt-16 space-y-6">
                     <h2 class="font-outfit text-4xl font-black leading-tight tracking-tight">Unlock the World of <span class="text-primary">Live Events.</span></h2>
@@ -34,9 +34,9 @@
 
             <div class="relative z-10 flex items-center gap-4">
                 <div class="flex -space-x-3">
-                    <img src="https://i.pravatar.cc/100?u=1" class="w-10 h-10 rounded-full border-2 border-[#1A0222]">
-                    <img src="https://i.pravatar.cc/100?u=2" class="w-10 h-10 rounded-full border-2 border-[#1A0222]">
-                    <img src="https://i.pravatar.cc/100?u=3" class="w-10 h-10 rounded-full border-2 border-[#1A0222]">
+                    <img loading="lazy" src="https://i.pravatar.cc/100?u=1" class="w-10 h-10 rounded-full border-2 border-[#1A0222]">
+                    <img loading="lazy" src="https://i.pravatar.cc/100?u=2" class="w-10 h-10 rounded-full border-2 border-[#1A0222]">
+                    <img loading="lazy" src="https://i.pravatar.cc/100?u=3" class="w-10 h-10 rounded-full border-2 border-[#1A0222]">
                 </div>
                 <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">50k+ Members</span>
             </div>
@@ -45,7 +45,7 @@
         <!-- Right Side: Form -->
         <div class="p-8 md:p-12">
             <div class="lg:hidden text-center mb-10">
-                <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="mx-auto h-12">
+                <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="mx-auto h-12">
             </div>
 
             <div class="mb-8">
@@ -108,7 +108,7 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <a href="#" class="flex items-center justify-center gap-2 py-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-all text-[10px] font-black text-slate-600 uppercase">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="w-3 h-3"> Google
+                        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="w-3 h-3"> Google
                     </a>
                     <a href="#" class="flex items-center justify-center gap-2 py-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-all text-[10px] font-black text-slate-600 uppercase">
                         <i class="fab fa-facebook text-blue-600"></i> Facebook

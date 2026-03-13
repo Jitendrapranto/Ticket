@@ -4,46 +4,46 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[450px] flex items-center">
+    <section class="relative pt-10 pb-16 md:pt-12 md:pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[320px] md:min-h-[450px] flex items-center">
         <!-- Abstract Background Glows -->
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
+        <div class="absolute top-0 right-0 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-primary/10 rounded-full blur-[80px] md:blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+        <div class="absolute bottom-0 left-0 w-[150px] md:w-[300px] h-[150px] md:h-[300px] bg-accent/5 rounded-full blur-[60px] md:blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
 
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <div class="inline-block px-4 py-1.5 rounded-full glass mb-6">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
+            <div class="inline-block px-4 py-1.5 rounded-full glass mb-4 md:mb-6">
                 <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">{{ $hero->badge_text ?? 'CONTACT CENTER' }}</span>
             </div>
             
-            <h1 class="font-outfit text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
+            <h1 class="font-outfit text-4xl md:text-6xl lg:text-8xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter">
                 {{ $hero->title_main ?? 'Get In' }} <br><span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Touch.' }}</span>
             </h1>
-            <p class="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+            <p class="text-slate-400 text-sm md:text-lg lg:text-xl mb-8 md:mb-12 max-w-2xl mx-auto font-light leading-relaxed px-2">
                 {{ $hero->subtitle ?? 'Have a question or need assistance with your booking? Our dedicated support team is available 24/7 to ensure your experience is flawless.' }}
             </p>
         </div>
     </section>
 
     <!-- Contact Info Cards -->
-    <section class="py-24 bg-white relative z-20 -mt-20">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
+    <section class="py-10 md:py-24 bg-white relative z-20 -mt-10 md:-mt-20">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-10 md:mb-24">
                 @foreach($cards as $card)
-                <div class="animate-fadeInUp rounded-[1.75rem] p-8 flex flex-col gap-6 hover:shadow-lg transition-all duration-300 group"
+                <div class="animate-fadeInUp rounded-[1.5rem] md:rounded-[1.75rem] p-6 md:p-8 flex flex-row md:flex-col gap-4 md:gap-6 hover:shadow-lg transition-all duration-300 group"
                      style="background: {{ $card->bg_color }}; border-top: 3px solid {{ $card->theme_color }};">
                     <!-- Icon badge -->
-                    <div class="w-14 h-14 rounded-[1rem] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-[0.85rem] md:rounded-[1rem] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
                          style="background: {{ $card->theme_color }};">
-                        <i class="{{ $card->icon }} text-white text-xl"></i>
+                        <i class="{{ $card->icon }} text-white text-lg md:text-xl"></i>
                     </div>
                     <!-- Text -->
                     <div>
-                        <h3 class="font-black text-[1.1rem] mb-2 leading-snug" style="color: {{ $card->title_color }};">{{ $card->title }}</h3>
-                        <p class="text-[14px] leading-relaxed font-medium" style="color: {{ $card->desc_color }};">
+                        <h3 class="font-black text-base md:text-[1.1rem] mb-1 md:mb-2 leading-snug" style="color: {{ $card->title_color }};">{{ $card->title }}</h3>
+                        <p class="text-sm leading-relaxed font-medium" style="color: {{ $card->desc_color }};">
                             {{ $card->description }}
                         </p>
                         @if($card->action_text)
                         <a href="{{ $card->action_url ?? '#' }}"
-                           class="inline-block mt-4 font-black text-[11px] tracking-widest uppercase hover:underline"
+                           class="inline-block mt-3 font-black text-[11px] tracking-widest uppercase hover:underline"
                            style="color: {{ $card->theme_color }};">{{ $card->action_text }}</a>
                         @endif
                     </div>
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Contact Form & Visual -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch">
 
                 <!-- ── Form Card (outlined) ── -->
                 <div class="animate-fadeInUp rounded-[1.75rem] p-8 sm:p-10 flex flex-col bg-white shadow-[0_8px_48px_rgba(82,12,107,0.18)]" style="border: 2px solid #520C6B;">
@@ -201,16 +201,16 @@
 
 
     <!-- Map/Location Section -->
-    <section class="py-24 bg-[#f8fafc]">
-        <div class="max-w-7xl mx-auto px-6">
+    <section class="py-12 md:py-24 bg-[#f8fafc]">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
             @if($map->title || $map->subtitle)
-            <div class="text-center mb-12">
-                <h2 class="font-outfit text-3xl font-black text-dark tracking-tight mb-3 uppercase">{{ $map->title }}</h2>
+            <div class="text-center mb-8 md:mb-12">
+                <h2 class="font-outfit text-2xl md:text-3xl font-black text-dark tracking-tight mb-3 uppercase">{{ $map->title }}</h2>
                 <p class="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">{{ $map->subtitle }}</p>
             </div>
             @endif
 
-            <div class="rounded-[3.5rem] overflow-hidden grayscale contrast-125 h-[500px] relative shadow-premium border border-slate-200">
+            <div class="rounded-[2rem] md:rounded-[3.5rem] overflow-hidden grayscale contrast-125 h-[300px] md:h-[500px] relative shadow-premium border border-slate-200">
                 @if($map->google_map_url)
                     <iframe 
                         src="{{ $map->google_map_url }}" 

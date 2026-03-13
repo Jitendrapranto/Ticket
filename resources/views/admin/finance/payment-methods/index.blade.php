@@ -24,7 +24,7 @@
                 <div class="flex items-start justify-between mb-8">
                     <div class="w-20 h-20 rounded-[1.5rem] bg-slate-50 border border-slate-100 flex items-center justify-center p-4 shadow-sm group-hover:scale-110 transition-transform">
                         @if($method->icon)
-                            <img src="{{ asset('storage/' . $method->icon) }}" class="w-full h-full object-contain">
+                            <img loading="lazy" src="{{ asset('storage/' . $method->icon) }}" class="w-full h-full object-contain">
                         @else
                             <i class="fas fa-wallet text-slate-300 text-3xl"></i>
                         @endif

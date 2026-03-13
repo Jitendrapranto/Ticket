@@ -43,6 +43,11 @@ Route::middleware('auth')->group(function () {
         return view('auth.my-bookings', compact('bookings'));
     })->name('bookings.index');
     Route::get('/bookings/{booking_id}/download', [\App\Http\Controllers\TicketController::class, 'download'])->name('bookings.download');
+
+    Route::get('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class, 'show'])->name('events.booking');
+    Route::post('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class, 'process'])->name('events.booking.process');
+    Route::get('/checkout/{booking_id}', [\App\Http\Controllers\BookingController::class, 'checkout'])->name('events.checkout');
+    Route::post('/checkout/complete/{booking_id}', [\App\Http\Controllers\BookingController::class, 'complete'])->name('events.checkout.complete');
 });
 
 Route::get('/', function () {
@@ -135,10 +140,6 @@ Route::get('/events/{slug}', function ($slug) {
     return view('events.show', compact('event', 'relatedEvents'));
 })->name('events.show');
 
-Route::get('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class, 'show'])->name('events.booking');
-Route::post('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class, 'process'])->name('events.booking.process');
-Route::get('/checkout/{booking_id}', [\App\Http\Controllers\BookingController::class, 'checkout'])->name('events.checkout');
-Route::post('/checkout/complete/{booking_id}', [\App\Http\Controllers\BookingController::class, 'complete'])->name('events.checkout.complete');
 
 Route::get('/gallery', function () {
     $hero = GalleryHero::first();

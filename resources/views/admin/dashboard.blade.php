@@ -6,7 +6,7 @@
     <title>Super Admin Dashboard | Ticket Kinun</title>
     <!-- Prevent FOUC -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <!-- Tailwind & Fonts -->
@@ -108,7 +108,7 @@
                                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary p-0.5 shadow-premium group-hover:scale-105 transition-transform">
                                     <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
                                         @if(Auth::user()->avatar)
-                                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                                            <img loading="lazy" src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
                                         @else
                                             <i class="fas fa-crown text-primary text-xs"></i>
                                         @endif

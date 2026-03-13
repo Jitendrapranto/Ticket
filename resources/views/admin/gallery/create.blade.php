@@ -6,7 +6,7 @@
     <title>Upload Gallery Asset | Ticket Kinun Admin</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -211,7 +211,7 @@
                         </div>
 
                         <div x-show="preview" x-cloak class="w-full h-full relative group rounded-[2rem] overflow-hidden bg-slate-50 shadow-inner">
-                            <img :src="preview" class="w-full h-full object-cover">
+                            <img loading="lazy" :src="preview" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <button type="button" @click="document.getElementById('imageInput').click()" class="bg-white text-dark px-8 py-4 rounded-xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-primary hover:text-white transition-all">
                                     <i class="fas fa-sync mr-2"></i> Change Asset

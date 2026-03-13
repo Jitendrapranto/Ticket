@@ -7,7 +7,7 @@
 
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
     </style>
 
     <!-- Tailwind & Fonts -->
@@ -117,7 +117,7 @@
                             <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium group-hover:scale-105 transition-transform duration-300">
                                 <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden border border-white">
                                     @if(auth()->user()->avatar)
-                                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
+                                        <img loading="lazy" src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="fas fa-user-tie text-primary text-xs"></i>
                                     @endif

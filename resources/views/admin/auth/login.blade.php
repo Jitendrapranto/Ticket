@@ -6,7 +6,7 @@
     <title>Admin Login - Ticket Kinun Dashboard</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,7 +47,7 @@
 
     <div class="max-w-md w-full relative z-10">
         <div class="text-center mb-10">
-            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-16 mx-auto mb-6 brightness-0 invert">
+            <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-16 mx-auto mb-6 brightness-0 invert">
             <h1 class="text-3xl font-black text-white tracking-tight">Super Admin Portal</h1>
             <p class="text-slate-400 mt-2 font-medium">Securely access your management dashboard</p>
         </div>

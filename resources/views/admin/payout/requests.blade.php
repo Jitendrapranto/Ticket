@@ -42,7 +42,7 @@
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden">
                                         @if($request->user->avatar)
-                                            <img src="{{ asset('storage/' . $request->user->avatar) }}" class="w-full h-full object-cover">
+                                            <img loading="lazy" src="{{ asset('storage/' . $request->user->avatar) }}" class="w-full h-full object-cover">
                                         @else
                                             <i class="fas fa-user-tie text-slate-300"></i>
                                         @endif

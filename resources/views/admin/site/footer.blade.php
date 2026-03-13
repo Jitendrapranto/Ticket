@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Footer Settings | Ticket Kinun Admin</title>
-    <style>html { visibility: hidden; opacity: 0; } html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }</style>
+    <style>/* FAST LOAD */ html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }</style>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -88,7 +88,7 @@
                             </h3>
                             <div class="flex items-center gap-6">
                                 <div class="w-24 h-24 rounded-2xl bg-secondary flex items-center justify-center overflow-hidden">
-                                    <img :src="logoPreview" class="max-w-full max-h-full object-contain brightness-0 invert" alt="Footer Logo">
+                                    <img loading="lazy" :src="logoPreview" class="max-w-full max-h-full object-contain brightness-0 invert" alt="Footer Logo">
                                 </div>
                                 <div class="flex-1">
                                     <label class="block text-xs font-black text-dark uppercase tracking-widest mb-2">Upload Footer Logo</label>
@@ -273,7 +273,7 @@
                             <div class="bg-gradient-to-r from-[#520C6B] to-[#1B2B46] rounded-3xl overflow-hidden shadow-sm p-6 space-y-5">
                                 <!-- Logo & Desc -->
                                 <div>
-                                    <img :src="logoPreview" class="h-10 w-auto object-contain brightness-0 invert mb-3" alt="Footer Logo">
+                                    <img loading="lazy" :src="logoPreview" class="h-10 w-auto object-contain brightness-0 invert mb-3" alt="Footer Logo">
                                     <p class="text-white/40 text-[9px] leading-relaxed">{{ Str::limit($footer->description ?? 'Your description here...', 120) }}</p>
                                 </div>
                                 <!-- Social Icons -->

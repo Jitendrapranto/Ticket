@@ -21,7 +21,7 @@
 <!-- Dynamic Statistics Command Center -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-8">
     <!-- Total Sales -->
-    <div class="group relative bg-[#4F46E5] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
+    <div class="group relative bg-gradient-to-br from-primary to-[#3a084c] p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden">
         <div class="relative z-10 text-white">
             <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-sack-dollar text-xl"></i>
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Today's Sale -->
-    <div class="group relative bg-[#10B981] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
+    <div class="group relative bg-gradient-to-br from-[#10B981] to-emerald-700 p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden">
         <div class="relative z-10 text-white">
             <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-chart-line text-xl"></i>
@@ -49,7 +49,7 @@
     </div>
 
     <!-- Total Events -->
-    <div class="group relative bg-[#3B82F6] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
+    <div class="group relative bg-gradient-to-br from-accent to-blue-700 p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden">
         <div class="relative z-10 text-white">
             <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-calendar-days text-xl"></i>
@@ -63,7 +63,7 @@
     </div>
 
     <!-- Today's Events -->
-    <div class="group relative bg-[#8B5CF6] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
+    <div class="group relative bg-gradient-to-br from-[#8B5CF6] to-violet-800 p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden">
         <div class="relative z-10 text-white">
             <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-calendar-check text-xl"></i>
@@ -77,9 +77,9 @@
     </div>
 
     <!-- Total Organizer -->
-    <div class="group relative bg-[#F59E0B] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
+    <div class="group relative bg-gradient-to-br from-secondary to-dark p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden">
         <div class="relative z-10 text-white">
-            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mb-4">
                 <i class="fa-solid fa-user-tie text-xl"></i>
             </div>
             <p class="text-xs font-black tracking-widest text-white/60 uppercase mb-1">Total Organizer</p>
@@ -91,11 +91,11 @@
     </div>
 
     <!-- Organizer Request (CLICKABLE) -->
-    <a href="{{ route('admin.organizer-requests.index') }}" class="group relative bg-[#EF4444] p-6 rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border-2 border-white/10">
+    <a href="{{ route('admin.organizer-requests.index') }}" class="group relative bg-gradient-to-br from-vibrant to-rose-600 p-6 rounded-[2rem] shadow-vibrant hover:-translate-y-1 transition-all duration-300 overflow-hidden border-2 border-white/10">
         <div class="relative z-10 text-white">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-10 h-10 rounded-xl bg-white/40 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-user-plus text-xl"></i>
+                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-user-plus text-xl text-white"></i>
                 </div>
                 <div class="px-3 py-1 bg-white/20 rounded-full border border-white/20">
                     <span class="text-[9px] font-black uppercase tracking-tighter text-white">Action Needed</span>
@@ -110,57 +110,57 @@
     </a>
 
     <!-- Event Approval Request (CLICKABLE) -->
-    <a href="{{ route('admin.events.index') }}" class="group relative bg-[#6366F1] p-6 rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border-2 border-white/10">
-        <div class="relative z-10 text-white">
-            <div class="w-10 h-10 rounded-xl bg-white/40 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-shield-check text-xl"></i>
+    <a href="{{ route('admin.events.index') }}" class="group relative bg-white p-6 rounded-[2rem] shadow-premium hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-slate-100">
+        <div class="relative z-10 text-dark">
+            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-primary/10">
+                <i class="fa-solid fa-shield-check text-xl text-primary"></i>
             </div>
-            <p class="text-xs font-black tracking-widest text-white/80 uppercase mb-1">Event Approval</p>
-            <h3 class="text-2xl font-black tracking-tighter">{{ number_format($eventApprovalRequests) }}</h3>
+            <p class="text-xs font-black tracking-widest text-slate-400 uppercase mb-1">Event Approval</p>
+            <h3 class="text-2xl font-black tracking-tighter text-primary">{{ number_format($eventApprovalRequests) }}</h3>
         </div>
-        <div class="absolute -right-4 -bottom-4 opacity-20 text-white group-hover:scale-110 transition-transform">
+        <div class="absolute -right-4 -bottom-4 opacity-5 text-primary group-hover:scale-110 transition-transform">
             <i class="fa-solid fa-clipboard-check text-8xl"></i>
         </div>
     </a>
 
     <!-- Payment Approval (CLICKABLE) -->
-    <a href="{{ route('admin.finance.bookings.index', ['status' => 'pending']) }}" class="group relative bg-[#F97316] p-6 rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border-2 border-white/10">
-        <div class="relative z-10 text-white">
-            <div class="w-10 h-10 rounded-xl bg-white/40 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-receipt text-xl"></i>
+    <a href="{{ route('admin.finance.bookings.index', ['status' => 'pending']) }}" class="group relative bg-white p-6 rounded-[2rem] shadow-premium hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-slate-100">
+        <div class="relative z-10 text-dark">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-amber-500/10">
+                <i class="fa-solid fa-receipt text-xl text-amber-500"></i>
             </div>
-            <p class="text-xs font-black tracking-widest text-white/80 uppercase mb-1">Payment Approval</p>
-            <h3 class="text-2xl font-black tracking-tighter">{{ number_format($paymentApprovalRequests) }}</h3>
+            <p class="text-xs font-black tracking-widest text-slate-400 uppercase mb-1">Payment Approval</p>
+            <h3 class="text-2xl font-black tracking-tighter text-amber-500">{{ number_format($paymentApprovalRequests) }}</h3>
         </div>
-        <div class="absolute -right-4 -bottom-4 opacity-20 text-white group-hover:scale-110 transition-transform">
+        <div class="absolute -right-4 -bottom-4 opacity-5 text-amber-500 group-hover:scale-110 transition-transform">
             <i class="fa-solid fa-money-check-dollar text-8xl"></i>
         </div>
     </a>
 
     <!-- Total Customer -->
-    <div class="group relative bg-[#2DD4BF] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
-        <div class="relative z-10 text-white">
-            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-users text-xl"></i>
+    <div class="group relative bg-white p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden border border-slate-100">
+        <div class="relative z-10 text-dark">
+            <div class="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center mb-4 border border-sky-500/10">
+                <i class="fa-solid fa-users text-xl text-sky-500"></i>
             </div>
-            <p class="text-xs font-black tracking-widest text-white/60 uppercase mb-1">Total Customer</p>
-            <h3 class="text-2xl font-black tracking-tighter">{{ number_format($totalCustomers) }}</h3>
+            <p class="text-xs font-black tracking-widest text-slate-400 uppercase mb-1">Total Customer</p>
+            <h3 class="text-2xl font-black tracking-tighter text-sky-500">{{ number_format($totalCustomers) }}</h3>
         </div>
-        <div class="absolute -right-4 -bottom-4 opacity-10 text-white group-hover:scale-110 transition-transform">
+        <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-sky-500 group-hover:scale-110 transition-transform">
             <i class="fa-solid fa-users text-8xl"></i>
         </div>
     </div>
 
     <!-- Total Booking -->
-    <div class="group relative bg-[#1E293B] p-6 rounded-[2rem] shadow-xl transition-all duration-300 overflow-hidden">
-        <div class="relative z-10 text-white">
-            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-ticket text-xl"></i>
+    <div class="group relative bg-white p-6 rounded-[2rem] shadow-premium transition-all duration-300 overflow-hidden border border-slate-100">
+        <div class="relative z-10 text-dark">
+            <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 border border-secondary/10">
+                <i class="fa-solid fa-ticket text-xl text-secondary"></i>
             </div>
-            <p class="text-xs font-black tracking-widest text-white/60 uppercase mb-1">Total Booking</p>
-            <h3 class="text-2xl font-black tracking-tighter">{{ number_format($totalBookings) }}</h3>
+            <p class="text-xs font-black tracking-widest text-slate-400 uppercase mb-1">Total Booking</p>
+            <h3 class="text-2xl font-black tracking-tighter text-secondary">{{ number_format($totalBookings) }}</h3>
         </div>
-        <div class="absolute -right-4 -bottom-4 opacity-10 text-white group-hover:scale-110 transition-transform">
+        <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-secondary group-hover:scale-110 transition-transform">
             <i class="fa-solid fa-ticket text-8xl"></i>
         </div>
     </div>

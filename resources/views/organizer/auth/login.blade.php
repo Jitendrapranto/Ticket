@@ -24,7 +24,7 @@
             
             <div class="relative z-10">
                 <a href="/">
-                    <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-16 brightness-0 invert">
+                    <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-16 brightness-0 invert">
                 </a>
                 <div class="mt-16 space-y-6">
                     <h2 class="font-outfit text-4xl font-black leading-tight tracking-tight">Access Your <span class="text-primary">Organizer</span> Access.</h2>
@@ -43,7 +43,7 @@
         <!-- Right Side: Form -->
         <div class="p-8 md:p-12">
             <div class="lg:hidden text-center mb-10">
-                <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="mx-auto h-12">
+                <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="mx-auto h-12">
             </div>
 
             <div class="mb-10">

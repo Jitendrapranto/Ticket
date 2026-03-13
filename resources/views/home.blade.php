@@ -4,8 +4,8 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative mt-12 pt-20 pb-12 bg-[#F1F5F9] overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6">
+    <section class="relative mt-7 pt-6 md:pt-12 lg:pt-20 pb-12 bg-[#F1F5F9] overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
             <div class="relative flex flex-col lg:flex-row items-stretch gap-6 h-auto lg:h-[480px]">
 
                 <!-- Left Side: Featured Event Banner Only -->
@@ -20,7 +20,7 @@
                                     <i class="fas fa-calendar-star text-6xl text-primary/30"></i>
                                 </div>
                             @endif
-                            
+
                             <!-- Featured Tag -->
                             <div class="absolute top-6 left-6 z-10">
                                 <span class="bg-primary text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg flex items-center gap-2">
@@ -63,10 +63,10 @@
                 </div>
 
                 <!-- Right Side: Event Details Card -->
-                <div class="lg:w-[380px] bg-white rounded-[2.5rem] p-10 flex flex-col justify-between relative overflow-hidden group shadow-premium border border-slate-100 animate-fadeInUp" style="animation-delay: 0.2s">
+                <div class="lg:w-[380px] bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 flex flex-col justify-between relative overflow-hidden group shadow-premium border border-slate-100 animate-fadeInUp" style="animation-delay: 0.2s">
                     <div class="relative z-10 h-full flex flex-col">
                         <span class="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-6 block">Quick Overview</span>
-                        
+
                         @if($featuredEvents->count() > 0)
                         <div id="overview-card" class="flex-1 flex flex-col">
                             <h2 id="overview-title" class="font-outfit text-3xl md:text-4xl font-black text-dark leading-tight mb-8 tracking-tight transition-all duration-500">
@@ -95,7 +95,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Book Your Seat Button -->
                         <a href="{{ route('events.show', $featuredEvents[0]->slug) }}" id="overview-book-btn" data-slug="{{ $featuredEvents[0]->slug }}" class="group/btn relative inline-flex items-center gap-3 bg-dark w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-premium">
                             <span class="relative z-10 flex items-center gap-3">
@@ -109,7 +109,7 @@
                             <h2 class="font-outfit text-2xl font-black text-dark mb-3 tracking-tight">No Events Yet</h2>
                             <p class="text-slate-400 text-sm mb-8">Stay tuned for upcoming featured events.</p>
                         </div>
-                        
+
                         <a href="{{ route('events') }}" class="group/btn relative inline-flex items-center gap-3 bg-dark w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-premium">
                             <span class="relative z-10 flex items-center gap-3">
                                 Explore All Events
@@ -130,18 +130,18 @@
 
 
     <!-- Featured Events Carousel Section -->
-    <section id="trending" class="py-24 bg-[#E4EDF7] overflow-hidden">
+    <section id="trending" class="py-12 md:py-24 bg-[#E4EDF7] overflow-hidden">
         <!-- Header aligned with main container -->
-        <div class="max-w-7xl mx-auto px-6 mb-12">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 mb-8 md:mb-12">
             <div>
-                <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">Featured <span class="text-primary">Events</span></h2>
-                <p class="text-slate-400 font-medium tracking-wide">The hottest tickets in town, updated every minute.</p>
+                <h2 class="font-outfit text-2xl md:text-4xl font-black text-dark mb-2 tracking-tighter">Featured <span class="text-primary">Events</span></h2>
+                <p class="text-slate-400 text-sm md:text-base font-medium tracking-wide">The hottest tickets in town, updated every minute.</p>
             </div>
         </div>
 
-        <!-- Carousel Container - Full width with proper inner alignment -->
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="overflow-hidden">
+        <!-- Carousel Container -->
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="overflow-hidden" style="max-width:100%;">
                 <div id="featured-carousel" class="flex transition-transform duration-500 ease-out gap-6">
                     @forelse($featuredEvents as $index => $event)
                     <a href="{{ route('events.show', $event->slug) }}" class="featured-card shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group bg-white rounded-[2rem] p-5 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col border border-slate-100">
@@ -228,22 +228,22 @@
     </section>
 
     <!-- All Events Section -->
-    <section class="py-24 bg-[#F1F5F9]" x-data="{ activeCategory: 'all' }">
-        <div class="max-w-7xl mx-auto px-6">
+    <section class="py-12 md:py-24 bg-[#F1F5F9] overflow-hidden" x-data="{ activeCategory: 'all' }">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
             <!-- Header with Filters -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-6 mb-8 md:mb-12">
                 <div>
-                    <h2 class="font-outfit text-4xl font-black text-dark mb-2 tracking-tighter">All <span class="text-primary">Events</span></h2>
-                    <p class="text-slate-400 font-medium tracking-wide">Explore our full library of experiences across every category.</p>
+                    <h2 class="font-outfit text-2xl md:text-4xl font-black text-dark mb-2 tracking-tighter">All <span class="text-primary">Events</span></h2>
+                    <p class="text-slate-400 text-sm md:text-base font-medium tracking-wide">Explore our full library of experiences across every category.</p>
                 </div>
                 <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-                    <button @click="activeCategory = 'all'" 
+                    <button @click="activeCategory = 'all'"
                             :class="activeCategory === 'all' ? 'bg-dark text-white border-dark shadow-lg' : 'bg-white text-slate-500 border-slate-200 hover:border-dark hover:text-dark'"
                             class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
                         ALL
                     </button>
                     @foreach(\App\Models\EventCategory::all() as $category)
-                    <button @click="activeCategory = '{{ strtolower($category->name) }}'" 
+                    <button @click="activeCategory = '{{ strtolower($category->name) }}'"
                             :class="activeCategory === '{{ strtolower($category->name) }}' ? 'bg-dark text-white border-dark shadow-lg' : 'bg-white text-slate-500 border-slate-200 hover:border-dark hover:text-dark'"
                             class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
                         {{ strtoupper($category->name) }}
@@ -255,7 +255,7 @@
             <!-- Events Grid - 3 cards per row -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 @forelse($upcomingEvents as $event)
-                <a href="{{ route('events.show', $event->slug) }}" 
+                <a href="{{ route('events.show', $event->slug) }}"
                    x-show="activeCategory === 'all' || activeCategory === '{{ $event->category ? strtolower($event->category->name) : 'general' }}'"
                    x-transition:enter="transition ease-out duration-300"
                    x-transition:enter-start="opacity-0 transform scale-95"
@@ -337,13 +337,13 @@
 
     <!-- Past Signature Events Section -->
     @if($pastEvents->count() > 0)
-    <section class="py-24 bg-[#E4EDF7] overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-12 text-center">
-                <h2 class="font-outfit text-4xl font-black mb-2 tracking-tighter" style="color: #500C69;">
+    <section class="py-12 md:py-24 bg-[#E4EDF7] overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="mb-8 md:mb-12 text-center">
+                <h2 class="font-outfit text-2xl md:text-4xl font-black mb-2 tracking-tighter" style="color: #500C69;">
                     Past Signature Events
                 </h2>
-                <p class="text-slate-400 font-medium tracking-wide">
+                <p class="text-slate-400 text-sm md:text-base font-medium tracking-wide">
                     A legacy of flawlessly executed events, powered by Ticket Kinun
                 </p>
             </div>
@@ -641,7 +641,7 @@
             <p class="text-xl text-white mb-16 max-w-2xl mx-auto font-light">Join over 2.5 million event enthusiasts discovering the most exclusive experiences every day.</p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6">
-               
+
                 <a href="{{ route('organizer.register') }}" class="px-16 py-6 rounded-3xl font-black text-2xl transition-all hover:scale-105 hover:shadow-2xl" style="background-color: #FFE700; color: #1B2B46;">Join as a Organizer</a>
             </div>
         </div>
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 overviewTitle.innerHTML = slideData[currentSlide].title;
                 overviewDate.innerText = slideData[currentSlide].date;
                 overviewLocation.innerText = slideData[currentSlide].location;
-                
+
                 // Update Book Your Seat button URL
                 if (bookBtn && slideData[currentSlide].slug) {
                     bookBtn.href = baseUrl + '/' + slideData[currentSlide].slug;
@@ -733,31 +733,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const featuredCarousel = document.getElementById('featured-carousel');
     const featuredCards = document.querySelectorAll('.featured-card');
     const featuredDots = document.querySelectorAll('.featured-dot');
-    
+
     if (featuredCarousel && featuredCards.length > 0) {
         let featuredIndex = 0;
         const totalCards = featuredCards.length;
         let autoSlideInterval;
-        
+
         // Get cards per view based on screen size
         function getCardsPerView() {
             if (window.innerWidth >= 1024) return 3; // lg
             if (window.innerWidth >= 768) return 2;  // md
             return 1; // mobile
         }
-        
+
         let cardsPerView = getCardsPerView();
-        
+
         function getMaxIndex() {
             return Math.max(0, totalCards - getCardsPerView());
         }
-        
+
         function updateFeaturedCarousel() {
             const cardWidth = featuredCards[0].offsetWidth;
             const gap = 24; // 1.5rem gap
             const offset = featuredIndex * (cardWidth + gap);
             featuredCarousel.style.transform = `translateX(-${offset}px)`;
-            
+
             // Update dots for mobile
             featuredDots.forEach((dot, i) => {
                 if (i === featuredIndex) {
@@ -769,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-        
+
         // Auto slide function
         function autoSlide() {
             const maxIndex = getMaxIndex();
@@ -780,21 +780,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             updateFeaturedCarousel();
         }
-        
+
         // Start auto sliding
         function startAutoSlide() {
             autoSlideInterval = setInterval(autoSlide, 3000); // Slide every 3 seconds
         }
-        
+
         // Pause on hover
         featuredCarousel.addEventListener('mouseenter', () => {
             clearInterval(autoSlideInterval);
         });
-        
+
         featuredCarousel.addEventListener('mouseleave', () => {
             startAutoSlide();
         });
-        
+
         // Handle dot clicks on mobile
         featuredDots.forEach((dot, i) => {
             dot.addEventListener('click', () => {
@@ -805,32 +805,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 startAutoSlide();
             });
         });
-        
+
         // Handle resize
         window.addEventListener('resize', () => {
             cardsPerView = getCardsPerView();
             featuredIndex = Math.min(featuredIndex, getMaxIndex());
             updateFeaturedCarousel();
         });
-        
+
         // Initialize
         updateFeaturedCarousel();
         startAutoSlide();
-        
+
         // Touch/Swipe support for mobile
         let touchStartX = 0;
         let touchEndX = 0;
-        
+
         featuredCarousel.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
             clearInterval(autoSlideInterval);
         }, { passive: true });
-        
+
         featuredCarousel.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             const diff = touchStartX - touchEndX;
             const maxIndex = getMaxIndex();
-            
+
             if (Math.abs(diff) > 50) {
                 if (diff > 0 && featuredIndex < maxIndex) {
                     featuredIndex++;

@@ -6,7 +6,7 @@
     <title>Manage Gallery Images | Ticket Kinun Admin</title>
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
-        html { visibility: hidden; opacity: 0; }
+        /* FAST LOAD */
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -95,7 +95,7 @@
                 @forelse($images as $image)
                     <div class="bg-white rounded-[2.5rem] shadow-premium border border-slate-50 overflow-hidden group hover:-translate-y-2 transition-all duration-500">
                         <div class="aspect-square relative overflow-hidden bg-slate-100">
-                            <img src="{{ str_starts_with($image->image_path, 'http') ? $image->image_path : asset('storage/' . $image->image_path) }}" alt="{{ $image->title }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
+                            <img loading="lazy" src="{{ str_starts_with($image->image_path, 'http') ? $image->image_path : asset('storage/' . $image->image_path) }}" alt="{{ $image->title }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
                                 <span class="bg-primary/90 backdrop-blur-md px-4 py-1.5 rounded-lg text-white font-black text-[9px] tracking-widest uppercase">
                                     {{ $image->category->name }}

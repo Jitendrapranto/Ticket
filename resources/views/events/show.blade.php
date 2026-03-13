@@ -39,7 +39,7 @@
                 <!-- Banner -->
                 <div id="eventBanner" class="rounded-lg overflow-hidden shadow-2xl relative group">
                     @if($event->image)
-                        <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105">
+                        <img loading="lazy" src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105">
                     @else
                         <div class="w-full h-full bg-slate-200 flex items-center justify-center">
                             <i class="fas fa-image text-6xl text-slate-300"></i>
@@ -98,7 +98,7 @@
                         @foreach($event->artists as $artist)
                         <div class="space-y-5 text-center group">
                             <div class="aspect-square rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl transition-all duration-500 hover:scale-105 hover:shadow-2xl ring-1 ring-slate-100">
-                                <img src="{{ $artist['image'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($artist['name'] ?? 'Artist') . '&background=520C6B&color=fff' }}" class="w-full h-full object-cover">
+                                <img loading="lazy" src="{{ $artist['image'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($artist['name'] ?? 'Artist') . '&background=520C6B&color=fff' }}" class="w-full h-full object-cover">
                             </div>
                             <div>
                                 <h4 class="font-bold text-dark text-base">{{ $artist['name'] ?? 'Artist Name' }}</h4>
@@ -136,7 +136,7 @@
                         @foreach($relatedEvents as $rEvent)
                         <a href="{{ route('events.show', $rEvent->slug) }}" class="group block bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
                             <div class="aspect-video relative overflow-hidden">
-                                <img src="{{ asset('storage/' . $rEvent->image) }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
+                                <img loading="lazy" src="{{ asset('storage/' . $rEvent->image) }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
                                 <div class="absolute inset-x-4 top-4">
                                     <span class="px-3 py-1 bg-black/50 backdrop-blur-md rounded-lg text-[9px] font-bold text-white uppercase tracking-widest">
                                         {{ $rEvent->category->name }}

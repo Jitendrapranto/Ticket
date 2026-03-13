@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header Settings | Ticket Kinun Admin</title>
-    <style>html { visibility: hidden; opacity: 0; } html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }</style>
+    <style>/* FAST LOAD */ html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }</style>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -87,7 +87,7 @@
                             </h3>
                             <div class="flex items-center gap-6">
                                 <div class="w-24 h-24 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden">
-                                    <img :src="logoPreview" class="max-w-full max-h-full object-contain" alt="Logo Preview">
+                                    <img loading="lazy" :src="logoPreview" class="max-w-full max-h-full object-contain" alt="Logo Preview">
                                 </div>
                                 <div class="flex-1">
                                     <label class="block text-xs font-black text-dark uppercase tracking-widest mb-2">Upload New Logo</label>
@@ -177,7 +177,7 @@
                             <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
                                 <!-- Top Row Preview -->
                                 <div class="px-4 py-3 flex items-center justify-between border-b border-slate-100">
-                                    <img :src="logoPreview" class="h-8 w-auto object-contain" alt="Logo">
+                                    <img loading="lazy" :src="logoPreview" class="h-8 w-auto object-contain" alt="Logo">
                                     <div class="flex items-center gap-2">
                                         <span class="text-[10px] font-semibold text-slate-500">Login</span>
                                         <span class="bg-primary text-white text-[9px] font-bold px-3 py-1 rounded-lg">Sign Up</span>

@@ -62,15 +62,33 @@ class ScannerController extends Controller
 
     public function processScan(Request $request)
     {
-        $ticket_number = $request->ticket_number;
+        $ticket_number = trim($request->ticket_number);
+        
+        // 1. First, search specifically for the ticket number
         $attendee = BookingAttendee::with(['booking.event', 'ticketType', 'booking.user'])
             ->where('ticket_number', $ticket_number)
             ->first();
 
+        // 2. If not found, try to search by booking ID (e.g. they scanned the main QR or typed the Order ID)
+        if (!$attendee) {
+            $booking = \App\Models\Booking::with(['attendees' => function($q) {
+                $q->with('ticketType');
+            }, 'event', 'user'])->where('booking_id', $ticket_number)->first();
+
+            if ($booking) {
+                // Find an unscanned attendee first to check in
+                $attendee = $booking->attendees->where('is_scanned', false)->first();
+                // If everyone is already scanned, just grab the first one to show "Already Scanned" error
+                if (!$attendee && $booking->attendees->isNotEmpty()) {
+                    $attendee = $booking->attendees->first();
+                }
+            }
+        }
+
         if (!$attendee) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Invalid ticket number.'
+                'message' => 'Invalid ticket or booking number.'
             ]);
         }
 

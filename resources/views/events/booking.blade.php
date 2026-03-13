@@ -164,7 +164,7 @@
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-premium overflow-hidden animate-fadeInUp" style="animation-delay: 0.2s">
                     <div class="aspect-video w-full relative">
                         @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
+                            <img loading="lazy" src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-primary/5 flex items-center justify-center">
                                 <i class="fas fa-image text-3xl text-primary/20"></i>

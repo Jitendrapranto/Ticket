@@ -79,10 +79,6 @@ class BookingController extends Controller
 
     public function process(Request $request, $slug)
     {
-        if (!Auth::check()) {
-            return redirect()->route('signup')->with('info', 'Please create an account or login to complete your booking.');
-        }
-
         $event = Event::with('ticketTypes')->where('slug', $slug)->firstOrFail();
         
         if ($event->registration_deadline && $event->registration_deadline->isPast()) {

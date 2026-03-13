@@ -181,7 +181,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#1B2B46] to-[#520C6B] flex items-center justify-center shrink-0 shadow">
                                         @if($req->avatar)
-                                            <img src="{{ asset('storage/'.$req->avatar) }}" class="w-11 h-11 rounded-xl object-cover">
+                                            <img loading="lazy" src="{{ asset('storage/'.$req->avatar) }}" class="w-11 h-11 rounded-xl object-cover">
                                         @else
                                             <span class="text-[#FFE700] font-black text-base">{{ strtoupper(substr($req->name,0,1)) }}</span>
                                         @endif

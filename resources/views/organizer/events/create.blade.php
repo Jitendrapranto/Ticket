@@ -109,7 +109,7 @@
                 <div class="space-y-6">
                     <div class="relative w-full aspect-video bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden transition-all group hover:border-primary/30">
                         <template x-if="preview">
-                            <img :src="preview" class="w-full h-full object-cover">
+                            <img loading="lazy" :src="preview" class="w-full h-full object-cover">
                         </template>
                         <template x-if="!preview">
                             <div class="text-center">
@@ -207,7 +207,7 @@
                             <div class="flex items-center justify-between mb-1">
                                 <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Artist Photo</label>
                                 <div x-show="artist.preview" class="w-6 h-6 rounded-lg overflow-hidden border border-slate-100 shadow-sm">
-                                    <img :src="artist.preview" class="w-full h-full object-cover">
+                                    <img loading="lazy" :src="artist.preview" class="w-full h-full object-cover">
                                 </div>
                             </div>
                             <label class="w-full h-[46px] bg-white border border-slate-100 rounded-xl flex items-center px-4 cursor-pointer hover:bg-slate-50 transition-all overflow-hidden relative group/file">

@@ -29,7 +29,7 @@
 
                 <div class="rounded-[2rem] overflow-hidden border border-slate-100 bg-slate-50 min-h-[400px] flex items-center justify-center relative z-10">
                     @if($booking->payment_screenshot)
-                        <img src="{{ asset('storage/' . $booking->payment_screenshot) }}" class="max-w-full h-auto" alt="Payment Proof">
+                        <img loading="lazy" src="{{ asset('storage/' . $booking->payment_screenshot) }}" class="max-w-full h-auto" alt="Payment Proof">
                     @else
                         <div class="flex flex-col items-center text-slate-200">
                             <i class="fas fa-image text-6xl mb-4"></i>

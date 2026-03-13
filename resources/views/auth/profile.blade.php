@@ -36,12 +36,12 @@
                 <div class="relative inline-block mb-6 group">
                     <div class="w-32 h-32 rounded-[2rem] bg-slate-100 border-4 border-white shadow-xl overflow-hidden relative transition-all group-hover:shadow-primary/20">
                         @if($user->avatar)
-                            <img id="avatar-preview" src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover">
+                            <img loading="lazy" id="avatar-preview" src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover">
                         @else
                             <div id="avatar-placeholder" class="w-full h-full flex items-center justify-center bg-primary/5 text-primary text-4xl font-black">
                                 {{ substr($user->name, 0, 1) }}
                             </div>
-                            <img id="avatar-preview" src="#" class="w-full h-full object-cover hidden">
+                            <img loading="lazy" id="avatar-preview" src="#" class="w-full h-full object-cover hidden">
                         @endif
                     </div>
                     <label for="avatar-upload" class="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg cursor-pointer hover:bg-secondary transition-all active:scale-90">

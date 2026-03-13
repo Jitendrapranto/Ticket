@@ -14,7 +14,7 @@
     <div class="relative z-10 max-w-lg w-full text-center space-y-8 animate-fadeInUp">
         <!-- Logo -->
         <a href="/" class="inline-block">
-            <img src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-14 mx-auto brightness-0 invert">
+            <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Ticket Kinun" class="h-14 mx-auto brightness-0 invert">
         </a>
 
         <!-- Status Card -->

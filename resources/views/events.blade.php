@@ -17,35 +17,35 @@
     }
 }">
     <!-- Hero Section -->
-    <section class="relative pt-12 pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[400px] flex items-center">
+    <section class="relative pt-8 md:pt-16 pb-16 md:pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[350px] md:min-h-[400px] flex items-center">
         <!-- Abstract Background Effects -->
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
+        <div class="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/10 rounded-full blur-[80px] md:blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+        <div class="absolute bottom-0 left-0 w-[200px] md:w-[300px] h-[200px] md:h-[300px] bg-accent/5 rounded-full blur-[60px] md:blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
 
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center w-full">
             @if($hero && $hero->badge_text)
-                <div class="inline-block px-6 py-2 rounded-full border border-white/10 bg-white/5 mb-8 animate-fadeInUp">
-                    <span class="text-blue-500 font-black text-[10px] tracking-[0.3em] uppercase">{{ $hero->badge_text }}</span>
+                <div class="inline-block px-5 py-2 rounded-full border border-white/10 bg-white/5 mb-6 md:mb-8 animate-fadeInUp">
+                    <span class="text-blue-400 font-black text-[9px] md:text-[10px] tracking-[0.3em] uppercase">{{ $hero->badge_text }}</span>
                 </div>
             @endif
 
-            <h1 class="font-outfit text-4xl md:text-7xl font-black text-white leading-tight mb-6 tracking-tighter max-w-4xl mx-auto">
+            <h1 class="font-outfit text-3xl md:text-7xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter max-w-4xl mx-auto">
                 {{ $hero->title ?? 'Find Your Next Experience' }}
             </h1>
 
             @if($hero && $hero->subtitle)
-                <p class="text-white/40 text-lg font-light mb-12 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-white/40 text-sm md:text-lg font-light mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed px-4">
                     {{ $hero->subtitle }}
                 </p>
             @endif
 
             <!-- Professional Search Bar -->
-            <div class="mt-12 max-w-5xl mx-auto px-4 md:px-0 animate-fadeInUp" style="animation-delay: 0.2s;">
-                <form action="{{ route('events') }}" method="GET" class="relative group">
+            <div class="mt-8 md:mt-12 max-w-5xl mx-auto px-0 md:px-0 animate-fadeInUp" style="animation-delay: 0.2s;">
+                <form action="{{ route('events') }}" method="GET" class="relative group px-2 md:px-0">
                     <!-- Dynamic Glow Background -->
-                    <div class="absolute -inset-1 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2.5rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-focus-within:duration-200"></div>
+                    <div class="absolute -inset-1 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] md:rounded-[2.5rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-focus-within:duration-200"></div>
 
-                    <div class="relative flex flex-col md:flex-row items-stretch bg-[#1a0b2e]/60 backdrop-blur-2xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-1.5 md:p-2 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 group-focus-within:border-white/20 group-focus-within:shadow-[0_20px_80px_rgba(82,12,107,0.3)]">
+                    <div class="relative flex flex-col md:flex-row items-stretch bg-[#1a0b2e]/60 backdrop-blur-2xl border border-white/10 rounded-[1.5rem] md:rounded-[2.5rem] p-1 md:p-2 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 group-focus-within:border-white/20 group-focus-within:shadow-[0_20px_80px_rgba(82,12,107,0.3)]">
 
                         <!-- Search Query Input -->
                         <div class="flex-1 flex items-center px-6 py-4 md:py-0 transition-colors">
@@ -89,7 +89,7 @@
     </section>
 
     <!-- Filter Section -->
-    <section class="py-6 bg-white border-b border-slate-100 sticky top-0 z-40 shadow-sm">
+    <section class="py-4 md:py-6 bg-white border-b border-slate-100 sticky top-16 md:top-20 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
                 <!-- Status Tabs -->
@@ -145,7 +145,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($featuredEvents as $fEvent)
                 <div class="relative group h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl">
-                    <img src="{{ asset('storage/' . $fEvent->image) }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110">
+                    <img loading="lazy" src="{{ asset('storage/' . $fEvent->image) }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/20 to-transparent"></div>
 
                     <!-- Content -->
@@ -202,7 +202,7 @@
                     <!-- Image Section (Full Cover) -->
                     <div class="relative aspect-[16/9] bg-slate-100 shrink-0 overflow-hidden">
                         @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img loading="lazy" src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
                                 <i class="fas fa-image text-4xl"></i>

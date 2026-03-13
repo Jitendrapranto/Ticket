@@ -45,7 +45,7 @@
                                 class="flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all duration-300 relative group">
                             <div class="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100 group-hover:scale-110 transition-transform">
                                 @if($method->icon)
-                                    <img src="{{ asset('storage/' . $method->icon) }}" class="w-12 h-12 object-contain">
+                                    <img loading="lazy" src="{{ asset('storage/' . $method->icon) }}" class="w-12 h-12 object-contain">
                                 @else
                                     <span class="font-black text-xs text-slate-400">{{ strtoupper($method->name) }}</span>
                                 @endif
@@ -82,7 +82,7 @@
                         <!-- QR Code -->
                         <div class="shrink-0 flex flex-col items-center md:items-end justify-start gap-4" x-show="selectedData.qr_code">
                             <div class="p-4 bg-white rounded-3xl shadow-sm border border-indigo-100">
-                                <img :src="'{{ asset('storage') }}/' + selectedData.qr_code" class="w-32 h-32 object-contain" alt="QR Code">
+                                <img loading="lazy" :src="'{{ asset('storage') }}/' + selectedData.qr_code" class="w-32 h-32 object-contain" alt="QR Code">
                             </div>
                             <span class="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Scan to Pay</span>
                         </div>
@@ -160,7 +160,7 @@
                     <div class="bg-dark p-8 text-white relative h-40">
                         <div class="absolute inset-0 opacity-40">
                             @if($booking->event->image)
-                                <img src="{{ asset('storage/' . $booking->event->image) }}" class="w-full h-full object-cover grayscale">
+                                <img loading="lazy" src="{{ asset('storage/' . $booking->event->image) }}" class="w-full h-full object-cover grayscale">
                             @endif
                         </div>
                         <div class="absolute inset-0 bg-gradient-to-t from-dark to-dark/20"></div>

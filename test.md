@@ -256,3 +256,23 @@ On customer menu on the admin dashboard here add filter as a dropdown bY date li
 When clicked view then its showed 404 error page...fix it
 
 I want to add submenu for PaYout menu named as Withdraw Request and Withdraw HistorY,, When organizer request for withdraw then it will be shown in the withdraw request section and when admin approve the withdraw request then it will be shown in the withdraw historY section and also make sure to add a professional popup when admin approve the withdraw request and also make sure to add a toast message after admin approve the withdraw request...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+In various mobile device the frontend design is not responsive...Please make sure the frontend design is responsive for all mobile devices and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+When clicke three . menus on the right corner of the frontend page then it will show the menu in mobile devices like Home,events, gallerY,contact,about but when click the menu then it does not show the menu items...fix it and also make sure to add a professional design for the mobile menu and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+here header menus and banner section intersecting with each other in everY devices...Please fix it and also make sure to add a professional design for the mobile menu and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+When scan the QR code from the ticket 
+
+When created ticket then the ticket number should be saved in database sothat when scanner scan the ticket then it will verifY the ticket number from the database and then show the ticket details and also show the status of the ticket whether it is valid or invalid or already scanned...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+When a user trY to buY a ticket for an event ...If he is not logged in then he trY to buY a ticket it redirected the login page but after login it does not redirect to the checkout page it go to the initial home page....fix it...
+
+
+The overall website loading speed is slow...Please optimize the website loading speed and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
