@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative mt-7 pt-6 md:pt-12 lg:pt-20 pb-12 bg-[#F1F5F9] overflow-hidden">
+    <section class="relative mt-7 pt-6 md:pt-12 lg:pt-20 pb-12 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 md:px-6">
             <div class="relative flex flex-col lg:flex-row items-stretch gap-6 h-auto lg:h-[480px]">
 
@@ -14,10 +14,12 @@
                         @forelse($featuredEvents as $event)
                         <div class="min-w-full h-full relative overflow-hidden">
                             @if($event->image)
-                                <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <img src="{{ $event->image_url }}" 
+                                     @if($loop->first) fetchpriority="high" @else loading="lazy" @endif 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             @else
-                                <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/30 flex items-center justify-center">
-                                    <i class="fas fa-calendar-star text-6xl text-primary/30"></i>
+                                <div class="w-full h-full bg-slate-50 flex items-center justify-center">
+                                    <i class="fas fa-calendar-star text-6xl text-slate-200"></i>
                                 </div>
                             @endif
 
@@ -33,10 +35,10 @@
                         </div>
                         @empty
                         <!-- Fallback when no featured events -->
-                        <div class="min-w-full h-full relative flex items-center bg-gradient-to-br from-primary/10 to-secondary/20 overflow-hidden">
+                        <div class="min-w-full h-full relative flex items-center bg-slate-50 overflow-hidden">
                             <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/islamic-exercise.png')]"></div>
                             <div class="relative z-10 w-full text-center flex flex-col items-center justify-center h-full">
-                                <i class="fas fa-calendar-star text-6xl text-primary/30 mb-6"></i>
+                                <i class="fas fa-calendar-star text-6xl text-slate-200 mb-6"></i>
                                 <h3 class="font-outfit text-2xl font-black text-dark/60">No Featured Events</h3>
                                 <p class="text-slate-400 text-sm mt-2">Check back soon for exciting events!</p>
                             </div>
@@ -148,7 +150,7 @@
                         <!-- Image Section -->
                         <div class="relative h-52 rounded-[1.5rem] overflow-hidden bg-slate-100 shrink-0">
                             @if($event->image)
-                                <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <img loading="lazy" src="{{ $event->image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center text-slate-200">
                                     <i class="fas fa-image text-4xl"></i>
@@ -242,7 +244,7 @@
                             class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
                         ALL
                     </button>
-                    @foreach(\App\Models\EventCategory::all() as $category)
+                    @foreach($eventCategories as $category)
                     <button @click="activeCategory = '{{ strtolower($category->name) }}'"
                             :class="activeCategory === '{{ strtolower($category->name) }}' ? 'bg-dark text-white border-dark shadow-lg' : 'bg-white text-slate-500 border-slate-200 hover:border-dark hover:text-dark'"
                             class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
@@ -264,7 +266,7 @@
                     <!-- Image Section -->
                     <div class="relative h-52 rounded-[1.5rem] overflow-hidden bg-slate-100 shrink-0">
                         @if($event->image)
-                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <img loading="lazy" src="{{ $event->image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         @else
                             <div class="w-full h-full bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center text-slate-200">
                                 <i class="fas fa-image text-4xl"></i>
@@ -359,7 +361,7 @@
                         <a href="{{ route('events.show', $past->slug) }}"
                            class="shrink-0 w-72 h-52 rounded-[2rem] overflow-hidden shadow-md group relative cursor-pointer block">
                             @if($past->image)
-                                <img src="{{ asset('storage/' . $past->image) }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $past->title }}">
+                                <img loading="lazy" src="{{ $past->image_url }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $past->title }}">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/40 flex items-center justify-center">
                                     <i class="fas fa-image text-4xl text-white/30"></i>
@@ -390,7 +392,7 @@
                 @foreach($pastEvents->take(4) as $past)
                 <a href="{{ route('events.show', $past->slug) }}" class="rounded-2xl overflow-hidden h-40 group relative block">
                     @if($past->image)
-                        <img src="{{ asset('storage/' . $past->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ $past->title }}">
+                        <img loading="lazy" src="{{ $past->image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ $past->title }}">
                     @else
                         <div class="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/40 flex items-center justify-center">
                             <i class="fas fa-image text-3xl text-white/30"></i>
@@ -650,6 +652,8 @@
         <div class="absolute top-20 right-[10%] w-40 h-40 border-2 border-white/5 rounded-full animate-pulse"></div>
         <div class="absolute bottom-20 left-[10%] w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
     </section>
+@endsection
+
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {

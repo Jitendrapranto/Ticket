@@ -61,4 +61,34 @@ class GalleryController extends Controller
         $status = $image->show_on_homepage ? 'added to' : 'removed from';
         return back()->with('success', "Image \"{$image->title}\" has been {$status} the homepage gallery!");
     }
+
+    public function edit(GalleryImage $image)
+    {
+        $categories = EventCategory::all();
+        return view('admin.gallery.edit', compact('image', 'categories'));
+    }
+
+    public function update(Request $request, GalleryImage $image)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:event_categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($image->image_path) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            $image->image_path = $request->file('image')->store('gallery', 'public');
+        }
+
+        $image->title = $request->title;
+        $image->category_id = $request->category_id;
+        $image->show_on_homepage = $request->input('show_on_homepage', 0) ? true : false;
+        $image->homepage_sort_order = $request->input('homepage_sort_order', 0);
+        $image->save();
+
+        return redirect()->route('admin.gallery.images.index')->with('success', 'Image updated successfully!');
+    }
 }

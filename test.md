@@ -276,3 +276,9 @@ When a user trY to buY a ticket for an event ...If he is not logged in then he t
 
 
 The overall website loading speed is slow...Please optimize the website loading speed and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+When reload the frotend then it will show the black screen for a moment....fix it
+
+
+When i send a message from the contact page ,I want to here after submit the form then it will show a popup with a message "Your message has been sent successfully. We will get back to you soon." and also make sure these data will be go to the super admin dashboard and also make sure to add a professional design for the popup and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?

@@ -344,17 +344,34 @@
     }
 
     function deleteRequest(id) {
-        if (!confirm('Permanently delete this organizer request?')) return;
-        fetch(`/admin/organizer-requests/${id}`, {
-            method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                const row = document.getElementById(`row-${id}`);
-                if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.3s'; setTimeout(() => row.remove(), 300); }
-                showToast('success', 'Request deleted.');
+        Swal.fire({
+            title: 'Delete Request?',
+            text: 'This organizer request will be permanently removed.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1B2B46',
+            cancelButtonColor: '#F1556C',
+            confirmButtonText: 'Yes, Delete',
+            borderRadius: '2rem',
+            customClass: {
+                popup: 'rounded-[2rem] border border-slate-100 shadow-2xl',
+                confirmButton: 'rounded-xl px-10 py-4 font-black text-xs uppercase tracking-widest',
+                cancelButton: 'rounded-xl px-10 py-4 font-black text-xs uppercase tracking-widest'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/organizer-requests/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const row = document.getElementById(`row-${id}`);
+                        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.3s'; setTimeout(() => row.remove(), 300); }
+                        showToast('success', 'Request deleted.');
+                    }
+                });
             }
         });
     }

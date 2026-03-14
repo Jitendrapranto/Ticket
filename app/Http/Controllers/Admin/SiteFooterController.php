@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteFooter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SiteFooterController extends Controller
 {
@@ -65,6 +66,8 @@ class SiteFooterController extends Controller
         $footer->terms_url          = $data['terms_url'];
         $footer->cookies_url        = $data['cookies_url'];
         $footer->save();
+
+        Cache::forget('site_footer');
 
         return redirect()->route('admin.site.footer.edit')
             ->with('success', 'Footer content updated successfully!');

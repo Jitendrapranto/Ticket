@@ -28,7 +28,7 @@
                 <button data-category="all" class="gallery-filter-btn active bg-[#1B2B46] text-white shadow-lg px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
                     ALL
                 </button>
-                @foreach(\App\Models\EventCategory::all() as $cat)
+                @foreach($galleryCategories as $cat)
                     <button data-category="{{ strtolower($cat->name) }}" class="gallery-filter-btn bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50 px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
                         {{ strtoupper($cat->name) }}
                     </button>
@@ -220,7 +220,7 @@
             <p class="text-slate-400 text-base sm:text-xl font-light mb-10 sm:mb-16 max-w-xl mx-auto px-4">Get your tickets today and be featured in our upcoming showcase of legends.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-6">
                 <a href="{{ route('events') }}" class="bg-primary text-white px-10 sm:px-16 py-4 sm:py-6 rounded-3xl font-black text-base sm:text-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/30">EXPLORE EVENTS</a>
-                <a href="#" class="glass text-white px-10 sm:px-16 py-4 sm:py-6 rounded-3xl font-black text-base sm:text-lg hover:border-white transition-all">FOLLOW US</a>
+               
             </div>
         </div>
     </section>

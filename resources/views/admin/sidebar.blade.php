@@ -5,7 +5,7 @@
     </button>
     <!-- Sidebar Header -->
     <div class="p-8 border-b border-white/5 space-y-10">
-        <a href="/" class="flex justify-center">
+        <a href="{{ route('admin.dashboard') }}" class="flex justify-center">
             <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-12 w-auto object-contain brightness-0 invert">
         </a>
 
@@ -32,14 +32,14 @@
             </button>
 
             <!-- Profile Dropdown Content -->
-            <div x-show="userOpen" 
+            <div x-show="userOpen"
                  @click.away="userOpen = false"
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
                  x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                 class="absolute left-1/2 -translate-x-1/2 mt-4 w-56 bg-white rounded-[1.5rem] shadow-2xl py-3 z-[60] border border-slate-100 overflow-hidden" 
+                 class="absolute left-1/2 -translate-x-1/2 mt-4 w-56 bg-white rounded-[1.5rem] shadow-2xl py-3 z-[60] border border-slate-100 overflow-hidden"
                  style="display: none;">
-                
+
                 <a href="{{ route('profile') }}" class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:text-primary hover:bg-slate-50 transition-all group/item">
                     <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-xs">
                         <i class="fas fa-user-edit"></i>
@@ -206,6 +206,13 @@
                 <a href="{{ route('admin.contact.map.edit') }}" class="flex items-center gap-4 px-4 py-2 text-white/60 hover:text-white text-sm font-medium transition-all">
                     Map Section
                 </a>
+                <a href="{{ route('admin.contact.messages.index') }}" class="flex items-center gap-4 px-4 py-2 {{ request()->routeIs('admin.contact.messages.*') ? 'text-white font-black' : 'text-white/60 hover:text-white' }} text-sm font-medium transition-all">
+                    Contact Messages
+                    @php $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
+                    @if($unreadCount > 0)
+                        <span class="ml-auto bg-primary text-white text-[9px] font-black px-2 py-0.5 rounded-full">{{ $unreadCount }}</span>
+                    @endif
+                </a>
             </div>
         </div>
 
@@ -225,7 +232,7 @@
             <span class="bg-[#FFE700] text-[#1B2B46] text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">{{ $pendingOrganizerCount }}</span>
             @endif
         </a>
-       
+
         <div x-data="{ open: false }">
             <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-2xl text-sm font-bold transition-all focus:outline-none group">
                 <div class="flex items-center gap-4">
@@ -286,7 +293,7 @@
                     <div class="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20">
                         <i class="fa-solid fa-wallet text-blue-400"></i>
                     </div>
-                    PaYout
+                    Payout
                 </div>
                 <i class="fa-solid fa-chevron-down text-[10px] transition-transform text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>

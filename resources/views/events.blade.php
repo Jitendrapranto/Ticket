@@ -202,7 +202,7 @@
                     <!-- Image Section (Full Cover) -->
                     <div class="relative aspect-[16/9] bg-slate-100 shrink-0 overflow-hidden">
                         @if($event->image)
-                            <img loading="lazy" src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img loading="lazy" src="{{ $event->image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
                                 <i class="fas fa-image text-4xl"></i>

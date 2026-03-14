@@ -174,7 +174,7 @@
             <h2 class="font-outfit text-3xl md:text-[2.75rem] font-black text-[#1e293b] tracking-tight mb-3 md:mb-4">{{ $cta->title ?? 'Ready to partner?' }}</h2>
             <p class="text-slate-500 text-sm md:text-[15px] mb-8 md:mb-10 font-medium">{{ $cta->subtitle ?? 'Join our global network of organizers and bring your events to millions.' }}</p>
             
-            <a href="{{ $cta->button_url ?? '#' }}" class="inline-flex items-center justify-center gap-3 bg-[#111827] text-white px-10 py-4 rounded-full font-bold text-sm tracking-wide hover:bg-[#1f2937] transition-all shadow-lg shadow-gray-900/30">
+            <a href="{{ route('contact') }}" class="inline-flex items-center justify-center gap-3 bg-[#111827] text-white px-10 py-4 rounded-full font-bold text-sm tracking-wide hover:bg-[#1f2937] transition-all shadow-lg shadow-gray-900/30">
                 {{ $cta->button_text ?? 'CONTACT US TODAY' }}
                 <i class="fas fa-arrow-right text-[10px]"></i>
             </a>

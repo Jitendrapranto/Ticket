@@ -1,28 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" style="overflow-x:hidden;">
+<html lang="en" style="overflow-x:hidden; background-color: #ffffff;">
 <head>
+    <!-- Critical: Force light mode and white background immediately to prevent dark flashing -->
+    <style>
+        :root { color-scheme: light; }
+        html, body { 
+            background-color: #ffffff !important; 
+            background: #ffffff !important; 
+            color: #000000; 
+            visibility: visible !important; 
+            opacity: 1 !important;
+        }
+    </style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Ticket Kinun - Your Ultimate Event Ticketing Platform')</title>
+    <meta name="description" content="@yield('meta_description', 'Discover, book, and enjoy the best events. Ticket Kinun is your premier gateway to concerts, sports, festivals and more.')">
 
-    <!-- Removed Blocking FOUC style to improve TTI/LCP loading speed -->
-
-    <!-- Tailwind & Fonts -->
+    <!-- DNS Prefetch & Preconnect for all CDN domains -->
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Critical: Tailwind CDN (required for rendering) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#520C6B',     // Brand Purple
-                        secondary: '#1B2B46',   // Deep Plum
-                        accent: '#2563EB',      // Vibrant Blue
+                        primary: '#520C6B',
+                        secondary: '#1B2B46',
+                        accent: '#2563EB',
                         dark: '#0F172A',
                         brand: '#520C6B',
                     },
@@ -35,6 +47,41 @@
                         'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
                     }
                 }
+            }
+        }
+    </script>
+
+    <!-- Fonts: preload critical subset, swap display -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Font Awesome: defer loading (non-critical for initial paint) -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+    <!-- Alpine.js: deferred -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- SweetAlert2: lazy-loaded on first use -->
+    <script>
+        window._swalLoaded = false;
+        window._swalQueue = [];
+        function ensureSwal(cb) {
+            if (window.Swal) { cb(); return; }
+            if (!window._swalLoaded) {
+                window._swalLoaded = true;
+                var s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                s.onload = function() {
+                    window._swalQueue.forEach(function(fn) { fn(); });
+                    window._swalQueue = [];
+                    if (cb) cb();
+                };
+                document.head.appendChild(s);
+            } else {
+                window._swalQueue.push(cb);
             }
         }
     </script>
@@ -86,34 +133,15 @@
             animation-play-state: paused;
         }
 
+        [x-cloak] { display: none !important; }
+
         /* ── Global horizontal overflow guard ── */
         html, body {
             overflow-x: hidden !important;
             max-width: 100vw;
-        }
-        section, .section-wrap {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Reveal once ready */
-        html.ready {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.15s ease-in;
+            background-color: #ffffff !important;
         }
     </style>
-
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        // Fallback: reveal after short delay even if DOMContentLoaded already fired
-        setTimeout(function() {
-            document.documentElement.classList.add('ready');
-        }, 100);
-    </script>
 
     @yield('styles')
 </head>

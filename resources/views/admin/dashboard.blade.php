@@ -7,6 +7,7 @@
     <!-- Prevent FOUC -->
     <style>
         /* FAST LOAD */
+        html:not(.ready) { visibility: hidden; opacity: 0; }
         html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
     </style>
     <!-- Tailwind & Fonts -->
@@ -216,6 +217,31 @@
             if (toggleBtn) toggleBtn.addEventListener('click', toggleMenu);
             if (overlay) overlay.addEventListener('click', toggleMenu);
         });
+
+        function confirmDelete(formId, message = 'Are you sure you want to delete this?') {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#520C6B',
+                cancelButtonColor: '#F1556C',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                background: '#ffffff',
+                color: '#1e293b',
+                borderRadius: '2rem',
+                customClass: {
+                    popup: 'rounded-[2rem] border border-slate-100 shadow-2xl',
+                    confirmButton: 'rounded-xl px-8 py-4 font-black tracking-widest uppercase text-xs shadow-lg',
+                    cancelButton: 'rounded-xl px-8 py-4 font-black tracking-widest uppercase text-xs shadow-lg'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
     </script>
     @stack('scripts')
 </body>

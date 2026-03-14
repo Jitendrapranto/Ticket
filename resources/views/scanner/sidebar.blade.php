@@ -9,7 +9,7 @@
 
     <!-- Sidebar Header -->
     <div class="p-8 border-b border-white/5 text-center">
-        <a href="/" class="flex flex-col items-center gap-4">
+        <a href="{{ route('scanner.dashboard') }}" class="flex flex-col items-center gap-4">
             <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-16 w-auto object-contain brightness-0 invert">
             <div>
                 <span class="text-[10px] font-black tracking-[0.4em] text-accent uppercase">On-Site Scanner</span>

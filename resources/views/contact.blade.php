@@ -13,9 +13,9 @@
             <div class="inline-block px-4 py-1.5 rounded-full glass mb-4 md:mb-6">
                 <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">{{ $hero->badge_text ?? 'CONTACT CENTER' }}</span>
             </div>
-            
+
             <h1 class="font-outfit text-4xl md:text-6xl lg:text-8xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter">
-                {{ $hero->title_main ?? 'Get In' }} <br><span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Touch.' }}</span>
+                {{ $hero->title_main ?? 'Get In' }} <span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Touch.' }}</span>
             </h1>
             <p class="text-slate-400 text-sm md:text-lg lg:text-xl mb-8 md:mb-12 max-w-2xl mx-auto font-light leading-relaxed px-2">
                 {{ $hero->subtitle ?? 'Have a question or need assistance with your booking? Our dedicated support team is available 24/7 to ensure your experience is flawless.' }}
@@ -64,18 +64,18 @@
                         {{ $formContent->description ?? 'Fill out the form and our team will get back to you within 2 hours.' }}
                     </p>
 
-                    <form action="#" class="space-y-4 flex-1 flex flex-col">
-
+                    <form action="{{ route('contact.store') }}" method="POST" class="space-y-4 flex-1 flex flex-col">
+                        @csrf
                         <!-- Row: Full Name + Email -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[10px] font-black text-slate-400 tracking-[0.18em] uppercase pl-1">{{ $formContent->name_label ?? 'Full Name' }}</label>
-                                <input type="text" placeholder="{{ $formContent->name_placeholder ?? 'John Doe' }}"
+                                <input type="text" name="full_name" placeholder="{{ $formContent->name_placeholder ?? 'John Doe' }}" required
                                        class="w-full bg-white border border-slate-200 rounded-xl py-3.5 px-4 text-[14px] text-[#111827] font-medium placeholder-slate-300 outline-none transition-all duration-200 focus:border-[#520C6B] focus:ring-2 focus:ring-[#520C6B]/10 hover:border-slate-300">
                             </div>
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[10px] font-black text-slate-400 tracking-[0.18em] uppercase pl-1">{{ $formContent->email_label ?? 'Email Address' }}</label>
-                                <input type="email" placeholder="{{ $formContent->email_placeholder ?? 'john@example.com' }}"
+                                <input type="email" name="email" placeholder="{{ $formContent->email_placeholder ?? 'john@example.com' }}" required
                                        class="w-full bg-white border border-slate-200 rounded-xl py-3.5 px-4 text-[14px] text-[#111827] font-medium placeholder-slate-300 outline-none transition-all duration-200 focus:border-[#520C6B] focus:ring-2 focus:ring-[#520C6B]/10 hover:border-slate-300">
                             </div>
                         </div>
@@ -88,18 +88,18 @@
                                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[13px]">
                                         <i class="fas fa-phone-alt"></i>
                                     </span>
-                                    <input type="tel" placeholder="{{ $formContent->phone_placeholder ?? '+880 1234 567 890' }}"
+                                    <input type="tel" name="phone" placeholder="{{ $formContent->phone_placeholder ?? '+880 1234 567 890' }}"
                                            class="w-full bg-white border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-[14px] text-[#111827] font-medium placeholder-slate-300 outline-none transition-all duration-200 focus:border-[#520C6B] focus:ring-2 focus:ring-[#520C6B]/10 hover:border-slate-300">
                                 </div>
                             </div>
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[10px] font-black text-slate-400 tracking-[0.18em] uppercase pl-1">{{ $formContent->subject_label ?? 'Subject' }}</label>
                                 <div class="relative">
-                                    <select class="w-full bg-white border border-slate-200 rounded-xl py-3.5 px-4 text-[14px] text-[#111827] font-medium outline-none transition-all duration-200 focus:border-[#520C6B] focus:ring-2 focus:ring-[#520C6B]/10 hover:border-slate-300 appearance-none cursor-pointer">
-                                        <option>General Inquiry</option>
-                                        <option>Ticket Issue</option>
-                                        <option>Partnership</option>
-                                        <option>Feedback</option>
+                                    <select name="subject" class="w-full bg-white border border-slate-200 rounded-xl py-3.5 px-4 text-[14px] text-[#111827] font-medium outline-none transition-all duration-200 focus:border-[#520C6B] focus:ring-2 focus:ring-[#520C6B]/10 hover:border-slate-300 appearance-none cursor-pointer">
+                                        <option value="General Inquiry">General Inquiry</option>
+                                        <option value="Ticket Issue">Ticket Issue</option>
+                                        <option value="Partnership">Partnership</option>
+                                        <option value="Feedback">Feedback</option>
                                     </select>
                                     <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center">
                                         <i class="fas fa-chevron-down text-slate-400 text-[11px]"></i>
@@ -111,7 +111,7 @@
                         <!-- Message -->
                         <div class="flex flex-col gap-1.5 flex-1">
                             <label class="text-[10px] font-black text-slate-400 tracking-[0.18em] uppercase pl-1">{{ $formContent->message_label ?? 'Your Message' }}</label>
-                            <textarea rows="5" placeholder="{{ $formContent->message_placeholder ?? 'How can we help you today?' }}"
+                            <textarea name="message" rows="5" placeholder="{{ $formContent->message_placeholder ?? 'How can we help you today?' }}" required
                                       class="w-full flex-1 bg-white border border-slate-200 rounded-xl py-3.5 px-4 text-[14px] text-[#111827] font-medium placeholder-slate-300 outline-none transition-all duration-200 focus:border-[#520C6B] focus:ring-2 focus:ring-[#520C6B]/10 hover:border-slate-300 resize-none"></textarea>
                         </div>
 
@@ -174,7 +174,7 @@
                                      style="background:rgba(255,255,255,0.08); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.15);">
                                     <h4 class="text-white font-black text-lg tracking-tight mb-2">{{ $support->card_title ?? 'Dedicated Support Team' }}</h4>
                                     <p class="text-white/60 text-[13px] font-medium leading-relaxed mb-6">{{ $support->card_description ?? 'Our specialists handle every request with precision and care. You\'re in good hands.' }}</p>
-                                    
+
                                     <!-- Dynamic Buttons -->
                                     <div class="flex flex-wrap gap-3">
                                         @if($support->call_url)
@@ -212,13 +212,13 @@
 
             <div class="rounded-[2rem] md:rounded-[3.5rem] overflow-hidden grayscale contrast-125 h-[300px] md:h-[500px] relative shadow-premium border border-slate-200">
                 @if($map->google_map_url)
-                    <iframe 
-                        src="{{ $map->google_map_url }}" 
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
+                    <iframe
+                        src="{{ $map->google_map_url }}"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 @else
@@ -235,4 +235,47 @@
             </div>
         </div>
     </section>
+@section('scripts')
+    @if(session('success'))
+    <div x-data="{ open: true }" 
+         x-show="open" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-90"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-90"
+         class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 pointer-events-none">
+        
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-dark/60 backdrop-blur-sm pointer-events-auto" @click="open = false"></div>
+
+        <!-- Modal Content -->
+        <div class="relative w-full max-w-md bg-white rounded-[2rem] shadow-2xl pointer-events-auto overflow-hidden animate-fadeInUp">
+            <!-- Top design element -->
+            <div class="h-2 w-full bg-gradient-to-r from-[#520C6B] to-[#7c3aed]"></div>
+            
+            <div class="p-8 text-center">
+                <!-- Success Icon -->
+                <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-100">
+                    <div class="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-green-200 animate-bounce">
+                        <i class="fas fa-check text-2xl"></i>
+                    </div>
+                </div>
+
+                <h3 class="font-outfit text-2xl font-black text-dark mb-3 tracking-tight">Success!</h3>
+                <p class="text-slate-500 font-medium leading-relaxed mb-8">
+                    {{ session('success') }}
+                </p>
+
+                <button @click="open = false" 
+                        class="w-full py-4 rounded-xl font-black text-[13px] tracking-[0.18em] uppercase text-white transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
+                        style="background:#520C6B;">
+                    Got It, Thanks!
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+@endsection
 @endsection

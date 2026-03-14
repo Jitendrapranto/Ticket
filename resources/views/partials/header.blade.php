@@ -17,7 +17,7 @@
     $curPath = request()->path();
 @endphp
 
-<header class="fixed top-0   left-0 w-full  z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
+<header style="background-color: #ffffff !important;" class="fixed top-0 left-0 w-full z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
 
     {{-- ═══════════════════════════════════════
          TOP ROW: Logo · Search · Auth · Burger
@@ -165,7 +165,7 @@
     </div>
 
     {{-- Mobile search bar (toggled) --}}
-    <div id="mobile-search-bar" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 py-3">
+    <div id="mobile-search-bar" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 py-3" style="display: none;">
         <form action="{{ route('events') }}" method="GET" class="relative">
             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
             <input type="text" name="search" value="{{ request('search') }}"
@@ -181,7 +181,7 @@
 ════════════════════════════════════════════════════ --}}
 <div id="mobile-drawer-overlay"
      class="fixed inset-0 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"
-     style="background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);">
+     style="background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); opacity: 0; pointer-events: none;">
 </div>
 
 {{-- ═══════════════════════════════════════════════
@@ -189,7 +189,7 @@
 ════════════════════════════════════════════════════ --}}
 <div id="mobile-drawer"
      class="fixed top-0 right-0 h-full z-[70] flex flex-col translate-x-full transition-transform duration-500 ease-in-out overflow-hidden"
-     style="width: min(300px, 88vw); background:#fff; box-shadow: -8px 0 40px rgba(0,0,0,0.2);">
+     style="width: min(300px, 88vw); background:#fff; box-shadow: -8px 0 40px rgba(0,0,0,0.2); transform: translateX(100%);">
 
     {{-- Drawer Header --}}
     <div class="relative flex items-center justify-between px-5 py-4 overflow-hidden flex-shrink-0"

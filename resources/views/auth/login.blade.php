@@ -81,20 +81,6 @@
                     Secure Login
                 </button>
 
-                <div class="relative py-4">
-                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-100"></div></div>
-                    <div class="relative flex justify-center text-[9px] uppercase tracking-widest font-black"><span class="px-4 bg-white text-slate-300">Quick sign in</span></div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <a href="#" class="flex items-center justify-center gap-2 py-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-all text-[10px] font-black text-slate-600 uppercase">
-                        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="w-3 h-3"> Google
-                    </a>
-                    <a href="#" class="flex items-center justify-center gap-2 py-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-all text-[10px] font-black text-slate-600 uppercase">
-                        <i class="fab fa-facebook text-blue-600"></i> Facebook
-                    </a>
-                </div>
-
                 <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-8">
                     Don't have an account? <a href="{{ route('signup') }}" class="text-primary hover:underline ml-1">Signup Free</a>
                 </p>

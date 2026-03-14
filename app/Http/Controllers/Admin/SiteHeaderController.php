@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteHeader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SiteHeaderController extends Controller
 {
@@ -38,6 +39,8 @@ class SiteHeaderController extends Controller
         $header->signup_text         = $data['signup_text'];
         $header->nav_links           = $data['nav_links'] ?? [];
         $header->save();
+
+        Cache::forget('site_header');
 
         return redirect()->route('admin.site.header.edit')
             ->with('success', 'Header content updated successfully!');

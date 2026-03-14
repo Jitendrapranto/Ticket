@@ -8,6 +8,12 @@
     <!-- Prevent FOUC: Hide body until styles are ready -->
     <style>
         /* FAST LOAD */
+        html:not(.ready) { visibility: hidden; opacity: 0; }
+        html.ready { 
+            visibility: visible; 
+            opacity: 1; 
+            transition: opacity 0.15s ease-in; 
+        }
     </style>
 
     <!-- Tailwind & Fonts -->

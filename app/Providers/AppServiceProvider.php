@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,10 +30,14 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['partials.header', 'partials.footer'], function ($view) {
             $viewName = $view->getName();
             if ($viewName === 'partials.header') {
-                $view->with('siteHeader', \App\Models\SiteHeader::first());
+                $view->with('siteHeader', Cache::remember('site_header', 3600, function () {
+                    return \App\Models\SiteHeader::first();
+                }));
             }
             if ($viewName === 'partials.footer') {
-                $view->with('siteFooter', \App\Models\SiteFooter::first());
+                $view->with('siteFooter', Cache::remember('site_footer', 3600, function () {
+                    return \App\Models\SiteFooter::first();
+                }));
             }
         });
     }

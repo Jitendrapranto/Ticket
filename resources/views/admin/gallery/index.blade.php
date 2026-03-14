@@ -120,6 +120,11 @@
                                         title="{{ $image->show_on_homepage ? 'Remove from Homepage' : 'Add to Homepage' }}">
                                     <i class="fas {{ $image->show_on_homepage ? 'fa-home' : 'fa-plus-circle' }} text-sm"></i>
                                 </button>
+                                <a href="{{ route('admin.gallery.images.edit', $image) }}"
+                                   class="w-12 h-12 flex items-center justify-center rounded-2xl bg-amber-50 text-amber-500 hover:bg-amber-500 hover:text-white transition-all shadow-sm"
+                                   title="Edit Asset">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </a>
                                 <button @click="confirmDelete('{{ route('admin.gallery.images.destroy', $image) }}', '{{ $image->title }}')"
                                     class="w-12 h-12 flex items-center justify-center rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
                                     <i class="fas fa-trash-alt text-sm"></i>

@@ -99,7 +99,7 @@
             </div>
 
             <!-- Media Section -->
-            <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50" x-data="{ preview: '{{ $event->image ? asset('storage/' . $event->image) : '' }}' }">
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50" x-data="{ preview: '{{ $event->image ? $event->image_url : '' }}' }">
                 <div class="flex items-center gap-4 mb-10">
                     <div class="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center text-xl">
                         <i class="fas fa-image"></i>

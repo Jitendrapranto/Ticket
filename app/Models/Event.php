@@ -55,4 +55,19 @@ class Event extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function getImageUrlAttribute()
+    {
+        $image = $this->attributes['image'] ?? null;
+        if (!$image) {
+            return asset('images/placeholder.png'); // Fallback placeholder
+        }
+
+        $image = trim($image);
+        if (str_starts_with($image, 'http')) {
+            return $image;
+        }
+
+        return asset('storage/' . $image);
+    }
 }

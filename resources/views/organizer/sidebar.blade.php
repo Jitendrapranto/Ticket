@@ -5,7 +5,7 @@
     </button>
     <!-- Sidebar Header -->
     <div class="p-8 border-b border-white/5 space-y-10">
-        <a href="/" class="flex justify-center">
+        <a href="{{ route('organizer.dashboard') }}" class="flex justify-center">
             <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-12 w-auto object-contain brightness-0 invert">
         </a>
 
@@ -32,20 +32,20 @@
             </button>
 
             <!-- Profile Dropdown Content -->
-            <div x-show="userOpen" 
+            <div x-show="userOpen"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 translate-y-4"
                  x-transition:enter-end="opacity-100 translate-y-0"
                  @click.away="userOpen = false"
                  class="absolute left-0 right-0 mt-6 bg-[#25375A] rounded-[2rem] border border-white/5 shadow-2xl overflow-hidden py-3 z-50">
-                
+
                 <a href="{{ route('profile') }}" class="flex items-center gap-4 px-6 py-4 text-xs font-bold text-white/70 hover:text-white hover:bg-white/5 transition-all">
                     <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-[10px] text-accent">
                         <i class="fas fa-user-edit"></i>
                     </div>
                     Manage Profile
                 </a>
-                
+
                 <a href="/" target="_blank" class="flex items-center gap-4 px-6 py-4 text-xs font-bold text-white/70 hover:text-white hover:bg-white/5 transition-all">
                     <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-[10px] text-sky-400">
                         <i class="fas fa-external-link-alt"></i>
@@ -130,7 +130,7 @@
                     <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20">
                         <i class="fa-solid fa-hand-holding-usd text-emerald-400"></i>
                     </div>
-                    PaYout
+                    Payout
                 </div>
                 <i class="fa-solid fa-chevron-down text-[10px] transition-all text-white/20" :class="open ? 'rotate-180' : ''"></i>
             </button>
