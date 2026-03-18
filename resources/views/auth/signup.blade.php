@@ -73,29 +73,35 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="{ showPass: false, showConfirm: false }">
                     <div class="space-y-1">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Password</label>
-                        <input name="password" type="password" required 
-                            class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner"
-                            placeholder="••••••••">
+                        <div class="relative">
+                            <input name="password" :type="showPass ? 'text' : 'password'" required 
+                                class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 pl-4 pr-12 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner"
+                                placeholder="••••••••">
+                            <button type="button" @click="showPass = !showPass" 
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-primary transition-colors focus:outline-none">
+                                <i class="fas" :class="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
                         @error('password') <p class="text-[9px] text-red-500 font-bold ml-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Confirm</label>
-                        <input name="password_confirmation" type="password" required 
-                            class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner"
-                            placeholder="••••••••">
+                        <div class="relative">
+                            <input name="password_confirmation" :type="showConfirm ? 'text' : 'password'" required 
+                                class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 pl-4 pr-12 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner"
+                                placeholder="••••••••">
+                            <button type="button" @click="showConfirm = !showConfirm" 
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-primary transition-colors focus:outline-none">
+                                <i class="fas" :class="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-2 pt-2">
-                    <input name="terms" type="checkbox" required
-                        class="w-4 h-4 rounded border-slate-200 text-primary focus:ring-primary/20 mt-0.5">
-                    <label class="text-[10px] text-slate-500 font-medium">
-                        Agree to <a href="#" class="text-primary font-bold hover:underline">Terms</a> & <a href="#" class="text-primary font-bold hover:underline">Privacy</a>
-                    </label>
-                </div>
+
 
                 <button type="submit" class="w-full bg-primary hover:bg-[#3D0851] text-white py-4 rounded-xl font-black text-xs tracking-widest transition-all shadow-xl shadow-primary/10 active:scale-[0.98] uppercase">
                     Create Account

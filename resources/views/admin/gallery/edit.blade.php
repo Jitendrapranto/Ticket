@@ -1,59 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Gallery Asset | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                    boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
+@extends('admin.dashboard')
+
+@section('admin_content')
+<script>
+    function galleryEditForm() {
+        return {
+            preview: @json(str_starts_with($image->image_path, "http") ? $image->image_path : asset("storage/" . $image->image_path)),
+            handleFile(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    if (file.size > 150 * 1024) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Asset Too Large',
+                            text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                            confirmButtonColor: '#520C6B'
+                        });
+                        event.target.value = "";
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.preview = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
                 }
             }
-        }
-    </script>
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus">
-    @include('admin.sidebar')
+        };
+    }
+</script>
+<div x-data="galleryEditForm()">
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <form action="{{ route('admin.gallery.images.update', $image) }}" method="POST" enctype="multipart/form-data"
-              x-data="{
-                  preview: '{{ str_starts_with($image->image_path, 'http') ? $image->image_path : asset('storage/' . $image->image_path) }}',
-                  handleFile(e) {
-                      const file = e.target.files[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (event) => { this.preview = event.target.result; };
-                      reader.readAsDataURL(file);
-                  }
-              }">
+    
+
+    <div class="animate-fadeIn">
+
+
+        <form action="{{ route('admin.gallery.images.update', $image) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            <header class="h-24 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-12 sticky top-0 z-40">
+            <header class="mb-8 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-6">
                     <a href="{{ route('admin.gallery.images.index') }}" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-dark hover:bg-white transition-all border border-slate-100 shadow-sm">
                         <i class="fas fa-arrow-left text-xs"></i>
@@ -204,9 +190,9 @@
                             </div>
                             <div>
                                 <h3 class="font-outfit text-xl font-black text-dark tracking-tight uppercase">Update Visual</h3>
-                                <p class="text-slate-400 text-sm font-medium mt-2">Recommended: 16:9 Aspect • Max 5MB</p>
+                                <p class="text-slate-400 text-sm font-medium mt-2">Recommended: 16:9 Aspect • Max 150KB</p>
                             </div>
-                            <button type="button" @click="document.getElementById('imageInput').click()" class="bg-primary-dark text-white px-10 py-5 rounded-2xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-black transition-all shadow-xl shadow-primary/10">
+                            <button type="button" @click="document.getElementById('imageInput').click()" class="bg-primary text-white px-10 py-5 rounded-2xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-black transition-all shadow-xl shadow-primary/10">
                                 <i class="fas fa-folder-open mr-3"></i> Replace Asset
                             </button>
                         </div>
@@ -224,5 +210,6 @@
             </main>
         </form>
     </div>
-</body>
-</html>
+
+</div>
+@endsection

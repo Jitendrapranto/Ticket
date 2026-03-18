@@ -70,4 +70,24 @@ class Event extends Model
 
         return asset('storage/' . $image);
     }
+
+    /**
+     * Get total available tickets across all ticket types.
+     */
+    public function getTotalAvailableTicketsAttribute()
+    {
+        return $this->ticketTypes->sum('quantity');
+    }
+
+    /**
+     * Check if the event is sold out (all ticket types have 0 quantity).
+     */
+    public function getIsSoldOutAttribute()
+    {
+        // If no ticket types exist, not sold out
+        if ($this->ticketTypes->isEmpty()) {
+            return false;
+        }
+        return $this->total_available_tickets <= 0;
+    }
 }

@@ -9,63 +9,7 @@
             <img loading="lazy" src="{{ asset('Blue_Simple_Technology_Logo.png') }}" alt="Logo" class="h-12 w-auto object-contain brightness-0 invert">
         </a>
 
-        <div x-data="{ userOpen: false }" class="relative w-full">
-            <button type="button" @click.stop="userOpen = !userOpen" class="w-full flex flex-col items-center gap-6 group focus:outline-none cursor-pointer">
-                <div class="relative">
-                    <div class="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-primary to-accent p-0.5 shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                        <div class="w-full h-full rounded-[1.8rem] bg-[#1B2B46] flex items-center justify-center overflow-hidden border-2 border-[#1B2B46]">
-                            @if(auth()->user()->avatar)
-                                <img loading="lazy" src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
-                            @else
-                                <i class="fas fa-user-tie text-slate-400 text-2xl"></i>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-accent text-white flex items-center justify-center shadow-lg border-2 border-[#1B2B46] group-hover:bg-primary transition-colors">
-                        <i class="fas fa-chevron-down text-[8px] transition-transform" :class="userOpen ? 'rotate-180' : ''"></i>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <h4 class="text-white font-black text-sm tracking-tight group-hover:text-amber-400 transition-colors leading-none mb-1.5">{{ auth()->user()->name }}</h4>
-                    <p class="text-[8px] font-black tracking-[0.4em] text-accent uppercase">Organizer Account</p>
-                </div>
-            </button>
 
-            <!-- Profile Dropdown Content -->
-            <div x-show="userOpen"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-4"
-                 x-transition:enter-end="opacity-100 translate-y-0"
-                 @click.away="userOpen = false"
-                 class="absolute left-0 right-0 mt-6 bg-[#25375A] rounded-[2rem] border border-white/5 shadow-2xl overflow-hidden py-3 z-50">
-
-                <a href="{{ route('profile') }}" class="flex items-center gap-4 px-6 py-4 text-xs font-bold text-white/70 hover:text-white hover:bg-white/5 transition-all">
-                    <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-[10px] text-accent">
-                        <i class="fas fa-user-edit"></i>
-                    </div>
-                    Manage Profile
-                </a>
-
-                <a href="/" target="_blank" class="flex items-center gap-4 px-6 py-4 text-xs font-bold text-white/70 hover:text-white hover:bg-white/5 transition-all">
-                    <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-[10px] text-sky-400">
-                        <i class="fas fa-external-link-alt"></i>
-                    </div>
-                    Live Preview
-                </a>
-
-                <div class="mt-2 pt-2 border-t border-white/5 px-2">
-                    <button @click="document.getElementById('logout-form-sidebar').submit()" class="w-full flex items-center gap-4 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all group/logout">
-                        <div class="w-8 h-8 rounded-xl bg-red-500/20 flex items-center justify-center text-[10px] group-hover/logout:bg-white/20">
-                            <i class="fas fa-power-off"></i>
-                        </div>
-                        <span class="font-black uppercase tracking-widest text-[9px]">Sign Out</span>
-                    </button>
-                    <form id="logout-form-sidebar" action="{{ route('organizer.logout') }}" method="POST" class="hidden">
-                        @csrf
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Navigation Menu -->

@@ -7,16 +7,25 @@
         <div>
             <div class="flex items-center gap-4 mb-3">
                 <a href="{{ route('admin.finance.payment-methods.index') }}" class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-slate-400 hover:text-primary transition-colors border border-slate-100 shadow-sm">
-                    <i class="fas fa-arrow-left text-[10px]"></i>
+                    <i class="fas fa-arrow-left"></i>
                 </a>
-                <span class="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em]">Finance / Checkout</span>
+                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Edit <span class="text-primary italic">Gateway</span></h2>
             </div>
-            <h1 class="text-3xl font-black text-dark italic tracking-tighter">Edit <span class="text-primary underline decoration-primary/10 decoration-8 underline-offset-8">Gateway</span></h1>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-14">Update manual payment method</p>
         </div>
     </div>
 
-    <!-- Form -->
-    <form id="payment-form" action="{{ route('admin.finance.payment-methods.update', $paymentMethod->id) }}" method="POST" enctype="multipart/form-data" class="max-w-4xl">
+    @if($errors->any())
+    <div class="mb-8 bg-brand-red/10 border border-brand-red/20 text-brand-red px-6 py-4 rounded-2xl text-[10px] font-bold tracking-widest uppercase">
+        <ul class="list-disc list-inside space-y-1">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    <form action="{{ route('admin.finance.payment-methods.update', $paymentMethod->id) }}" method="POST" enctype="multipart/form-data" id="payment-form">
         @csrf
         @method('PUT')
         <div class="bg-white border border-white rounded-[3rem] p-12 space-y-10 shadow-premium">
@@ -109,9 +118,14 @@
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmUpdate() {
+        var form = document.getElementById('payment-form');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
         Swal.fire({
             title: 'Update Gateway?',
             text: "All live users will see the updated instructions immediately.",
@@ -128,7 +142,7 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('payment-form').submit();
+                form.submit();
             }
         })
     }

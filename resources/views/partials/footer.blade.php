@@ -113,18 +113,10 @@
             </div>
         </div>
 
-        <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-white/20 text-[10px] font-black">N</div>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-loose">
-                    {{ $fCopyright }}
-                </p>
-            </div>
-            <div class="flex gap-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                <a href="{{ $fPrivacy }}" class="hover:text-white transition-colors">Privacy</a>
-                <a href="{{ $fTerms }}" class="hover:text-white transition-colors">Terms</a>
-                <a href="{{ $fCookies }}" class="hover:text-white transition-colors">Cookies</a>
-            </div>
+        <div class="pt-12 border-t border-white/5 flex justify-center text-center">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-loose">
+                {{ $fCopyright }}
+            </p>
         </div>
     </div>
 </footer>

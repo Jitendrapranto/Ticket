@@ -24,7 +24,7 @@ class ProfileController extends Controller
             'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users,email,' . $user->id, 'regex:/^.+@.+\..+$/'],
             'phone' => 'nullable|string|max:20',
             'present_address' => 'nullable|string|max:500',
-            'avatar' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'avatar' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp|max:150',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 

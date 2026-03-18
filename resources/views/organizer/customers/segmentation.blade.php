@@ -115,9 +115,6 @@
                                                     }
                                                 }
                                             }
-                                            if (!$customerPhoto && $attendee->booking->user && $attendee->booking->user->profile_picture) {
-                                                $customerPhoto = asset('storage/' . $attendee->booking->user->profile_picture);
-                                            }
                                             $initials = substr($attendee->name && $attendee->name !== 'Self' ? $attendee->name : ($attendee->booking->user->name ?? 'U'), 0, 1);
                                         @endphp
                                         @if($customerPhoto)

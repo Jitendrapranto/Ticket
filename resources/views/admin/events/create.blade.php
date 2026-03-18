@@ -122,7 +122,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-4">
                             <label class="form-label">Event ID</label>
-                            <input type="text" value="{{ 'EVP-'.strtoupper(Str::random(6)) }}" readonly class="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-slate-400 font-bold text-sm cursor-not-allowed">
+                            <input type="text" value="Auto-generated on save" readonly class="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-slate-400 font-bold text-sm cursor-not-allowed">
                         </div>
                         <div class="space-y-4">
                             <label class="form-label">Event Name</label>
@@ -256,8 +256,14 @@
                             const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
                             this.imageMeta.size = sizeMB;
 
-                            if (sizeMB > 5) {
-                                this.imageError = 'File size (' + sizeMB + 'MB) exceeds the 5MB limit';
+                            if (sizeMB > 0.15) {
+                                this.imageError = 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit';
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Asset Too Large',
+                                    text: this.imageError,
+                                    confirmButtonColor: '#520C6B'
+                                });
                                 this.preview = null;
                                 e.target.value = '';
                                 return;
@@ -287,7 +293,7 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="form-label">Event Banner</label>
-                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • < 5MB</span>
+                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • < 150KB</span>
                             </div>
 
                             <div class="flex gap-4">

@@ -21,42 +21,42 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <!-- Total Audience -->
-        <div class="bg-gradient-to-br from-sky-500 to-indigo-600 p-8 rounded-[2rem] shadow-xl shadow-sky-500/20 flex items-center justify-between group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
-            <div class="relative z-10">
-                <p class="text-[10px] font-black text-white/60 uppercase tracking-widest mb-4">Unique Customers</p>
-                <h3 class="text-4xl font-outfit font-black text-white tracking-tighter mb-1">{{ number_format($totalCustomers) }}</h3>
-                <p class="text-[11px] font-bold text-sky-200">Direct Reach</p>
+        <div class="bg-gradient-to-br from-sky-500 to-indigo-600 py-8 px-6 rounded-[2rem] shadow-xl shadow-sky-500/20 group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden h-40 flex flex-col justify-center">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+            <div class="flex items-center gap-4 mb-2 relative z-10 overflow-hidden">
+                <div class="shrink-0 w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white text-xl">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <h3 class="font-outfit text-3xl font-black text-white tracking-tighter truncate" title="{{ number_format($totalCustomers) }}">{{ number_format($totalCustomers) }}</h3>
             </div>
-            <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-all relative z-10 backdrop-blur-md">
-                <i class="fas fa-user-friends"></i>
-            </div>
+            <p class="text-[10px] font-black text-white/80 uppercase tracking-widest relative z-10">Unique Customers</p>
+            <p class="text-[11px] font-bold text-sky-200 mt-1 relative z-10">Direct Reach</p>
         </div>
 
         <!-- Total Bookings -->
-        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-8 rounded-[2rem] shadow-xl shadow-emerald-500/20 flex items-center justify-between group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
-            <div class="relative z-10">
-                <p class="text-[10px] font-black text-white/60 uppercase tracking-widest mb-4">Event Bookings</p>
-                <h3 class="text-4xl font-outfit font-black text-white tracking-tighter mb-1">{{ number_format($totalBookings) }}</h3>
-                <p class="text-[11px] font-bold text-emerald-200 uppercase tracking-widest">Confirmed Seats</p>
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 py-8 px-6 rounded-[2rem] shadow-xl shadow-emerald-500/20 group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden h-40 flex flex-col justify-center">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+            <div class="flex items-center gap-4 mb-2 relative z-10 overflow-hidden">
+                <div class="shrink-0 w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white text-xl">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <h3 class="font-outfit text-3xl font-black text-white tracking-tighter truncate" title="{{ number_format($totalBookings) }}">{{ number_format($totalBookings) }}</h3>
             </div>
-            <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-all relative z-10 backdrop-blur-md">
-                <i class="fas fa-ticket-alt"></i>
-            </div>
+            <p class="text-[10px] font-black text-white/80 uppercase tracking-widest relative z-10">Event Bookings</p>
+            <p class="text-[11px] font-bold text-emerald-200 uppercase tracking-widest mt-1 relative z-10">Confirmed Seats</p>
         </div>
 
         <!-- Avg. Lifetime Value -->
-        <div class="bg-gradient-to-br from-orange-400 to-amber-600 p-8 rounded-[2rem] shadow-xl shadow-orange-500/20 flex items-center justify-between group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
-            <div class="relative z-10">
-                <p class="text-[10px] font-black text-white/60 uppercase tracking-widest mb-4">Audience Value (LTV)</p>
-                <h3 class="text-4xl font-outfit font-black text-white tracking-tighter mb-1">৳{{ number_format($averageLTV, 2) }}</h3>
-                <p class="text-[11px] font-bold text-orange-200 uppercase tracking-tight">Avg per customer</p>
+        <div class="bg-gradient-to-br from-orange-400 to-amber-600 py-8 px-6 rounded-[2rem] shadow-xl shadow-orange-500/20 group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden h-40 flex flex-col justify-center">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+            <div class="flex items-center gap-4 mb-2 relative z-10 overflow-hidden">
+                <div class="shrink-0 w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white text-xl">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3 class="font-outfit text-2xl md:text-3xl font-black text-white tracking-tighter truncate" title="৳{{ number_format($averageLTV, 2) }}">৳{{ number_format($averageLTV, 2) }}</h3>
             </div>
-            <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-all relative z-10 backdrop-blur-md">
-                <i class="fas fa-chart-pie"></i>
-            </div>
+            <p class="text-[10px] font-black text-white/80 uppercase tracking-widest relative z-10">Audience Value (LTV)</p>
+            <p class="text-[11px] font-bold text-orange-200 uppercase tracking-tight mt-1 relative z-10">Avg per customer</p>
         </div>
     </div>
 

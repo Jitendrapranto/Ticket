@@ -1,41 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Map Section | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus">
-    @include('admin.sidebar')
+@extends('admin.dashboard')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
+@section('admin_content')
+<div>
+
+    
+
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
             <div>
                 <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Contact Map Section</h2>
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"><a href="#" class="hover:text-primary">Contact Page</a> / Edit Map Content</p>
@@ -140,5 +111,6 @@
             </form>
         </main>
     </div>
-</body>
-</html>
+
+</div>
+@endsection

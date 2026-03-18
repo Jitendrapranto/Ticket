@@ -11,7 +11,7 @@
         <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
             <h1 class="font-outfit text-4xl md:text-6xl lg:text-8xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter">
                 {{ $hero->title_main ?? 'The Story' }}<br>
-                <span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Behind Kinun.' }}</span>
+                <span class="text-[#FFE700] tracking-normal">{{ $hero->title_accent ?? 'Behind Kinun.' }}</span>
             </h1>
             <p class="text-slate-400 text-sm md:text-lg lg:text-xl mb-8 md:mb-12 max-w-2xl mx-auto font-light leading-relaxed px-2">
                 {{ $hero->subtitle ?? 'We are a passionate team dedicated to transforming the way the world experiences live events.' }}

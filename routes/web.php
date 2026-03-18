@@ -48,10 +48,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class , 'show'])->name('events.booking');
         Route::post('/events/{slug}/booking', [\App\Http\Controllers\BookingController::class , 'process'])->name('events.booking.process');
         Route::get('/checkout/{booking_id}', [\App\Http\Controllers\BookingController::class , 'checkout'])->name('events.checkout');
-        Route::post('/checkout/complete/{booking_id}', [\App\Http\Controllers\BookingController::class , 'complete'])->name('events.checkout.complete');    });
+        Route::post('/checkout/complete/{booking_id}', [\App\Http\Controllers\BookingController::class , 'complete'])->name('events.checkout.complete');
+    });
 
 Route::get('/', function () {
-    $featuredEvents = Event::with('category')
+    $featuredEvents = Event::with(['category', 'ticketTypes'])
         ->select('id', 'category_id', 'title', 'slug', 'image', 'date', 'location', 'price', 'status', 'is_approved', 'is_featured', 'sort_order', 'created_at')
         ->where('status', 'Live')
         ->where('is_approved', true)
@@ -70,7 +71,7 @@ Route::get('/', function () {
         }
         );
 
-        $upcomingEvents = Event::with('category')
+        $upcomingEvents = Event::with(['category', 'ticketTypes'])
             ->select('id', 'category_id', 'title', 'slug', 'image', 'date', 'location', 'price', 'status', 'is_approved', 'sort_order', 'created_at')
             ->where('is_approved', true)
             ->where('status', 'Live')
@@ -79,14 +80,15 @@ Route::get('/', function () {
             ->take(6)->get();
         $pastEvents = Event::with('category')
             ->select('id', 'category_id', 'title', 'slug', 'image', 'date', 'location', 'price', 'status', 'is_approved', 'created_at')
-            ->where('is_approved', true)->where('date', '<', now())->orderBy('date', 'desc')->take(12)->get();
+            ->where('is_approved', true)->where('status', 'Live')->where('date', '<', now())->orderBy('date', 'desc')->take(12)->get();
         $eventCategories = EventCategory::all();
         $platformFeatures = PlatformFeature::active()->orderBy('sort_order')->get();
         $gallerySection = HomeGallerySection::first();
-        $homepageGalleryImages = GalleryImage::with('category')->homepage()->orderBy('homepage_sort_order')->latest()->get();
+        $homepageGalleryImages = GalleryImage::with('category')->homepage()->orderBy('homepage_sort_order')->latest()->take(5)->get();
         $ctaSection = HomeCtaSection::first();
 
-        return view('home', compact('featuredEvents', 'upcomingEvents', 'slideData', 'pastEvents', 'eventCategories', 'platformFeatures', 'gallerySection', 'homepageGalleryImages', 'ctaSection'));    });
+        return view('home', compact('featuredEvents', 'upcomingEvents', 'slideData', 'pastEvents', 'eventCategories', 'platformFeatures', 'gallerySection', 'homepageGalleryImages', 'ctaSection'));
+    });
 
 Route::get('/events', function (\Illuminate\Http\Request $request) {
     $hero = EventHero::first();
@@ -103,7 +105,7 @@ Route::get('/events', function (\Illuminate\Http\Request $request) {
             ->orderBy('sort_order', 'asc')
             ->latest()->take(3)->get();
 
-        $eventsQuery = Event::with('category')
+        $eventsQuery = Event::with(['category', 'ticketTypes'])
             ->where('status', 'Live')
             ->where('is_approved', true)
             ->where('date', '>=', now());
@@ -127,14 +129,21 @@ Route::get('/events', function (\Illuminate\Http\Request $request) {
             ->latest()->paginate(12)
             ->appends(['search' => $search]);
 
-        return view('events', compact('hero', 'categories', 'events', 'featuredEvents', 'search'));    })->name('events');
+        return view('events', compact('hero', 'categories', 'events', 'featuredEvents', 'search'));
+    })->name('events');
 
 Route::get('/events/{slug}', function ($slug) {
     $event = Event::with(['category', 'ticketTypes'])
         ->where('slug', $slug)
-        ->where('is_approved', true)
-        ->where('date', '>=', now())
         ->firstOrFail();
+
+    $isActive = $event->is_approved && $event->date >= now();
+    $isOwner = \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::id() === $event->user_id;
+    $isAdmin = \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->role === 'admin';
+
+    if (!$isActive && !$isOwner && !$isAdmin) {
+        abort(404);
+    }
 
     $relatedEvents = Event::with('category')
         ->where('category_id', $event->category_id)
@@ -173,7 +182,7 @@ Route::get('/contact', function () {
     return view('contact', compact('hero', 'cards', 'formContent', 'support', 'map'));
 })->name('contact');
 
-Route::post('/contact', [\App\Http\Controllers\ContactMessageController::class, 'store'])->name('contact.store');
+Route::post('/contact', [\App\Http\Controllers\ContactMessageController::class , 'store'])->name('contact.store');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Admin Guest Auth
@@ -260,6 +269,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             Route::get('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class , 'index'])->name('finance.commission.index');
             Route::post('/finance/commission', [\App\Http\Controllers\Admin\CommissionController::class , 'update'])->name('finance.commission.update');
+            Route::post('/finance/commission/overrides', [\App\Http\Controllers\Admin\CommissionController::class , 'storeOverride'])->name('finance.commission.overrides.store');
+            Route::put('/finance/commission/overrides/{override}', [\App\Http\Controllers\Admin\CommissionController::class , 'updateOverride'])->name('finance.commission.overrides.update');
+            Route::delete('/finance/commission/overrides/{override}', [\App\Http\Controllers\Admin\CommissionController::class , 'destroyOverride'])->name('finance.commission.overrides.destroy');
             Route::resource('finance/payment-methods', \App\Http\Controllers\Admin\PaymentMethodController::class)->names('finance.payment-methods');
             Route::get('/finance/reports/sales', [\App\Http\Controllers\Admin\ReportController::class , 'sales'])->name('finance.reports.sales');
             Route::get('/finance/reports/sales/export', [\App\Http\Controllers\Admin\ReportController::class , 'exportSales'])->name('finance.reports.sales.export');
@@ -268,6 +280,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/finance/bookings/{id}', [\App\Http\Controllers\Admin\BookingController::class , 'show'])->name('finance.bookings.show');
             Route::post('/finance/bookings/{id}/approve', [\App\Http\Controllers\Admin\BookingController::class , 'approve'])->name('finance.bookings.approve');
             Route::post('/finance/bookings/{id}/reject', [\App\Http\Controllers\Admin\BookingController::class , 'reject'])->name('finance.bookings.reject');
+            Route::delete('/finance/bookings/{id}', [\App\Http\Controllers\Admin\BookingController::class , 'destroy'])->name('finance.bookings.destroy');
 
             // Site Header & Footer
             Route::get('/site/header', [\App\Http\Controllers\Admin\SiteHeaderController::class , 'edit'])->name('site.header.edit');
@@ -287,7 +300,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/payout/{id}/approve', [\App\Http\Controllers\Admin\PayoutController::class , 'approve'])->name('payout.approve');
             Route::post('/payout/{id}/reject', [\App\Http\Controllers\Admin\PayoutController::class , 'reject'])->name('payout.reject');
         }
-        );    });
+        );
+    });
 
 Route::prefix('organizer')->name('organizer.')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Organizer\AuthController::class , 'showLoginForm'])->name('login');
@@ -322,7 +336,8 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
             // Scanner Management
             Route::resource('scanners', \App\Http\Controllers\Organizer\ScannerController::class);
         }
-        );    });
+        );
+    });
 
 Route::prefix('scanner')->name('scanner.')->group(function () {
     Route::middleware(['auth', 'scanner'])->group(function () {
@@ -333,4 +348,5 @@ Route::prefix('scanner')->name('scanner.')->group(function () {
 
             Route::get('/manual-checkin', [\App\Http\Controllers\Scanner\ScannerController::class , 'showManualCheckin'])->name('manual-checkin');
         }
-        );    });
+        );
+    });

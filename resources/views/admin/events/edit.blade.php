@@ -42,7 +42,7 @@
 
     <div class="lg:ml-72 min-h-screen flex flex-col">
         <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" x-data="{
-            tickets: {{ $event->ticketTypes->map(fn($t) => ['name' => $t->name, 'price' => $t->price, 'quantity' => $t->quantity])->toJson() }},
+            tickets: {{ $event->ticketTypes->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'price' => $t->price, 'quantity' => $t->quantity])->toJson() }},
             artists: {{ json_encode($event->artists ?? []) }}.map(a => ({
                 name: a.name || '',
                 role: a.role || '',
@@ -50,12 +50,12 @@
                 preview: a.image ? '{{ asset('storage') }}/' + a.image : null,
                 imageName: a.image ? a.image.split('/').pop() : ''
             })),
-            formFields: {{ json_encode($event->formFields->where('is_default', false)->map(fn($f) => ['label' => $f->label, 'type' => $f->type, 'options' => $f->options ?? [], 'is_required' => $f->is_required])->values()) }},
-            addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
+            formFields: {{ json_encode($event->formFields->where('is_default', false)->map(fn($f) => ['id' => $f->id, 'label' => $f->label, 'type' => $f->type, 'options' => $f->options ?? [], 'is_required' => $f->is_required])->values()) }},
+            addTicket() { this.tickets.push({ id: null, name: '', price: '', quantity: '' }) },
             removeTicket(index) { this.tickets.splice(index, 1) },
             addArtist() { this.artists.push({ name: '', role: '', image: '', preview: null, imageName: '' }) },
             removeArtist(index) { this.artists.splice(index, 1) },
-            addFormField() { this.formFields.push({ label: '', type: 'text', options: [], is_required: false }) },
+            addFormField() { this.formFields.push({ id: null, label: '', type: 'text', options: [], is_required: false }) },
             removeFormField(index) { this.formFields.splice(index, 1) },
             addOption(fieldIndex) { this.formFields[fieldIndex].options.push('') },
             removeOption(fieldIndex, optIndex) { this.formFields[fieldIndex].options.splice(optIndex, 1) }
@@ -129,7 +129,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-4">
                             <label class="form-label">Event ID</label>
-                            <input type="text" value="EVP-{{ strtoupper($event->slug) }}" readonly class="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-slate-400 font-bold text-sm cursor-not-allowed">
+                            <input type="text" value="{{ $event->event_code }}" readonly class="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-slate-400 font-bold text-sm cursor-not-allowed">
                         </div>
                         <div class="space-y-4">
                             <label class="form-label">Event Name</label>
@@ -263,8 +263,14 @@
                             const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
                             this.imageMeta.size = sizeMB;
 
-                            if (sizeMB > 5) {
-                                this.imageError = 'File size (' + sizeMB + 'MB) exceeds the 5MB limit';
+                            if (sizeMB > 0.15) {
+                                this.imageError = 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit';
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Asset Too Large',
+                                    text: this.imageError,
+                                    confirmButtonColor: '#520C6B'
+                                });
                                 this.preview = null;
                                 e.target.value = '';
                                 return;
@@ -294,7 +300,7 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <label class="form-label">Update Banner</label>
-                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • Max 5MB</span>
+                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Recommended: 1280x720px • Max 150KB</span>
                             </div>
 
                             <div class="flex gap-4">
@@ -422,6 +428,7 @@
                     <div class="space-y-4">
                         <template x-for="(ticket, index) in tickets" :key="index">
                             <div class="grid grid-cols-12 gap-6 items-end group animate-fadeInUp">
+                                <input type="hidden" :name="'tickets['+index+'][id]'" x-model="ticket.id">
                                 <div class="col-span-12 md:col-span-5 space-y-3">
                                     <label class="form-label text-[10px]">Tier Name</label>
                                     <input type="text" :name="'tickets['+index+'][name]'" x-model="ticket.name" required class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none text-sm font-bold opacity-80 focus:opacity-100 transition-all shadow-inner">
@@ -486,6 +493,7 @@
                         <div class="space-y-4">
                             <template x-for="(field, index) in formFields" :key="index">
                                 <div class="bg-slate-50/30 border border-slate-100 rounded-2xl p-6 group animate-fadeInUp relative">
+                                    <input type="hidden" :name="'formFields['+index+'][id]'" x-model="field.id">
                                     <button type="button" @click="removeFormField(index)" class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white border border-red-100 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm">
                                         <i class="fas fa-times text-[10px]"></i>
                                     </button>

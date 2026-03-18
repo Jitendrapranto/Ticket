@@ -45,7 +45,7 @@
                     <a href="{{ route('admin.finance.payment-methods.edit', $method->id) }}" class="flex-1 bg-slate-50 hover:bg-primary hover:text-white text-dark py-4 rounded-2xl font-black text-[9px] tracking-widest uppercase transition-all text-center italic shadow-sm">
                         Edit Settings
                     </a>
-                    <button onclick="confirmDelete({{ $method->id }})" class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all border border-rose-100 shadow-sm">
+                    <button type="button" onclick="confirmDelete('delete-form-{{ $method->id }}', 'Users won\'t be able to pay using this method anymore.')" class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all border border-rose-100 shadow-sm">
                         <i class="fas fa-trash-alt text-[10px]"></i>
                     </button>
                     <form id="delete-form-{{ $method->id }}" action="{{ route('admin.finance.payment-methods.destroy', $method->id) }}" method="POST" class="hidden">
@@ -69,30 +69,7 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'Delete Gateway?',
-            text: "Users won't be able to pay using this method anymore.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#F43F5E',
-            cancelButtonColor: '#94A3B8',
-            confirmButtonText: 'Yes, Delete it!',
-            background: '#ffffff',
-            color: '#1e293b',
-            customClass: {
-                popup: 'rounded-[2rem] border border-slate-100 shadow-2xl',
-                confirmButton: 'rounded-2xl px-8 py-4 font-black uppercase tracking-widest text-[10px]',
-                cancelButton: 'rounded-2xl px-8 py-4 font-black uppercase tracking-widest text-[10px]'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form-' + id).submit();
-            }
-        })
-    }
 
     @if(session('success'))
         Swal.fire({

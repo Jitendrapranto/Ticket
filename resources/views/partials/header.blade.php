@@ -17,7 +17,9 @@
     $curPath = request()->path();
 @endphp
 
-<header style="background-color: #ffffff !important;" class="fixed top-0 left-0 w-full z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
+<div x-data="{ isMobileNavOpen: false, searchOpen: false }">
+    <header style="background-color: #ffffff !important;" 
+            class="fixed top-0 left-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
 
     {{-- ═══════════════════════════════════════
          TOP ROW: Logo · Search · Auth · Burger
@@ -112,22 +114,23 @@
                 @endguest
             </div>
 
-            {{-- Mobile Search Toggle --}}
-            <button id="mobile-search-btn" type="button"
-                    class="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:text-primary hover:bg-primary/10 transition-all">
+            <button @click="searchOpen = !searchOpen" type="button"
+                    class="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl bg-primary/5 text-primary hover:bg-primary/10 transition-all">
                 <i class="fas fa-search text-sm"></i>
             </button>
 
             {{-- ═══════════
-                 BURGER BTN  — visible on all screens < lg
+                 MENU BTN — visible on MOBILE ONLY
             ══════════════ --}}
-            <button id="mobile-menu-btn" type="button"
-                    class="lg:hidden flex flex-col items-center justify-center gap-[5px] w-10 h-10 rounded-xl focus:outline-none transition-all active:scale-95"
-                    style="background: linear-gradient(135deg,#520C6B,#1B2B46); box-shadow: 0 4px 12px rgba(82,12,107,.35);">
-                <span class="block w-5 h-[2px] bg-white rounded-full"></span>
-                <span class="block w-3.5 h-[2px] bg-white/70 rounded-full"></span>
-                <span class="block w-5 h-[2px] bg-white rounded-full"></span>
-            </button>
+            <div class="md:hidden">
+                <button @click="isMobileNavOpen = true" type="button"
+                        class="flex flex-col items-center justify-center gap-[5px] w-10 h-10 rounded-xl focus:outline-none transition-all active:scale-95"
+                        style="background: linear-gradient(135deg,#520C6B,#1B2B46); box-shadow: 0 4px 12px rgba(82,12,107,.35);">
+                    <span class="block w-5 h-[2px] bg-white rounded-full"></span>
+                    <span class="block w-3.5 h-[2px] bg-white/70 rounded-full"></span>
+                    <span class="block w-5 h-[2px] bg-white rounded-full"></span>
+                </button>
+            </div>
 
         </div>
     </div>
@@ -149,28 +152,44 @@
                     @endforeach
                 </ul>
             </nav>
-            @if(!Auth::check() || in_array(Auth::user()->role, ['user']))
-            <a href="{{ route('bookings.index') }}"
+            @guest
+            <a href="{{ route('organizer.register') }}"
                class="inline-flex items-center gap-2 font-black text-[11px] tracking-widest uppercase px-4 py-1.5 rounded-lg hover:opacity-90 transition-all shadow-sm hover:-translate-y-px"
                style="background:#FFE700; color:#4F0B67;">
-                <i class="fas fa-ticket-alt text-[10px]"></i> My Bookings
+                <i class="fas fa-user-tie text-[10px]"></i> Join as a Organizer
             </a>
-            @elseif(Auth::check() && Auth::user()->role === 'pending_organizer')
-            <a href="{{ route('organizer.pending') }}"
-               class="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-1.5 rounded-lg font-black text-[11px] uppercase tracking-widest">
-                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span> Pending
-            </a>
-            @endif
+            @else
+                @if(Auth::user()->role === 'user')
+                <a href="{{ route('bookings.index') }}"
+                   class="inline-flex items-center gap-2 font-black text-[11px] tracking-widest uppercase px-4 py-1.5 rounded-lg hover:opacity-90 transition-all shadow-sm hover:-translate-y-px"
+                   style="background:#FFE700; color:#4F0B67;">
+                    <i class="fas fa-ticket-alt text-[10px]"></i> My Bookings
+                </a>
+                @elseif(Auth::user()->role === 'pending_organizer')
+                <a href="{{ route('organizer.pending') }}"
+                   class="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-1.5 rounded-lg font-black text-[11px] uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span> Pending
+                </a>
+                @endif
+            @endguest
         </div>
     </div>
 
-    {{-- Mobile search bar (toggled) --}}
-    <div id="mobile-search-bar" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 py-3" style="display: none;">
+    {{-- Mobile search bar (toggled via Alpine) --}}
+    <div x-show="searchOpen" 
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-2"
+         class="lg:hidden border-t border-slate-100 bg-white px-4 py-3" 
+         x-cloak>
         <form action="{{ route('events') }}" method="GET" class="relative">
             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="{{ $searchPlaceholder }}"
-                   class="w-full bg-slate-50 border border-slate-200 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+                    class="w-full bg-slate-50 border border-slate-200 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
         </form>
     </div>
 
@@ -179,17 +198,30 @@
 {{-- ═══════════════════════════════════════════════
      MOBILE DRAWER OVERLAY
 ════════════════════════════════════════════════════ --}}
-<div id="mobile-drawer-overlay"
-     class="fixed inset-0 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"
-     style="background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); opacity: 0; pointer-events: none;">
+<div x-show="isMobileNavOpen"
+     @click="isMobileNavOpen = false"
+     x-transition:enter="transition-opacity ease-linear duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition-opacity ease-linear duration-300"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm"
+     x-cloak>
 </div>
 
 {{-- ═══════════════════════════════════════════════
      MOBILE NAVIGATION DRAWER
 ════════════════════════════════════════════════════ --}}
-<div id="mobile-drawer"
-     class="fixed top-0 right-0 h-full z-[70] flex flex-col translate-x-full transition-transform duration-500 ease-in-out overflow-hidden"
-     style="width: min(300px, 88vw); background:#fff; box-shadow: -8px 0 40px rgba(0,0,0,0.2); transform: translateX(100%);">
+<div x-show="isMobileNavOpen"
+     x-transition:enter="transition ease-in-out duration-500 transform"
+     x-transition:enter-start="translate-x-full"
+     x-transition:enter-end="translate-x-0"
+     x-transition:leave="transition ease-in-out duration-500 transform"
+     x-transition:leave-start="translate-x-0"
+     x-transition:leave-end="translate-x-full"
+     class="fixed top-0 right-0 h-full z-[70] flex flex-col w-[280px] bg-white shadow-2xl"
+     x-cloak>
 
     {{-- Drawer Header --}}
     <div class="relative flex items-center justify-between px-5 py-4 overflow-hidden flex-shrink-0"
@@ -208,7 +240,7 @@
             </div>
         </div>
 
-        <button id="close-drawer" type="button"
+        <button @click="isMobileNavOpen = false" type="button"
                 class="relative w-9 h-9 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all focus:outline-none">
             <i class="fas fa-xmark text-base"></i>
         </button>
@@ -238,6 +270,7 @@
                         : str_starts_with($curPath, $item['match']);
                 @endphp
                 <a href="{{ $item['href'] }}"
+                   @click="isMobileNavOpen = false"
                    class="flex items-center gap-3 px-3 py-3 rounded-2xl font-bold text-sm transition-all group"
                    @if($isActive)
                        style="background:linear-gradient(135deg,#520C6B,#1B2B46); color:#fff;"
@@ -258,6 +291,29 @@
                 </a>
             @endforeach
 
+            {{-- Categories section --}}
+            @if(isset($activeCategories) && $activeCategories->count() > 0)
+                <div class="pt-6 pb-2">
+                    <p class="text-[9px] font-black tracking-[0.3em] text-slate-400 uppercase px-3 pb-3">Categories</p>
+                    <div class="grid grid-cols-2 gap-2 px-1">
+                        @foreach($activeCategories->take(8) as $cat)
+                        <a href="{{ route('events', ['search' => $cat->name]) }}"
+                           @click="isMobileNavOpen = false"
+                           class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-primary/30 hover:bg-primary/5 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm mb-2 group-hover:scale-110 transition-all">
+                                @if($cat->icon)
+                                    <i class="{{ $cat->icon }} text-primary text-sm"></i>
+                                @else
+                                    <i class="fas fa-shapes text-slate-300 text-sm"></i>
+                                @endif
+                            </div>
+                            <span class="text-[9px] font-black uppercase tracking-wider text-slate-600 group-hover:text-primary text-center truncate w-full">{{ $cat->name }}</span>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             {{-- Divider --}}
             <div class="border-t border-slate-100 my-4 mx-2"></div>
 
@@ -275,10 +331,10 @@
                        style="background:linear-gradient(135deg,#520C6B,#1B2B46);">
                         <i class="fas fa-user-plus text-xs"></i> Sign Up Free
                     </a>
-                    <a href="{{ route('bookings.index') }}"
+                    <a href="{{ route('organizer.register') }}"
                        class="flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all"
                        style="background:#FFE700; color:#4F0B67;">
-                        <i class="fas fa-ticket-alt text-xs"></i> My Bookings
+                        <i class="fas fa-user-tie text-xs"></i> Join as a Organizer
                     </a>
                 </div>
             @else
@@ -297,12 +353,33 @@
 
                 <div class="space-y-1 px-1">
                     <a href="{{ route('profile') }}"
+                       @click="isMobileNavOpen = false"
                        class="flex items-center gap-3 px-3 py-3 rounded-2xl text-slate-600 font-bold text-sm hover:bg-primary/5 hover:text-primary transition-all group">
                         <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-all">
                             <i class="fas fa-user-circle text-sm text-slate-400 group-hover:text-primary"></i>
                         </span>
                         My Profile
                     </a>
+
+                    @if(Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}"
+                       @click="isMobileNavOpen = false"
+                       class="flex items-center gap-3 px-3 py-3 rounded-2xl text-slate-600 font-bold text-sm hover:bg-primary/5 hover:text-primary transition-all group">
+                        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-all">
+                            <i class="fas fa-gauge-high text-sm text-slate-400 group-hover:text-primary"></i>
+                        </span>
+                        Admin Dashboard
+                    </a>
+                    @elseif(Auth::user()->role === 'organizer')
+                    <a href="{{ route('organizer.dashboard') }}"
+                       @click="isMobileNavOpen = false"
+                       class="flex items-center gap-3 px-3 py-3 rounded-2xl text-slate-600 font-bold text-sm hover:bg-primary/5 hover:text-primary transition-all group">
+                        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-all">
+                            <i class="fas fa-gauge-high text-sm text-slate-400 group-hover:text-primary"></i>
+                        </span>
+                        Organizer Dashboard
+                    </a>
+                    @endif
                     @if(!in_array(Auth::user()->role, ['organizer','admin','pending_organizer']))
                     <a href="{{ route('bookings.index') }}"
                        class="flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all"
@@ -327,6 +404,36 @@
                 </div>
             @endguest
 
+            {{-- Social & Contact info --}}
+            @php $sf = \App\Models\SiteFooter::first(); @endphp
+            @if($sf)
+                <div class="border-t border-slate-100 my-6 mx-2"></div>
+                
+                <p class="text-[9px] font-black tracking-[0.3em] text-slate-400 uppercase px-3 pb-3">Stay Connected</p>
+                <div class="flex gap-3 px-3 pb-6">
+                    @if($sf->facebook_url)<a href="{{ $sf->facebook_url }}" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-[#1877F2] hover:text-white transition-all"><i class="fab fa-facebook-f text-sm"></i></a>@endif
+                    @if($sf->twitter_url)<a href="{{ $sf->twitter_url }}" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-[#1DA1F2] hover:text-white transition-all"><i class="fab fa-twitter text-sm"></i></a>@endif
+                    @if($sf->instagram_url)<a href="{{ $sf->instagram_url }}" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-[#E4405F] hover:text-white transition-all"><i class="fab fa-instagram text-sm"></i></a>@endif
+                    @if($sf->linkedin_url)<a href="{{ $sf->linkedin_url }}" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-[#0A66C2] hover:text-white transition-all"><i class="fab fa-linkedin-in text-sm"></i></a>@endif
+                </div>
+
+                <p class="text-[9px] font-black tracking-[0.3em] text-slate-400 uppercase px-3 pb-3">Get In Touch</p>
+                <div class="px-3 space-y-4 pb-8">
+                    @if($sf->contact_email)
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center"><i class="fas fa-envelope text-[10px] text-primary"></i></div>
+                        <span class="text-xs font-bold text-slate-500">{{ $sf->contact_email }}</span>
+                    </div>
+                    @endif
+                    @if($sf->contact_address)
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center"><i class="fas fa-map-marker-alt text-[10px] text-primary"></i></div>
+                        <span class="text-xs font-bold text-slate-500">{{ $sf->contact_address }}</span>
+                    </div>
+                    @endif
+                </div>
+            @endif
+
         </div>
     </div>
 
@@ -335,5 +442,5 @@
          style="background:linear-gradient(135deg,rgba(82,12,107,.04),rgba(27,43,70,.04));">
         <p class="text-[9px] font-black text-slate-400 tracking-[0.3em] uppercase">Ticket Kinun &copy; {{ date('Y') }}</p>
     </div>
-
+    </div>
 </div>

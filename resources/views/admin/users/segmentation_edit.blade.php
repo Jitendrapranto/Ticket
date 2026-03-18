@@ -1,47 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Attendee | Ticket Kinun</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+@extends('admin.dashboard')
+
+@section('admin_content')
+<div>
+
+
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        secondary: '#1B2B46',
-                        accent: '#FF7D52',
-                        dark: '#0F172A',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F8FAFC] font-plus text-slate-800">
-
-    @include('admin.sidebar')
-
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40">
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-4">
                 <a href="{{ route('admin.customers.segmentation') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark hover:bg-primary hover:text-white transition-all">
                     <i class="fas fa-arrow-left"></i>
@@ -109,5 +75,6 @@
             </div>
         </main>
     </div>
-</body>
-</html>
+
+</div>
+@endsection

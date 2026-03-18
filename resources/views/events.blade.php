@@ -23,11 +23,6 @@
         <div class="absolute bottom-0 left-0 w-[200px] md:w-[300px] h-[200px] md:h-[300px] bg-accent/5 rounded-full blur-[60px] md:blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
 
         <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center w-full">
-            @if($hero && $hero->badge_text)
-                <div class="inline-block px-5 py-2 rounded-full border border-white/10 bg-white/5 mb-6 md:mb-8 animate-fadeInUp">
-                    <span class="text-blue-400 font-black text-[9px] md:text-[10px] tracking-[0.3em] uppercase">{{ $hero->badge_text }}</span>
-                </div>
-            @endif
 
             <h1 class="font-outfit text-3xl md:text-7xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter max-w-4xl mx-auto">
                 {{ $hero->title ?? 'Find Your Next Experience' }}
@@ -214,9 +209,15 @@
                             <span class="px-3 py-1 bg-black/50 backdrop-blur-md rounded-lg text-[10px] font-bold text-white tracking-tight">
                                 {{ $event->category ? $event->category->name : 'Uncategorized' }}
                             </span>
+                            @if($event->is_sold_out)
+                            <span class="px-3 py-1.5 bg-red-600 backdrop-blur-md rounded-lg text-[10px] font-black text-white tracking-wider uppercase flex items-center gap-1.5 shadow-lg shadow-red-600/30">
+                                <i class="fas fa-ban text-[8px]"></i> Sold Out
+                            </span>
+                            @else
                             <span class="px-3 py-1 bg-black/60 backdrop-blur-md rounded-lg text-[10px] font-bold text-white tracking-tight flex items-center gap-2">
                                 Live Now
                             </span>
+                            @endif
                         </div>
                     </div>
 
@@ -251,9 +252,15 @@
                         <div class="flex-1"></div>
 
                         <!-- Book Now Button -->
+                        @if($event->is_sold_out)
+                        <div class="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] bg-slate-200 text-slate-500 font-black text-xs tracking-[0.2em] uppercase cursor-not-allowed">
+                            <i class="fas fa-ban text-[10px]"></i> Sold Out
+                        </div>
+                        @else
                         <a href="{{ route('events.show', $event->slug) }}" class="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] bg-primary text-white font-black text-xs tracking-[0.2em] uppercase transition-all hover:bg-dark hover:shadow-2xl hover:shadow-primary/20 group/btn">
                             Book Your Seat <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                         </a>
+                        @endif
                     </div>
                 </div>
                 @empty
@@ -308,4 +315,21 @@
         </div>
     </section>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    // Detect manual page reload and reset search
+    window.addEventListener('DOMContentLoaded', function() {
+        const navEntries = performance.getEntriesByType('navigation');
+        if (navEntries.length > 0 && navEntries[0].type === 'reload') {
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('search')) {
+                url.searchParams.delete('search');
+                // Redirect to the same path without search parameters
+                window.location.href = url.pathname;
+            }
+        }
+    });
+</script>
 @endsection

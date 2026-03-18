@@ -6,7 +6,7 @@
 @section('content')
 <div class="p-8 animate-fadeInUp">
     <form action="{{ route('organizer.events.update', $event) }}" method="POST" enctype="multipart/form-data" x-data="{
-        tickets: {{ json_encode($event->ticketTypes->map(fn($t) => ['name' => $t->name, 'price' => $t->price, 'quantity' => $t->quantity])) }},
+        tickets: {{ json_encode($event->ticketTypes->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'price' => $t->price, 'quantity' => $t->quantity])) }},
         artists: {{ json_encode($event->artists ?? []) }}.map(a => ({
             name: a.name || '',
             role: a.role || '',
@@ -14,10 +14,15 @@
             preview: a.image ? '{{ asset('storage') }}/' + a.image : null,
             imageName: a.image ? a.image.split('/').pop() : ''
         })),
-        addTicket() { this.tickets.push({ name: '', price: '', quantity: '' }) },
+        formFields: {{ json_encode($event->formFields->where('is_default', false)->map(fn($f) => ['id' => $f->id, 'label' => $f->label, 'type' => $f->type, 'options' => $f->options ?? [], 'is_required' => $f->is_required])->values()) }},
+        addTicket() { this.tickets.push({ id: null, name: '', price: '', quantity: '' }) },
         removeTicket(index) { this.tickets.splice(index, 1) },
         addArtist() { this.artists.push({ name: '', role: '', image: '', preview: null, imageName: '' }) },
-        removeArtist(index) { this.artists.splice(index, 1) }
+        removeArtist(index) { this.artists.splice(index, 1) },
+        addFormField() { this.formFields.push({ id: null, label: '', type: 'text', options: [], is_required: false }) },
+        removeFormField(index) { this.formFields.splice(index, 1) },
+        addOption(fieldIndex) { this.formFields[fieldIndex].options.push('') },
+        removeOption(fieldIndex, optIndex) { this.formFields[fieldIndex].options.splice(optIndex, 1) }
     }">
         @csrf
         @method('PUT')
@@ -30,7 +35,7 @@
             </div>
             <div class="flex items-center gap-4">
                 <button type="submit" name="status" value="Draft" class="px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-all">Move to Draft</button>
-                <button type="submit" name="status" value="Live" class="bg-primary text-white px-8 py-3.5 rounded-xl text-[10px] font-black tracking-widest hover:bg-primary-dark transition-all uppercase shadow-xl shadow-primary/20 flex items-center gap-3">
+                <button type="submit" name="status" value="Live" class="bg-primary text-white px-8 py-3.5 rounded-xl text-[10px] font-black tracking-widest hover:bg-secondary transition-all uppercase shadow-xl shadow-primary/20 flex items-center gap-3">
                     <i class="fas fa-save text-[10px]"></i> Save Changes
                 </button>
             </div>
@@ -63,7 +68,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Code</label>
-                        <input type="text" name="event_code" value="{{ $event->event_code }}" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none text-primary font-black text-sm tracking-widest shadow-inner">
+                        <input type="text" name="event_code" value="{{ $event->event_code }}" readonly class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none text-primary font-black text-sm cursor-not-allowed tracking-widest shadow-inner">
                     </div>
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Name</label>
@@ -118,7 +123,26 @@
                                 <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Select Banner Photo</p>
                             </div>
                         </template>
-                        <input type="file" name="image" class="absolute inset-0 opacity-0 cursor-pointer" @change="const file = $event.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => preview = e.target.result; reader.readAsDataURL(file); }">
+                        <input type="file" name="image" class="absolute inset-0 opacity-0 cursor-pointer" 
+                            @change="
+                                const file = $event.target.files[0]; 
+                                if(file) { 
+                                    if (file.size > 150 * 1024) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Banner Too Large',
+                                            text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                                            confirmButtonColor: '#ff0000'
+                                        });
+                                        $event.target.value = '';
+                                        preview = null;
+                                        return;
+                                    }
+                                    const reader = new FileReader(); 
+                                    reader.onload = (e) => preview = e.target.result; 
+                                    reader.readAsDataURL(file); 
+                                }
+                            ">
                     </div>
                 </div>
             </div>
@@ -159,6 +183,7 @@
                     <div class="space-y-4">
                         <template x-for="(ticket, index) in tickets" :key="index">
                             <div class="grid grid-cols-12 gap-3 items-end p-2 bg-slate-50/50 rounded-2xl border border-slate-100 animate-fadeInUp">
+                                <input type="hidden" :name="'tickets['+index+'][id]'" x-model="ticket.id">
                                 <div class="col-span-12">
                                     <input type="text" :name="'tickets['+index+'][name]'" x-model="ticket.name" placeholder="Name" class="w-full bg-white px-4 py-3 rounded-xl border border-slate-100 text-xs font-bold">
                                 </div>
@@ -216,7 +241,25 @@
                                     <i class="fas fa-camera text-slate-300 mr-2 group-hover/file:text-primary transition-colors"></i>
                                     <span class="text-[10px] font-bold text-slate-400 truncate" x-text="artist.imageName || (artist.image ? 'Change Photo' : 'Select Artist Photo')"></span>
                                     <input type="file" :name="'artists['+index+'][image]'" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" 
-                                        @change="const file = $event.target.files[0]; if(file) { artist.imageName = file.name; const reader = new FileReader(); reader.onload = (e) => artist.preview = e.target.result; reader.readAsDataURL(file); }">
+                                        @change="
+                                            const file = $event.target.files[0]; 
+                                            if(file) { 
+                                                if (file.size > 150 * 1024) {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Photo Too Large',
+                                                        text: 'Artist photo (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                                                        confirmButtonColor: '#ff0000'
+                                                    });
+                                                    $event.target.value = '';
+                                                    return;
+                                                }
+                                                artist.imageName = file.name; 
+                                                const reader = new FileReader(); 
+                                                reader.onload = (e) => artist.preview = e.target.result; 
+                                                reader.readAsDataURL(file); 
+                                            }
+                                        ">
                                 </label>
                             </div>
                         </div>
@@ -242,10 +285,115 @@
                 </div>
             </div>
 
+            <!-- Registration Form Builder -->
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-premium border border-slate-50">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-outfit text-lg font-black text-dark tracking-tight">Registration Form Builder</h3>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Configure dynamic fields for the booking form.</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="addFormField()" class="bg-secondary text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-lg shadow-black/10">
+                        <i class="fas fa-plus"></i> Add Field
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Default Fields (Static) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 border-b border-dashed border-slate-100">
+                        <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                            <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                            <p class="text-[13px] font-bold text-dark">Name</p>
+                        </div>
+                        <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                            <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                            <p class="text-[13px] font-bold text-dark">Email</p>
+                        </div>
+                        <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                            <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                            <p class="text-[13px] font-bold text-dark">Phone</p>
+                        </div>
+                        <div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 opacity-60">
+                            <span class="text-[10px] font-black text-primary uppercase tracking-tighter block mb-1">Required</span>
+                            <p class="text-[13px] font-bold text-dark">Address</p>
+                        </div>
+                    </div>
+
+                    <!-- Custom Dynamic Fields -->
+                    <div class="space-y-4">
+                        <template x-for="(field, index) in formFields" :key="index">
+                            <div class="bg-slate-50/30 border border-slate-100 rounded-2xl p-6 group animate-fadeInUp relative">
+                                <input type="hidden" :name="'formFields['+index+'][id]'" x-model="field.id">
+                                <button type="button" @click="removeFormField(index)" class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white border border-red-100 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                    <i class="fas fa-times text-[10px]"></i>
+                                </button>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
+                                    <div class="space-y-2">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Field Name</label>
+                                        <input type="text" x-model="field.label" placeholder="e.g. Identity Card Number" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 outline-none text-[13px] font-bold focus:border-primary/30 transition-all">
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Field Type</label>
+                                        <select x-model="field.type" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 outline-none text-[13px] font-bold focus:border-primary/30 transition-all cursor-pointer">
+                                            <option value="text">Text Input</option>
+                                            <option value="email">Email Input</option>
+                                            <option value="number">Number Input</option>
+                                            <option value="select">Dropdown Menu</option>
+                                            <option value="textarea">Long Text / Textarea</option>
+                                            <option value="date">Date Picker</option>
+                                            <option value="checkbox">Single Checkbox</option>
+                                            <option value="file">File Upload</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Required?</label>
+                                        <div class="flex items-center h-[46px]">
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" x-model="field.is_required" class="sr-only peer">
+                                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Options for Dropdown -->
+                                    <div class="md:col-span-3 lg:col-span-1 space-y-2" x-show="field.type === 'select'">
+                                        <div class="flex items-center justify-between">
+                                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Options</label>
+                                            <button type="button" @click="addOption(index)" class="text-[9px] font-black text-primary uppercase">+ Add</button>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <template x-for="(opt, optIndex) in field.options" :key="optIndex">
+                                                <div class="flex gap-2">
+                                                    <input type="text" x-model="field.options[optIndex]" placeholder="Option val" class="flex-1 bg-white border border-slate-100 rounded-lg py-1.5 px-3 outline-none text-[11px] font-bold">
+                                                    <button type="button" @click="removeOption(index, optIndex)" class="text-red-400"><i class="fas fa-trash-alt text-[9px]"></i></button>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div x-show="formFields.length === 0" class="text-center py-12 bg-slate-50/50 rounded-[2.5rem] border-2 border-dashed border-slate-100">
+                        <i class="fas fa-wand-magic-sparkles text-2xl text-slate-200 mb-3 block"></i>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Add custom fields to build your form</p>
+                    </div>
+                </div>
+                <input type="hidden" name="form_fields_raw" :value="JSON.stringify(formFields)">
+            </div>
+
             <!-- Action Bar -->
             <div class="pt-10 flex items-center justify-end gap-6">
                 <a href="{{ route('organizer.events.index') }}" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cancel</a>
-                <button type="submit" name="status" value="{{ $event->status }}" class="bg-dark text-white px-12 py-5 rounded-3xl font-black text-xs tracking-[0.3em] uppercase hover:bg-primary transition-all shadow-2xl active:scale-95">Sync Updates</button>
+                <button type="submit" name="status" value="{{ $event->status }}" class="bg-secondary text-white px-12 py-5 rounded-3xl font-black text-xs tracking-[0.3em] uppercase hover:bg-primary transition-all shadow-2xl active:scale-95">Sync Updates</button>
             </div>
         </div>
     </form>

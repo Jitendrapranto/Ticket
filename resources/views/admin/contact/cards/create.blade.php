@@ -1,136 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Contact Card | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus">
-    @include('admin.sidebar')
+@extends('admin.dashboard')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
-            <div>
-                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Create Contact Card</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"><a href="{{ route('admin.contact.cards.index') }}" class="hover:text-primary">Contact Cards</a> / Create</p>
+@section('admin_content')
+<div>
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-4">
+                <a href="{{ route('admin.contact.cards.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-dark hover:bg-slate-50 transition-all border border-slate-100 shadow-sm">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Create Contact Card</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Add new support/contact option</p>
+                </div>
             </div>
         </header>
 
-        <main class="p-8 flex-1">
-            <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-10">
-                <form action="{{ route('admin.contact.cards.store') }}" method="POST" class="space-y-6">
+        <main class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-[2.5rem] shadow-premium border border-slate-50 overflow-hidden text-left">
+                <form action="{{ route('admin.contact.cards.store') }}" method="POST" class="p-10 space-y-8">
                     @csrf
-
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}" required placeholder="e.g. Email Support" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold">
-                        @error('title') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    
+                    <div class="space-y-3 text-left">
+                        <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Title</label>
+                        <input type="text" name="title" value="{{ old('title') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Email Support" required>
+                        @error('title')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Description</label>
-                        <textarea name="description" rows="3" required placeholder="Brief description text..." class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm">{{ old('description') }}</textarea>
-                        @error('description') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    <div class="space-y-3 text-left">
+                        <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Description</label>
+                        <textarea name="description" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-[2rem] p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Tell users how you can help..." required>{{ old('description') }}</textarea>
+                        @error('description')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Action Text (Link Title)</label>
-                            <input type="text" name="action_text" value="{{ old('action_text') }}" placeholder="e.g. support@ticketkinun.com" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none transition-all font-bold text-sm">
-                            @error('action_text') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Action Label (Link Text)</label>
+                            <input type="text" name="action_text" value="{{ old('action_text') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. support@ticketkinun.com">
+                            @error('action_text')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Action URL / Link</label>
-                            <input type="text" name="action_url" value="{{ old('action_url') }}" placeholder="mailto:support@ticketkinun.com" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none font-mono text-sm">
-                            @error('action_url') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">FontAwesome Icon Class</label>
-                            <input type="text" name="icon" value="{{ old('icon', 'fas fa-envelope') }}" required class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none font-mono text-sm">
-                            @error('icon') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sort Order</label>
-                            <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none font-mono text-sm">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Action Link (URL)</label>
+                            <input type="text" name="action_url" value="{{ old('action_url') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-blue-600 font-mono text-sm" placeholder="mailto:support@ticketkinun.com">
+                            @error('action_url')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col gap-6 mt-6">
-                        <h4 class="font-outfit text-sm font-black text-slate-800 uppercase tracking-tight border-b border-slate-200 pb-2"><i class="fas fa-palette text-primary mr-2"></i> Design & Colors</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Icon (FontAwesome)</label>
+                            <input type="text" name="icon" value="{{ old('icon', 'fas fa-envelope') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-mono text-sm font-bold" required>
+                            @error('icon')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
+                        </div>
 
-                        <div class="grid grid-cols-2 gap-6">
-                            <div x-data="{ color: '{{ old('bg_color', '#fffbf0') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Card Background</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" x-model="color" @input="$refs.bgInput.value = color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" name="bg_color" x-ref="bgInput" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono text-xs">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Sort Order</label>
+                            <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
+                        </div>
+                    </div>
+
+                    <div class="pt-8 border-t border-slate-50">
+                        <h4 class="text-[11px] font-black text-dark uppercase tracking-widest flex items-center gap-2 mb-8 ml-4">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            Design & Brand Colors
+                        </h4>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                            <div class="flex items-center gap-4" x-data="{ color: '{{ old('bg_color', '#fffbf0') }}' }">
+                                <div class="w-14 h-14 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                    <input type="color" x-model="color" @input="$refs.bgInput.value = color" class="w-full h-full scale-150 cursor-pointer">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Card Background</label>
+                                    <input type="text" name="bg_color" x-ref="bgInput" x-model="color" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-2.5 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
                                 </div>
                             </div>
 
-                            <div x-data="{ color: '{{ old('theme_color', '#f59e0b') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Theme (Icon/Border/Link)</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" x-model="color" @input="$refs.themeInput.value = color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" name="theme_color" x-ref="themeInput" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono text-xs">
+                            <div class="flex items-center gap-4" x-data="{ color: '{{ old('theme_color', '#f59e0b') }}' }">
+                                <div class="w-14 h-14 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                    <input type="color" x-model="color" @input="$refs.themeInput.value = color" class="w-full h-full scale-150 cursor-pointer">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Theme (Icon/Link)</label>
+                                    <input type="text" name="theme_color" x-ref="themeInput" x-model="color" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-2.5 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
                                 </div>
                             </div>
 
-                            <div x-data="{ color: '{{ old('title_color', '#92400e') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Title Color</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" x-model="color" @input="$refs.titleInput.value = color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" name="title_color" x-ref="titleInput" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono text-xs">
+                            <div class="flex items-center gap-4" x-data="{ color: '{{ old('title_color', '#92400e') }}' }">
+                                <div class="w-14 h-14 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                    <input type="color" x-model="color" @input="$refs.titleInput.value = color" class="w-full h-full scale-150 cursor-pointer">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Title Color</label>
+                                    <input type="text" name="title_color" x-ref="titleInput" x-model="color" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-2.5 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
                                 </div>
                             </div>
 
-                            <div x-data="{ color: '{{ old('desc_color', '#b45309') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Description Color</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" x-model="color" @input="$refs.descInput.value = color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" name="desc_color" x-ref="descInput" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono text-xs">
+                            <div class="flex items-center gap-4" x-data="{ color: '{{ old('desc_color', '#b45309') }}' }">
+                                <div class="w-14 h-14 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                    <input type="color" x-model="color" @input="$refs.descInput.value = color" class="w-full h-full scale-150 cursor-pointer">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Description Color</label>
+                                    <input type="text" name="desc_color" x-ref="descInput" x-model="color" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-2.5 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-6 flex gap-4">
-                        <a href="{{ route('admin.contact.cards.index') }}" class="flex-1 text-center py-4 rounded-xl font-black tracking-widest uppercase hover:bg-slate-100 transition-all text-slate-500">Cancel</a>
-                        <button type="submit" class="flex-1 bg-primary text-white py-4 rounded-xl font-black tracking-widest uppercase hover:bg-primary-dark transition-all shadow-lg hover:shadow-primary/20">
-                            Create Card
+                    <div class="pt-10 flex items-center justify-between">
+                        <p class="text-[10px] font-bold text-slate-400">Card will be added to the contact grid instantly.</p>
+                        <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 transition-all active:scale-95 uppercase">
+                            Create Contact Card
                         </button>
                     </div>
                 </form>
             </div>
         </main>
     </div>
-</body>
-</html>
+</div>
+@endsection

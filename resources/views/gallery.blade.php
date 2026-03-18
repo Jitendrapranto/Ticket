@@ -3,17 +3,15 @@
 @section('title', 'Gallery - Relive the Magic | Ticket Kinun')
 
 @section('content')
+<div x-data="{ activeCategory: 'all' }">
     <!-- Hero Section -->
     <section class="relative pt-10 pb-16 md:pt-12 md:pb-24 bg-gradient-to-r from-[#520C6B] to-[#1B2B46] overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
         <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-            <div class="inline-block px-4 py-1.5 rounded-full glass mb-6">
-                <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">{{ $hero->badge_text ?? 'VISUAL JOURNEY' }}</span>
-            </div>
             <h1 class="font-outfit text-4xl sm:text-6xl md:text-8xl font-black text-white leading-tight mb-6 tracking-tighter">
                 @php $titleLines = explode('.', $hero->title ?? 'Moments In Motion'); @endphp
-                {{ $titleLines[0] }} @if(isset($titleLines[1])) <br><span class="text-accent tracking-normal">{{ $titleLines[1] }}.</span> @else . @endif
+                {{ $titleLines[0] }} @if(isset($titleLines[1])) <br><span class="text-accent tracking-normal">{{ $titleLines[1] }}</span> @endif
             </h1>
             <p class="text-slate-400 text-base sm:text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed px-4">
                 {{ $hero->subtitle ?? 'Step inside the most exclusive events. Explore our collection of captured memories, from high-energy concerts to elite sports finals.' }}
@@ -25,11 +23,15 @@
     <section class="py-5 bg-white border-b border-slate-100 sticky top-20 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="flex flex-wrap justify-center gap-2 sm:gap-4">
-                <button data-category="all" class="gallery-filter-btn active bg-[#1B2B46] text-white shadow-lg px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
+                <button @click="activeCategory = 'all'" 
+                        :class="activeCategory === 'all' ? 'bg-[#1B2B46] text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50'"
+                        class="gallery-filter-btn px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
                     ALL
                 </button>
                 @foreach($galleryCategories as $cat)
-                    <button data-category="{{ strtolower($cat->name) }}" class="gallery-filter-btn bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50 px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
+                    <button @click="activeCategory = '{{ strtolower($cat->name) }}'"
+                            :class="activeCategory === '{{ strtolower($cat->name) }}' ? 'bg-[#1B2B46] text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50'"
+                            class="gallery-filter-btn px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
                         {{ strtoupper($cat->name) }}
                     </button>
                 @endforeach
@@ -50,6 +52,8 @@
                         $imgSrc       = str_starts_with($img->image_path, 'http') ? $img->image_path : asset('storage/' . $img->image_path);
                     @endphp
                     <div class="gallery-item group cursor-pointer rounded-[0.75rem] overflow-hidden bg-white shadow-[0_2px_12px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_28px_rgba(82,12,107,0.15)] transition-all duration-300 flex flex-col"
+                         x-show="activeCategory === 'all' || activeCategory === '{{ strtolower($img->category->name) }}'"
+                         x-transition.opacity.duration.300ms
                          data-category="{{ strtolower($img->category->name) }}"
                          data-src="{{ $imgSrc }}"
                          data-title="{{ $img->title }}"
@@ -220,49 +224,30 @@
             <p class="text-slate-400 text-base sm:text-xl font-light mb-10 sm:mb-16 max-w-xl mx-auto px-4">Get your tickets today and be featured in our upcoming showcase of legends.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-6">
                 <a href="{{ route('events') }}" class="bg-primary text-white px-10 sm:px-16 py-4 sm:py-6 rounded-3xl font-black text-base sm:text-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/30">EXPLORE EVENTS</a>
-               
+
             </div>
         </div>
     </section>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    /* ── Filter buttons ── */
-    const filterBtns  = document.querySelectorAll('.gallery-filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => {
-                b.classList.remove('bg-[#1B2B46]', 'text-white', 'shadow-lg');
-                b.classList.add('bg-slate-50', 'text-slate-400');
-            });
-            btn.classList.add('bg-[#1B2B46]', 'text-white', 'shadow-lg');
-            btn.classList.remove('bg-slate-50', 'text-slate-400');
-
-            const cat = btn.getAttribute('data-category');
-            galleryItems.forEach(item => {
-                const show = cat === 'all' || item.getAttribute('data-category') === cat;
-                item.style.display = show ? 'flex' : 'none';
-            });
+;(function() {
+    if (!window.__galleryKeyboardBound) {
+        document.addEventListener('keydown', e => {
+            const modal = document.getElementById('galleryModal');
+            if (!modal || modal.style.display === 'none' || modal.style.display === '') return;
+            if (e.key === 'Escape')      closeGalleryModalBtn();
+            if (e.key === 'ArrowLeft')   navigateModal(-1);
+            if (e.key === 'ArrowRight')  navigateModal(1);
         });
-    });
-
-    /* ── Keyboard navigation ── */
-    document.addEventListener('keydown', e => {
-        const modal = document.getElementById('galleryModal');
-        if (modal.style.display === 'none' || modal.style.display === '') return;
-        if (e.key === 'Escape')      closeGalleryModalBtn();
-        if (e.key === 'ArrowLeft')   navigateModal(-1);
-        if (e.key === 'ArrowRight')  navigateModal(1);
-    });
-});
+        window.__galleryKeyboardBound = true;
+    }
+})();
 
 /* ── Collect visible items for navigation ── */
-let currentModalIndex = 0;
+window.currentModalIndex = window.currentModalIndex || 0;
 
 function getVisibleItems() {
     return Array.from(document.querySelectorAll('.gallery-item'))
@@ -271,8 +256,8 @@ function getVisibleItems() {
 
 function openGalleryModal(card) {
     const visibleItems = getVisibleItems();
-    currentModalIndex  = visibleItems.indexOf(card);
-    showModalItem(currentModalIndex, visibleItems);
+    window.currentModalIndex  = visibleItems.indexOf(card);
+    showModalItem(window.currentModalIndex, visibleItems);
 
     const modal = document.getElementById('galleryModal');
     modal.style.removeProperty('display');
@@ -303,8 +288,8 @@ function showModalItem(idx, items) {
 
 function navigateModal(dir) {
     const items = getVisibleItems();
-    currentModalIndex = (currentModalIndex + dir + items.length) % items.length;
-    showModalItem(currentModalIndex, items);
+    window.currentModalIndex = (window.currentModalIndex + dir + items.length) % items.length;
+    showModalItem(window.currentModalIndex, items);
 }
 
 function closeGalleryModal(e) {

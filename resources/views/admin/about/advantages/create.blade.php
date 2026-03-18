@@ -1,123 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Advantage | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus">
-    @include('admin.sidebar')
+@extends('admin.dashboard')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
-            <div>
-                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Create Advantage</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"><a href="{{ route('admin.about.advantages.index') }}" class="hover:text-primary">Advantages Section</a> / Create</p>
+@section('admin_content')
+<div>
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-4">
+                <a href="{{ route('admin.about.advantages.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-dark hover:bg-slate-50 transition-all border border-slate-100 shadow-sm">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Create Advantage</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Add new feature card to about us page</p>
+                </div>
             </div>
         </header>
 
-        <main class="p-8 flex-1">
-            <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-10">
-                <form action="{{ route('admin.about.advantages.store') }}" method="POST" class="space-y-6">
+        <main class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-[2.5rem] shadow-premium border border-slate-50 overflow-hidden text-left">
+                <form action="{{ route('admin.about.advantages.store') }}" method="POST" class="p-10 space-y-8">
                     @csrf
                     
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}" required class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold">
-                        @error('title') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    <div class="space-y-3 text-left">
+                        <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Title</label>
+                        <input type="text" name="title" value="{{ old('title') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="e.g. Speed & Security" required>
+                        @error('title')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Description</label>
-                        <textarea name="description" rows="3" required class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm">{{ old('description') }}</textarea>
-                        @error('description') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    <div class="space-y-3 text-left">
+                        <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Description</label>
+                        <textarea name="description" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-[2rem] p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Briefly describe this advantage..." required>{{ old('description') }}</textarea>
+                        @error('description')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">FontAwesome Icon Class</label>
-                            <input type="text" name="icon" value="{{ old('icon') }}" placeholder="fas fa-bolt text-xl" required class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none font-mono text-sm">
-                            @error('icon') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Icon (FontAwesome)</label>
+                            <input type="text" name="icon" value="{{ old('icon', 'fas fa-shield-alt') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-mono text-sm font-bold" placeholder="fas fa-star" required>
+                            @error('icon')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                         </div>
 
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Tailwind Border Class (Optional)</label>
-                            <input type="text" name="border_class" value="{{ old('border_class') }}" placeholder="border-orange-50/50" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none font-mono text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sort Order</label>
-                            <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none font-mono text-sm">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Border Class (Optional)</label>
+                            <input type="text" name="border_class" value="{{ old('border_class', 'border-slate-100') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-mono text-sm font-bold" placeholder="border-primary/20">
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col gap-6 mt-6">
-                        <h4 class="font-outfit text-sm font-black text-slate-800 uppercase tracking-tight border-b border-slate-200 pb-2"><i class="fas fa-palette text-primary mr-2"></i> Theme Colors</h4>
-                        
-                        <div class="grid grid-cols-2 gap-6">
-                            <div x-data="{ color: '{{ old('card_bg_color', '#fffbf0') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Card Background</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" name="card_bg_color" x-model="color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono">
-                                </div>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-slate-50">
+                        <div class="space-y-6">
+                            <h4 class="text-[11px] font-black text-dark uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                Theme Colors
+                            </h4>
                             
-                            <div x-data="{ color: '{{ old('icon_bg_color', '#f59e0b') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Icon Background</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" name="icon_bg_color" x-model="color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="flex items-center gap-4" x-data="{ color: '{{ old('card_bg_color', '#FFFFFF') }}' }">
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                        <input type="color" name="card_bg_color" x-model="color" class="w-full h-full scale-150 cursor-pointer">
+                                    </div>
+                                    <input type="text" x-model="color" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter w-20">Card BG</span>
+                                </div>
+
+                                <div class="flex items-center gap-4" x-data="{ color: '{{ old('icon_bg_color', '#520C6B') }}' }">
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                        <input type="color" name="icon_bg_color" x-model="color" class="w-full h-full scale-150 cursor-pointer">
+                                    </div>
+                                    <input type="text" x-model="color" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter w-20">Icon BG</span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div x-data="{ color: '{{ old('title_color', '#92400e') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Title Text Color</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" name="title_color" x-model="color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono">
+                        <div class="space-y-6">
+                            <h4 class="text-[11px] font-black text-dark uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-accent"></span>
+                                Text Colors
+                            </h4>
+
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="flex items-center gap-4" x-data="{ color: '{{ old('title_color', '#1E293B') }}' }">
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                        <input type="color" name="title_color" x-model="color" class="w-full h-full scale-150 cursor-pointer">
+                                    </div>
+                                    <input type="text" x-model="color" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter w-20">Title</span>
                                 </div>
-                            </div>
 
-                            <div x-data="{ color: '{{ old('desc_color', '#b45309') }}' }">
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Description Text Color</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" name="desc_color" x-model="color" class="h-10 w-12 cursor-pointer rounded overflow-hidden border-none outline-none">
-                                    <input type="text" x-model="color" class="flex-1 bg-white border border-slate-200 text-dark rounded-xl px-3 py-2 text-sm focus:outline-none font-mono">
+                                <div class="flex items-center gap-4" x-data="{ color: '{{ old('desc_color', '#64748B') }}' }">
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden shadow-inner border border-slate-100 shrink-0">
+                                        <input type="color" name="desc_color" x-model="color" class="w-full h-full scale-150 cursor-pointer">
+                                    </div>
+                                    <input type="text" x-model="color" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 text-xs font-mono font-bold uppercase transition-all focus:bg-white">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter w-20">Desc</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-6 flex gap-4">
-                        <a href="{{ route('admin.about.advantages.index') }}" class="flex-1 text-center py-4 rounded-xl font-black tracking-widest uppercase hover:bg-slate-100 transition-all text-slate-500">Cancel</a>
-                        <button type="submit" class="flex-1 bg-primary text-white py-4 rounded-xl font-black tracking-widest uppercase hover:bg-primary-dark transition-all shadow-lg hover:shadow-primary/20">
+                    <div class="space-y-3 text-left">
+                        <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Sort Order</label>
+                        <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <p class="text-[10px] font-bold text-slate-400">Ensure all details are correct before saving.</p>
+                        <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 transition-all active:scale-95 uppercase">
                             Create Advantage
                         </button>
                     </div>
@@ -125,5 +112,5 @@
             </div>
         </main>
     </div>
-</body>
-</html>
+</div>
+@endsection

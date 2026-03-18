@@ -81,10 +81,10 @@
 
                         <!-- QR Code -->
                         <div class="shrink-0 flex flex-col items-center md:items-end justify-start gap-4" x-show="selectedData.qr_code">
-                            <div class="p-4 bg-white rounded-3xl shadow-sm border border-indigo-100">
-                                <img loading="lazy" :src="'{{ asset('storage') }}/' + selectedData.qr_code" class="w-32 h-32 object-contain" alt="QR Code">
+                            <div class="p-6 bg-white rounded-[2rem] shadow-sm border border-indigo-100">
+                                <img loading="lazy" :src="'{{ asset('storage') }}/' + selectedData.qr_code" class="w-56 h-56 object-contain" alt="QR Code">
                             </div>
-                            <span class="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Scan to Pay</span>
+                            <span class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Scan to Pay</span>
                         </div>
                     </div>
                 </div>
@@ -122,14 +122,32 @@
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Payment Screenshot (Optional)</label>
                         <div class="relative group border-2 border-dashed border-slate-200 rounded-[2.5rem] p-12 flex flex-col items-center justify-center hover:border-primary/30 transition-all cursor-pointer bg-slate-50/30">
                             <input type="file" name="payment_screenshot" id="screenshot-upload" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*"
-                                   @change="const file = $event.target.files[0]; if(file) { document.getElementById('preview-box').classList.remove('hidden'); document.getElementById('upload-icon').classList.add('hidden'); }">
+                                   @change="
+                                       const file = $event.target.files[0];
+                                       if (file) {
+                                           if (file.size > 150 * 1024) {
+                                               Swal.fire({
+                                                   icon: 'error',
+                                                   title: 'Screenshot Too Large',
+                                                   text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                                                   confirmButtonColor: '#520C6B'
+                                               });
+                                               $event.target.value = '';
+                                               document.getElementById('preview-box').classList.add('hidden');
+                                               document.getElementById('upload-icon').classList.remove('hidden');
+                                           } else {
+                                               document.getElementById('preview-box').classList.remove('hidden');
+                                               document.getElementById('upload-icon').classList.add('hidden');
+                                           }
+                                       }
+                                   ">
                             
                             <div id="upload-icon" class="flex flex-col items-center text-center">
                                 <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-cloud-upload-alt text-2xl"></i>
                                 </div>
                                 <h4 class="text-sm font-black text-dark mb-1">Click to upload screenshot</h4>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">PNG, JPG up to 2MB</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">PNG, JPG up to 150KB</p>
                             </div>
 
                             <div id="preview-box" class="hidden flex flex-col items-center">
@@ -228,7 +246,7 @@
                     <div class="relative z-10">
                         <h4 class="font-outfit text-xl font-black mb-4">Need Assistance?</h4>
                         <p class="text-indigo-100/70 text-xs font-medium leading-relaxed mb-8">Our VIP support team is available 24/7 to help with your payment verification or any technical queries.</p>
-                        <a href="{{ route('contact') }}" class="inline-flex items-center gap-3 bg-white text-indigo-600 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-colors active:scale-95 shadow-xl">
+                        <a href="{{ $support->whatsapp_url ?? route('contact') }}" target="_blank" class="inline-flex items-center gap-3 bg-white text-indigo-600 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-colors active:scale-95 shadow-xl">
                             Contact Support
                         </a>
                     </div>

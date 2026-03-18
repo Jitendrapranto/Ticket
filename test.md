@@ -282,3 +282,55 @@ When reload the frotend then it will show the black screen for a moment....fix i
 
 
 When i send a message from the contact page ,I want to here after submit the form then it will show a popup with a message "Your message has been sent successfully. We will get back to you soon." and also make sure these data will be go to the super admin dashboard and also make sure to add a professional design for the popup and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+Here I dont want to scroll the row that means I dont want to scroll the x axis...I want to all column will be visible in the screen and also make sure to add a professional design for this section and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the all cards bg color will be colorfull and also make sure to add a professional design for the cards and also make sure to follow the overall colour combination .Here the content is not visible properly.please make it visible perfectlY..I want to use tailwind for this design. Can you help me with the code?
+
+
+Here when i clicked the submenu on the dashboard the page reload and then submenu content is not visible...fix it and also make sure to add a professional design for the submenu and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+when I looged in with capital letter its perfectlY logged in...but here need to mus be email formatted login...fix it
+
+
+I want to the full page slide ..I dont want to the upper content fixed...i want to verticallY scroll the full page
+
+
+When mobile view the banner image is not showing properlY...some image can full height but some image not showing full height...and the three . doesnot work ....fix it and also make sure to add a professional design for the mobile banner and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+On super admin dashboard three . menu is not showing the submenu items when click on it...fix it and also make sure to add a professional design for the submenu and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+On super admin dashboard I want to the first portion will be exist on everY submenu clicked....when clicked the submenu the first portion will be same but the second portion will be changed according to the submenu clicked...fix it and also make sure to add a professional design for the submenu and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the upper section will be fixed all submenu clicked and only the lower section will be changed according to the submenu clicked...fix it and also make sure to add a professional design for the submenu and also make sure to follow the overall colour combination.
+
+
+On mobile device here I need to event featured image and definately image height will be full screen ..and also make sure to add a professional design for the mobile banner and also make sure to follow the overall colour combination . I want to use tailwind for this design. Can you help me with the code?
+
+
+I want to the similar experience section will be exist before footer section on mobile device 
+
+
+On customer database from super admin dashboard does not deleted the customers...I want to when press delete button then it will show a professional popup for confirmation and when press confirm then the customer will be deleted from the database and also make sure to add a toast message after delete the customer...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+On scanner dashboard here onlY showed live events but capacitY,pending entrY,shift value showed 0 and can not scan the ticket...I want to here when scanner scan the ticket then it will show the ticket details and also show the status of the ticket whether it is valid or invalid or already scanned and also make sure to add a professional design for this section...You must follow the overall colour combination of this website and make the super admin dashboard in the same colour combination. I want to use tailwind for this design. Can you help me with the code?
+
+
+On scanner dashboard here onlY showed live events but Total pass,pending entrY,shift value showed 0 but ticket can be sell and can not scan the ticket...I want to here when scanner scan the ticket then it will show the ticket details and also show the status of the ticket whether it is valid or invalid or already scanned..I think here the problem is when created the ticket then the ticket number is not saved in database so when scanner scan the ticket then it can not verifY the ticket number from the database and then it does not show the ticket details and also does not show the status of the ticket whether it is valid or invalid or already scanned...
+
+
+When edit the events from super admin then Customer segmentation have emptY value ...but here does not should emptY value...I want to here all the segmentation value will be show in the segmentation section whatevr edit the event from super admin...
+
+
+When a user brought a ticket for an event then when his buYing completed then quantitY of Ticket will be decrease  but here does not decrease the quantitY of ticket...I want to here when user buy a ticket then it will decrease the event capacity and if the event capacity is 0 then it will show sold out on the event card and also on the event details page and if user can trY more than the available ticket then it will show a professional popup with a message "Only X tickets are available for this event.
+
+I want to this website to be fullY optimized sothat reloading the page will be verY fast  and all transitions of this website will be smooth....
+
+Check the super admin dashboard here delete icon does not work where delete icon exists in almost everY section....

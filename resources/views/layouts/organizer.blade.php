@@ -4,101 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Organizer Dashboard') | Ticket Kinun</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
-    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <!-- Critical Loader Styles (Inline for speed) -->
     <style>
-        /* FAST LOAD */
-        html:not(.ready) { visibility: hidden; opacity: 0; }
-        html.ready { 
-            visibility: visible; 
-            opacity: 1; 
-            transition: opacity 0.15s ease-in; 
+        :root { color-scheme: light; }
+        html, body { background-color: #F1F5F9 !important; margin: 0; padding: 0; }
+        #top-loader {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, #520C6B, #FFE700);
+            z-index: 10000; pointer-events: none; transition: width 0.1s ease-out;
         }
     </style>
 
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',     // Brand Purple
-                        secondary: '#1B2B46',   // Deep Plum
-                        accent: '#FF7D52',      // Brand Orange
-                        dark: '#0F172A',
-                        'slate-custom': '#F8FAFC',
-                        'brand-red': '#E11D48',
-                    },
-                    brand: '#520C6B',
-                    fontFamily: {
-                        sans: ['Arial', 'Helvetica', 'sans-serif'],
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)',
-                        'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: Arial, Helvetica, sans-serif; }
-        * { font-style: normal !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        [x-cloak] { display: none !important; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
-
-        /* Reveal once ready */
-        html.ready {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.15s ease-in;
-        }
-    </style>
-
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        // Fallback: reveal after short delay even if DOMContentLoaded already fired
-        setTimeout(function() {
-            document.documentElement.classList.add('ready');
-        }, 100);
-    </script>
+    <!-- Optimized Asset Bundle -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-[#F1F5F9] text-slate-800">
+<body class="bg-slate-100 text-slate-800 antialiased overflow-x-hidden">
 
-    <!-- Sidebar Inclusion -->
+    <!-- Top Loading Progress Bar -->
+    <div id="top-loader"></div>
+
     @include('organizer.sidebar')
 
-    <!-- Main Content Wrapper -->
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-
+    <div id="swup-container" class="lg:ml-72 min-h-screen flex flex-col swup-transition-fade">
         <!-- Header / Topbar -->
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40 transition-all duration-300 shadow-sm">
+        <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-8 z-40 transition-all duration-300 shadow-sm sticky top-0">
             <div class="flex items-center gap-4">
                 <!-- Mobile Toggle -->
                 <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
@@ -112,7 +46,6 @@
 
             <!-- Header Actions -->
             <div class="flex items-center gap-4">
-
                 <div class="flex items-center gap-3 ml-2" x-data="{ open: false }">
                     <div class="relative">
                         <button @click="open = !open" class="flex items-center gap-3 group focus:outline-none">
@@ -120,7 +53,7 @@
                                 <p class="text-xs font-black text-dark group-hover:text-primary transition-colors">{{ auth()->user()->name }}</p>
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Organizer Account</p>
                             </div>
-                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-0.5 shadow-premium group-hover:scale-105 transition-transform duration-300">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-secondary p-0.5 shadow-premium group-hover:scale-105 transition-transform duration-300">
                                 <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden border border-white">
                                     @if(auth()->user()->avatar)
                                         <img loading="lazy" src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
@@ -185,31 +118,12 @@
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="flex-1">
+        <main class="flex-1 p-6 lg:p-10" id="main-content">
             @yield('content')
         </main>
     </div>
 
-    <!-- Toggle Sidebar Script -->
-    <script>
-        const sidebar = document.getElementById('organizer-sidebar');
-        const toggleBtn = document.getElementById('toggle-sidebar');
-        let isSidebarOpen = false;
-
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', () => {
-                isSidebarOpen = !isSidebarOpen;
-                if(isSidebarOpen) {
-                    sidebar.classList.remove('-translate-x-full');
-                    sidebar.classList.add('translate-x-0');
-                } else {
-                    sidebar.classList.add('-translate-x-full');
-                    sidebar.classList.remove('translate-x-0');
-                }
-            });
-        }
-    </script>
     @stack('scripts')
 </body>
 </html>
+

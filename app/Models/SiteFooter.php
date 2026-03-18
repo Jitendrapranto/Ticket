@@ -22,9 +22,6 @@ class SiteFooter extends Model
         'contact_phone',
         'contact_address',
         'copyright_text',
-        'privacy_url',
-        'terms_url',
-        'cookies_url',
     ];
 
     protected $casts = [

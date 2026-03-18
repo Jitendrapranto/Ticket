@@ -17,6 +17,10 @@
 
             <form action="{{ route('events.booking.process', $event->slug) }}" method="POST" enctype="multipart/form-data" class="space-y-10">
                 @csrf
+                {{-- Pass ticket quantities as hidden fields so backend knows the correct count --}}
+                @foreach($ticketsData as $ticket)
+                    <input type="hidden" name="ticket_quantities[{{ $ticket['id'] }}]" value="{{ $ticket['quantity'] }}">
+                @endforeach
                 
                 <!-- 1. Attendee Information Header & Choice -->
                 <div class="space-y-6">
@@ -128,12 +132,29 @@
                                                 </div>
                                                 <div class="flex-1">
                                                     <span class="text-sm font-bold text-white/80 block" id="file-label-{{ $field->id }}">Choose a file...</span>
-                                                    <span class="text-[10px] text-white/40 font-medium">PDF, JPG, PNG — Max 5MB</span>
+                                                    <span class="text-[10px] text-white/40 font-medium">PDF, JPG, PNG — Max 150KB</span>
                                                 </div>
                                                 <input type="file" name="form_data_files[{{ $field->id }}]" {{ $field->is_required ? 'required' : '' }}
+                                                    id="file-input-{{ $field->id }}"
                                                     class="hidden"
-                                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                                    onchange="document.getElementById('file-label-{{ $field->id }}').textContent = this.files[0] ? this.files[0].name : 'Choose a file...'">
+                                                    accept=".pdf,.jpg,.jpeg,.png"
+                                                    onchange="
+                                                        const file = this.files[0];
+                                                        if (file) {
+                                                            if (file.size > 150 * 1024) {
+                                                                Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'File Too Large',
+                                                                    text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                                                                    confirmButtonColor: '#520C6B'
+                                                                });
+                                                                this.value = '';
+                                                                document.getElementById('file-label-{{ $field->id }}').textContent = 'Choose a file...';
+                                                            } else {
+                                                                document.getElementById('file-label-{{ $field->id }}').textContent = file.name;
+                                                            }
+                                                        }
+                                                    ">
                                             </label>
                                         </div>
                                     @else

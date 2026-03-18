@@ -1,117 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit CTA | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus">
-    @include('admin.sidebar')
+@extends('admin.dashboard')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
+@section('admin_content')
+<div>
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
             <div>
                 <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Call To Action Section</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"><a href="#" class="hover:text-primary">About Page</a> / Edit Section</p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">About Page / Edit CTA</p>
             </div>
         </header>
 
-        <main class="p-8 flex-1">
-            @if(session('success'))
-                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-                     x-transition:enter="transition ease-out duration-500"
-                     x-transition:enter-start="translate-x-full opacity-0"
-                     x-transition:enter-end="translate-x-0 opacity-100"
-                     x-transition:leave="transition ease-in duration-300"
-                     x-transition:leave-end="translate-x-full opacity-0"
-                     class="fixed top-8 right-8 z-[100] max-w-sm w-full">
-                    <div class="bg-secondary rounded-[2rem] shadow-2xl p-6 flex items-center gap-6 relative overflow-hidden text-white border border-white/5">
-                        <div class="absolute left-0 top-0 bottom-0 w-2 bg-primary"></div>
-                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-check-circle"></i></div>
-                        <div class="flex-1 text-left">
-                            <h4 class="text-sm font-black tracking-tight">Operation Successful</h4>
-                            <p class="text-[11px] text-white/60 mt-0.5 leading-tight">{{ session('success') }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
+        <main class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-[2.5rem] shadow-premium border border-slate-50 overflow-hidden text-left">
+                <form action="{{ route('admin.about.cta.update') }}" method="POST" class="p-10 space-y-8">
+                    @csrf
+                    @method('PUT')
 
-            <form action="{{ route('admin.about.cta.update') }}" method="POST" class="max-w-3xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
-                @csrf
-                @method('PUT')
+                    <div class="space-y-6">
+                        <h3 class="font-outfit text-lg font-black text-dark border-b border-slate-100 pb-4 text-left">
+                            <i class="fas fa-bullhorn mr-2 text-primary"></i> Core Content
+                        </h3>
 
-                <div class="p-10 space-y-8">
-
-                    <div>
-                        <h3 class="font-outfit text-lg font-black text-[#1e293b] mb-6 border-b border-slate-100 pb-2"><i class="fas fa-bullhorn mr-2 text-primary"></i> Core Content</h3>
-
-                        <div class="space-y-6">
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Title</label>
-                                <input type="text" name="title" value="{{ old('title', $cta->title) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold">
-                                @error('title') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                        <div class="space-y-5 text-left">
+                            <div class="text-left">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-4">Section Title</label>
+                                <input type="text" name="title" value="{{ old('title', $cta->title) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="Ready to partner?" required>
+                                @error('title') <p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p> @enderror
                             </div>
 
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Subtitle / Description</label>
-                                <textarea name="subtitle" rows="3" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm">{{ old('subtitle', $cta->subtitle) }}</textarea>
-                                @error('subtitle') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                            <div class="text-left">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-4">Subtitle / Narrative</label>
+                                <textarea name="subtitle" rows="3" class="w-full bg-slate-50 border border-slate-100 rounded-[2rem] p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm leading-relaxed" placeholder="Join our global network..." required>{{ old('subtitle', $cta->subtitle) }}</textarea>
+                                @error('subtitle') <p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-slate-100">
-                        <h3 class="font-outfit text-lg font-black text-[#1e293b] mb-6 border-b border-slate-100 pb-2"><i class="fas fa-link mr-2 text-primary"></i> Button Configuration</h3>
+                    <div class="space-y-6 pt-6 border-t border-slate-50">
+                        <h3 class="font-outfit text-lg font-black text-dark border-b border-slate-100 pb-4 text-left">
+                            <i class="fas fa-link mr-2 text-accent"></i> Interaction configuration
+                        </h3>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Button Text</label>
-                                <input type="text" name="button_text" value="{{ old('button_text', $cta->button_text) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold uppercase tracking-wider text-sm">
-                                @error('button_text') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                            <div class="text-left">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-4">Button Label</label>
+                                <input type="text" name="button_text" value="{{ old('button_text', $cta->button_text) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-black tracking-widest text-xs uppercase" placeholder="CONTACT US" required>
+                                @error('button_text') <p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p> @enderror
                             </div>
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Link Destination (URL)</label>
-                                <input type="text" name="button_url" value="{{ old('button_url', $cta->button_url) }}" class="w-full bg-slate-50 border border-slate-200 text-blue-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-mono text-sm">
-                                @error('button_url') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                            <div class="text-left">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-4">Button Destination (URL)</label>
+                                <input type="text" name="button_url" value="{{ old('button_url', $cta->button_url) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-blue-600 font-mono text-sm" placeholder="/contact" required>
+                                @error('button_url') <p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>
 
-                </div>
-
-                <div class="bg-slate-50 p-8 border-t border-slate-100 flex justify-end">
-                    <button type="submit" class="bg-primary text-white px-8 py-4 rounded-xl font-black tracking-widest uppercase hover:bg-primary-dark transition-all shadow-lg hover:shadow-primary/20">
-                        Update Section
-                    </button>
-                </div>
-            </form>
+                    <div class="pt-8 flex items-center justify-between">
+                        <p class="text-[10px] font-bold text-slate-400">Updates reflect instantly on the Live About Page.</p>
+                        <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 transition-all active:scale-95 uppercase">
+                            Update CTA Section
+                        </button>
+                    </div>
+                </form>
+            </div>
         </main>
     </div>
-</body>
-</html>
+</div>
+@endsection

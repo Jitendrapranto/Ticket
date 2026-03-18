@@ -1,104 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commission Strategy | Ticket Kinun</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@extends('admin.dashboard')
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        secondary: '#1B2B46',
-                        accent: '#FF7D52',
-                        dark: '#0F172A',
-                        'brand-green': '#10B981',
-                        'brand-red': '#EF4444',
-                        'brand-amber': '#F59E0B',
-                    },
-                    fontFamily: {
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 25px 60px -15px rgba(27, 43, 70, 0.08)',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F8FAFC] text-slate-800 font-plus overflow-x-hidden">
+@section('admin_content')
+<div x-data="{ 
+    addModal: false, 
+    editModal: false,
+    editData: { id: '', type: '', target_name: '', revenue_model: 'percentage', percentage: 0, fixed_amount: 0 },
+    openEdit(override) {
+        this.editData = {
+            id: override.id,
+            target_name: override.overridable ? (override.overridable_type.includes('EventCategory') ? override.overridable.name : override.overridable.title) : 'Unknown',
+            revenue_model: override.revenue_model,
+            percentage: override.percentage,
+            fixed_amount: override.fixed_amount
+        };
+        this.editModal = true;
+    }
+}">
 
-    @include('admin.sidebar')
-
-    <div class="lg:ml-72 min-h-screen flex flex-col transition-all duration-300">
-        <!-- Topbar -->
-        <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40">
-            <div class="flex items-center gap-6">
-                <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="relative w-80 group">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors"></i>
-                    <input type="text" placeholder="Search platform resources.." class="w-full bg-slate-50 border-none rounded-xl pl-12 pr-4 py-2.5 text-xs font-bold text-dark focus:ring-2 focus:ring-primary/10 transition-all">
-                </div>
-            </div>
-
-            <div class="flex items-center gap-6">
-                <button class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-primary/5 hover:text-primary transition-all relative">
-                    <i class="far fa-bell"></i>
-                    <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-brand-red rounded-full border-2 border-white"></span>
-                </button>
-                <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
-                    <div class="text-right">
-                        <p class="text-xs font-black text-dark">Super Admin</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
-                        <img loading="lazy" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
-                    </div>
-                </div>
-            </div>
-        </header>
-
+    <div class="animate-fadeIn">
         <main class="p-10 flex-1 max-w-7xl mx-auto w-full">
-            <form action="{{ route('admin.finance.commission.update') }}" method="POST">
-                @csrf
                 <!-- Header -->
                 <div class="flex items-center justify-between mb-10">
                     <div>
                         <h1 class="font-outfit text-3xl font-black text-dark tracking-tight mb-2">Commission Strategy</h1>
                         <p class="text-slate-400 font-medium text-sm">Define platform earning models and specific event-level overrides.</p>
                     </div>
-                    <button type="submit" class="bg-secondary text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-dark transition-all flex items-center gap-3 shadow-xl shadow-secondary/20">
+                    <button type="submit" form="commissionSettingsForm" class="bg-secondary text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-dark transition-all flex items-center gap-3 shadow-xl shadow-secondary/20">
                         <i class="fas fa-save text-[13px]"></i> Save Configuration
                     </button>
                 </div>
 
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <!-- Revenue Model Badge -->
                     <div class="bg-white p-8 rounded-[2rem] border border-slate-50 shadow-premium flex items-start justify-between group hover:border-primary/20 transition-all">
                         <div>
                             <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block">Revenue Model</span>
@@ -112,7 +45,6 @@
                         </div>
                     </div>
 
-                    <!-- Avg Earnings -->
                     <div class="bg-white p-8 rounded-[2rem] border border-slate-50 shadow-premium flex items-start justify-between group hover:border-brand-green/20 transition-all">
                         <div>
                             <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block">Default Percentage</span>
@@ -126,11 +58,10 @@
                         </div>
                     </div>
 
-                    <!-- Overrides -->
                     <div class="bg-white p-8 rounded-[2rem] border border-slate-50 shadow-premium flex items-start justify-between group hover:border-accent/20 transition-all">
                         <div>
                             <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block">Active Overrides</span>
-                            <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-1">0 Rules</h3>
+                            <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-1">{{ $overrides->count() }} Rules</h3>
                             <p class="text-[10px] font-bold text-slate-400">Specific event/category settings</p>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-accent/5 text-accent flex items-center justify-center text-sm group-hover:bg-accent group-hover:text-white transition-all">
@@ -142,35 +73,33 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     <!-- Set Default Fees -->
                     <div class="lg:col-span-12 xl:col-span-4 space-y-8">
-                        <div class="bg-white rounded-[2.5rem] border border-slate-50 shadow-premium overflow-hidden">
+                        <form id="commissionSettingsForm" action="{{ route('admin.finance.commission.update') }}" method="POST" class="bg-white rounded-[2.5rem] border border-slate-50 shadow-premium overflow-hidden text-left">
+                            @csrf
                             <div class="p-10 pb-0">
                                 <h3 class="font-outfit text-xl font-black text-dark mb-2 tracking-tight">Global Default Fees</h3>
                                 <p class="text-[11px] font-medium text-slate-400 leading-relaxed">Primary rates applied when no specific override exists across the board.</p>
                             </div>
 
                             <div class="p-10 space-y-8">
-                                <!-- Model Select -->
                                 <div class="space-y-4">
                                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Revenue Collection Model</label>
-                                    <select name="revenue_model" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white outline-none transition-all cursor-pointer">
+                                    <select name="revenue_model" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white outline-none transition-all cursor-pointer text-left">
                                         <option value="percentage" {{ $setting->revenue_model == 'percentage' ? 'selected' : '' }}>Percentage-based (%)</option>
-                                        <option value="fixed" {{ $setting->revenue_model == 'fixed' ? 'selected' : '' }}>Fixed Amount ($)</option>
+                                        <option value="fixed" {{ $setting->revenue_model == 'fixed' ? 'selected' : '' }}>Fixed Amount (৳)</option>
                                     </select>
                                 </div>
 
-                                <!-- Percentage Input -->
                                 <div class="space-y-4">
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">% Default Percentage</label>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 text-left">% Default Value</label>
                                     <div class="relative">
                                         <input type="number" step="0.01" name="default_percentage" value="{{ $setting->default_percentage }}"
                                             class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all outline-none">
-                                        <div class="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 uppercase tracking-widest">Percent</div>
+                                        <div class="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 uppercase tracking-widest">Amount</div>
                                     </div>
                                 </div>
 
-                                <!-- Toggle -->
                                 <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
-                                    <div>
+                                    <div class="text-left">
                                         <p class="text-xs font-black text-dark mb-1">Active Platform Fee</p>
                                         <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Toggle earning system globally.</p>
                                     </div>
@@ -180,10 +109,10 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </form>
 
                         <!-- Pro Tip Card -->
-                        <div class="bg-gradient-to-br from-primary/95 to-secondary rounded-[2.5rem] p-10 text-white relative overflow-hidden group shadow-2xl shadow-primary/20">
+                        <div class="bg-gradient-to-br from-primary/95 to-secondary rounded-[2.5rem] p-10 text-white relative overflow-hidden group shadow-2xl shadow-primary/20 text-left">
                             <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-sm mb-6">
@@ -198,13 +127,13 @@
                     <!-- Overrides List -->
                     <div class="lg:col-span-12 xl:col-span-8 flex flex-col">
                         <div class="bg-white rounded-[2.5rem] border border-slate-50 shadow-premium overflow-hidden flex-1 h-fit">
-                            <div class="p-10 flex items-center justify-between border-b border-slate-50">
+                            <div class="p-10 flex items-center justify-between border-b border-slate-50 text-left">
                                 <div>
                                     <h3 class="font-outfit text-xl font-black text-dark mb-1 tracking-tight">Event & Category Overrides</h3>
                                     <p class="text-[11px] font-medium text-slate-400">Custom rules for specific platform entities that override global settings.</p>
                                 </div>
-                                <button type="button" class="bg-slate-50 border border-slate-100 text-dark px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all flex items-center gap-3">
-                                    <i class="fas fa-plus text-[9px]"></i> Add Event Override
+                                <button type="button" @click="addModal = true" class="bg-slate-50 border border-slate-100 text-dark px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all flex items-center gap-3">
+                                    <i class="fas fa-plus text-[9px]"></i> Add Override
                                 </button>
                             </div>
 
@@ -219,80 +148,197 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-50">
-                                        <tr class="group hover:bg-slate-50/50 transition-all">
+                                        @forelse($overrides as $override)
+                                        <tr class="group hover:bg-slate-50/50 transition-all text-left">
                                             <td class="px-10 py-8">
                                                 <div class="flex items-center gap-4">
-                                                    <div class="w-10 h-10 rounded-xl bg-brand-green/5 text-brand-green flex items-center justify-center text-xs">
-                                                        <i class="fas fa-university"></i>
+                                                    <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center text-xs">
+                                                        <i class="fas {{ str_contains($override->overridable_type, 'EventCategory') ? 'fa-university' : 'fa-calendar-star' }}"></i>
                                                     </div>
-                                                    <span class="text-xs font-black text-dark">School Programs</span>
+                                                    <span class="text-xs font-black text-dark">
+                                                        {{ $override->overridable ? (str_contains($override->overridable_type, 'EventCategory') ? $override->overridable->name : $override->overridable->title) : 'Unknown' }}
+                                                    </span>
                                                 </div>
                                             </td>
-                                            <td class="px-8 py-8 text-center">
-                                                <span class="px-3 py-1 rounded-lg bg-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Category</span>
+                                            <td class="px-8 py-8 text-center text-left">
+                                                <span class="px-3 py-1 rounded-lg bg-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                                                    {{ str_contains($override->overridable_type, 'EventCategory') ? 'Category' : 'Event' }}
+                                                </span>
                                             </td>
-                                            <td class="px-8 py-8 text-center">
-                                                <span class="px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green text-[9px] font-black uppercase tracking-wider">Free (0%)</span>
+                                            <td class="px-8 py-8 text-center text-left">
+                                                <span class="px-4 py-1.5 rounded-full {{ $override->revenue_model === 'percentage' ? ($override->percentage == 0 ? 'bg-brand-green/10 text-brand-green' : 'bg-primary/10 text-primary') : 'bg-accent/10 text-accent' }} text-[9px] font-black uppercase tracking-wider">
+                                                    @if($override->revenue_model === 'percentage')
+                                                        {{ $override->percentage == 0 ? 'Free (0%)' : 'Custom ('.$override->percentage.'%)' }}
+                                                    @else
+                                                        Custom (৳{{ $override->fixed_amount }})
+                                                    @endif
+                                                </span>
                                             </td>
                                             <td class="px-10 py-8 text-right">
-                                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center hover:bg-slate-100 transition-all"><i class="fas fa-ellipsis-h text-[10px]"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr class="group hover:bg-slate-50/50 transition-all">
-                                            <td class="px-10 py-8">
-                                                <div class="flex items-center gap-4">
-                                                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-xs">
-                                                        <i class="fas fa-calendar-star"></i>
+                                                <div x-data="{ openMenu: false }" class="relative flex justify-end">
+                                                    <button type="button" @click="openMenu = !openMenu" @click.away="openMenu = false"
+                                                        class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+                                                        :class="openMenu ? 'bg-primary text-white ring-4 ring-primary/10' : ''">
+                                                        <i class="fas fa-ellipsis-v text-[10px]"></i>
+                                                    </button>
+                                                    <div x-show="openMenu"
+                                                         x-transition:enter="transition ease-out duration-200"
+                                                         x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                                         x-transition:leave="transition ease-in duration-150"
+                                                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                                         x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                                         class="absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-premium border border-slate-100 z-50 overflow-hidden" 
+                                                         x-cloak>
+                                                        <div class="p-2 space-y-1">
+                                                            <button type="button" @click="openEdit({{ json_encode($override) }})" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-primary/5 hover:text-primary rounded-xl transition-all group/item">
+                                                                <div class="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white transition-all"><i class="fas fa-edit text-[9px]"></i></div>
+                                                                Edit Rule
+                                                            </button>
+                                                            <form action="{{ route('admin.finance.commission.overrides.destroy', $override) }}" method="POST" class="w-full">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 rounded-xl transition-all group/item">
+                                                                    <div class="w-6 h-6 rounded-lg bg-red-50/50 flex items-center justify-center group-hover/item:bg-white transition-all"><i class="fas fa-trash-alt text-[9px]"></i></div>
+                                                                    Remove
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </div>
-                                                    <span class="text-xs font-black text-dark">Tomorrowland 2024</span>
                                                 </div>
                                             </td>
-                                            <td class="px-8 py-8 text-center">
-                                                <span class="px-3 py-1 rounded-lg bg-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Event</span>
-                                            </td>
-                                            <td class="px-8 py-8 text-center">
-                                                <span class="px-4 py-1.5 rounded-full bg-accent/10 text-accent text-[9px] font-black uppercase tracking-wider">Custom ($2.50)</span>
-                                            </td>
-                                            <td class="px-10 py-8 text-right">
-                                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center hover:bg-slate-100 transition-all"><i class="fas fa-ellipsis-h text-[10px]"></i></button>
-                                            </td>
                                         </tr>
-                                        <tr class="group hover:bg-slate-50/50 transition-all">
-                                            <td class="px-10 py-8">
-                                                <div class="flex items-center gap-4">
-                                                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-xs">
-                                                        <i class="fas fa-users-crown"></i>
-                                                    </div>
-                                                    <span class="text-xs font-black text-dark">Non-Profit Galas</span>
-                                                </div>
-                                            </td>
-                                            <td class="px-8 py-8 text-center">
-                                                <span class="px-3 py-1 rounded-lg bg-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Category</span>
-                                            </td>
-                                            <td class="px-8 py-8 text-center">
-                                                <span class="px-4 py-1.5 rounded-full bg-brand-amber/10 text-brand-amber text-[9px] font-black uppercase tracking-wider">Reduced (2%)</span>
-                                            </td>
-                                            <td class="px-10 py-8 text-right">
-                                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center hover:bg-slate-100 transition-all"><i class="fas fa-ellipsis-h text-[10px]"></i></button>
-                                            </td>
+                                        @empty
+                                        <tr>
+                                            <td colspan="4" class="px-10 py-12 text-center text-slate-400 font-bold text-xs uppercase tracking-widest">No overrides defined.</td>
                                         </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
 
-                            <div class="p-10 bg-slate-50/30 flex items-center justify-center gap-3">
+                            <div class="p-10 bg-slate-50/30 flex items-center justify-center gap-3 text-left">
                                 <i class="fas fa-info-circle text-[10px] text-slate-300"></i>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Event-level overrides always take precedence over global settings.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
         </main>
     </div>
 
+    <!-- Modals -->
+    <!-- Add Modal -->
+    <div x-show="addModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm" @click="addModal = false"></div>
+        <div class="bg-white rounded-[2.5rem] w-full max-w-lg relative z-10 shadow-2xl overflow-hidden text-left"
+             x-transition:enter="transition ease-out duration-300 translate-y-4"
+             x-transition:enter-start="translate-y-8 scale-95 opacity-0"
+             x-transition:enter-end="translate-y-0 scale-100 opacity-100">
+            <div class="p-10 border-b border-slate-50 flex items-center justify-between">
+                <h3 class="font-outfit text-xl font-black text-dark tracking-tight">New Commission Override</h3>
+                <button @click="addModal = false" class="text-slate-300 hover:text-dark transition-colors"><i class="fas fa-times"></i></button>
+            </div>
+            <form action="{{ route('admin.finance.commission.overrides.store') }}" method="POST" x-data="{ type: 'event', model: 'percentage' }">
+                @csrf
+                <div class="p-10 space-y-6">
+                    <div class="space-y-3">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Target Type</label>
+                        <select name="type" x-model="type" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 outline-none transition-all">
+                            <option value="event">Specific Event</option>
+                            <option value="category">Category-wide</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-3" x-show="type === 'event'">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Select Event</label>
+                        <select x-bind:name="type === 'event' ? 'target_id' : ''" x-bind:required="type === 'event'" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 outline-none transition-all">
+                            @foreach($events as $event)
+                                <option value="{{ $event->id }}">{{ $event->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="space-y-3" x-show="type === 'category'" style="display: none;">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Select Category</label>
+                        <select x-bind:name="type === 'category' ? 'target_id' : ''" x-bind:required="type === 'category'" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 outline-none transition-all">
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Override Model</label>
+                        <select name="revenue_model" x-model="model" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark focus:ring-4 focus:ring-primary/5 outline-none transition-all">
+                            <option value="percentage">Percentage (%)</option>
+                            <option value="fixed">Fixed Amount (৳)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-3" x-show="model === 'percentage'">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Percentage (%)</label>
+                            <input type="number" step="0.01" name="percentage" value="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark">
+                        </div>
+                        <div class="space-y-3" x-show="model === 'fixed'">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Fixed Fee (৳)</label>
+                            <input type="number" step="0.01" name="fixed_amount" value="0" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-10 bg-slate-50 flex items-center justify-end gap-4">
+                    <button type="button" @click="addModal = false" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-dark transition-colors">Cancel</button>
+                    <button type="submit" class="bg-primary text-white px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-dark transition-all shadow-lg shadow-primary/20">Create Rule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div x-show="editModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm" @click="editModal = false"></div>
+        <div class="bg-white rounded-[2.5rem] w-full max-w-lg relative z-10 shadow-2xl overflow-hidden text-left"
+             x-transition:enter="transition ease-out duration-300 translate-y-4">
+            <div class="p-10 border-b border-slate-50 flex items-center justify-between">
+                <div>
+                    <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Edit Override Rule</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1" x-text="'Target: ' + editData.target_name"></p>
+                </div>
+                <button @click="editModal = false" class="text-slate-300 hover:text-dark transition-colors"><i class="fas fa-times"></i></button>
+            </div>
+            <form :action="'{{ route('admin.finance.commission.overrides.update', '___ID___') }}'.replace('___ID___', editData.id)" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="p-10 space-y-6">
+                    <div class="space-y-3">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Override Model</label>
+                        <select name="revenue_model" x-model="editData.revenue_model" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark outline-none">
+                            <option value="percentage">Percentage (%)</option>
+                            <option value="fixed">Fixed Amount (৳)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-3" x-show="editData.revenue_model === 'percentage'">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Percentage (%)</label>
+                            <input type="number" step="0.01" name="percentage" x-model="editData.percentage" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark">
+                        </div>
+                        <div class="space-y-3" x-show="editData.revenue_model === 'fixed'">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Fixed Fee (৳)</label>
+                            <input type="number" step="0.01" name="fixed_amount" x-model="editData.fixed_amount" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-dark">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-10 bg-slate-50 flex items-center justify-end gap-4">
+                    <button type="button" @click="editModal = false" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-dark transition-colors">Cancel</button>
+                    <button type="submit" class="bg-secondary text-white px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-dark transition-all shadow-lg shadow-secondary/20">Update Rule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Feedback Toasts -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         @if(session('success'))
             Swal.fire({
@@ -309,6 +355,5 @@
             });
         @endif
     </script>
-
-</body>
-</html>
+</div>
+@endsection

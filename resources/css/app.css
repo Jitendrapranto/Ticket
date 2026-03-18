@@ -1,11 +1,125 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
+/* Tailwind 4 Theme Configuration */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-primary: #520C6B;
+    --color-secondary: #1B2B46;
+    --color-accent: #FF7D52;
+    --color-dark: #0F172A;
+    --color-brand: #520C6B;
+    --color-slate-custom: #F8FAFC;
+    --color-brand-red: #E11D48;
+
+    --font-sans: "Inter", "system-ui", "sans-serif";
+    --font-outfit: "Inter", "system-ui", "sans-serif";
+
+    --shadow-premium: 0 20px 50px -12px rgba(82, 12, 107, 0.12);
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+
+    --animate-marquee: marquee 30s linear infinite;
+    --animate-marquee-slow: marquee 120s linear infinite;
+    --animate-fadeInUp: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+@source "../../storage/framework/views/*.php";
+@source "../**/*.blade.php";
+@source "../**/*.js";
+
+/* Global Smoothness */
+:root {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Swup Transition: Simple & Elegant */
+.swup-transition-fade {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+html.is-animating .swup-transition-fade {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+/* Glassmorphism Classes */
+.glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Performance Optimized Scroll Reveal */
+.reveal-init {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+
+.revealed {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Custom Scrollbar (Very Fast Layout) */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Marquee Logic */
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Essential Base Styles */
+body {
+    @apply font-sans antialiased bg-white text-slate-900 leading-relaxed;
+}
+
+/* Bento Card Style */
+.bento-card {
+    @apply transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-premium;
+}
+
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+a,
+button,
+[onclick],
+.clickable {
+    cursor: pointer !important;
 }

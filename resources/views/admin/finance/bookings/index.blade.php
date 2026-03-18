@@ -9,115 +9,142 @@
             <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Verify and approve manual payment transactions</p>
         </div>
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.finance.bookings.index') }}" class="px-6 py-3 bg-white border border-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-all shadow-sm">All</a>
-            <a href="{{ route('admin.finance.bookings.index', ['status' => 'pending']) }}" class="px-6 py-3 bg-white border border-amber-100 rounded-full text-[10px] font-black {{ request('status') == 'pending' ? 'bg-amber-500 text-white' : 'text-amber-500' }} uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all shadow-sm">Pending</a>
-            <a href="{{ route('admin.finance.bookings.index', ['status' => 'confirmed']) }}" class="px-6 py-3 bg-white border border-emerald-100 rounded-full text-[10px] font-black {{ request('status') == 'confirmed' ? 'bg-emerald-500 text-white' : 'text-emerald-500' }} uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all shadow-sm">Confirmed</a>
+            <a href="{{ route('admin.finance.bookings.index') }}" class="px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-sm border {{ !request('status') ? 'bg-secondary text-white border-secondary' : 'bg-white text-slate-400 border-slate-100 hover:text-primary' }}">All</a>
+            <a href="{{ route('admin.finance.bookings.index', ['status' => 'confirmed']) }}" class="px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-sm border {{ request('status') == 'confirmed' ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-emerald-500 border-emerald-100 hover:bg-emerald-50' }}">Confirmed</a>
         </div>
     </div>
 
     <!-- Main Table Container -->
-    <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-premium border border-slate-50">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[1200px]">
+    <div class="bg-white rounded-[2rem] shadow-premium border border-slate-50 relative overflow-visible">
+        <div class="w-full overflow-visible min-h-[400px]">
+            <table class="w-full text-left border-collapse table-fixed relative z-10">
                 <thead>
-                    <tr class="bg-slate-50/30 border-b border-slate-50">
-                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction ID</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Customer</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Sender No</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Event ID</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Method</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date & Time</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Actions</th>
+                    <tr class="bg-slate-50/40 border-b border-slate-100">
+                        <th class="w-[13%] pl-6 pr-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction</th>
+                        <th class="w-[15%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Customer</th>
+                        <th class="w-[12%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Sender Info</th>
+                        <th class="w-[16%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Event</th>
+                        <th class="w-[10%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Method</th>
+                        <th class="w-[10%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Amount</th>
+                        <th class="w-[8%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Date</th>
+                        <th class="w-[8%] px-4 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
+                        <th class="w-[8%] pl-4 pr-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
-                    @foreach($bookings as $booking)
+                    @foreach($bookings as $index => $booking)
                     <tr class="hover:bg-slate-50/60 transition-all group">
-                        <!-- Transaction ID -->
-                        <td class="px-8 py-5">
+                        <!-- Transaction Info -->
+                        <td class="pl-6 pr-4 py-4">
                             <div class="flex flex-col">
-                                <span class="text-xs font-black text-primary underline decoration-primary/5 decoration-4 tracking-tight">
+                                <span class="text-[11px] font-black text-primary hover:underline cursor-default tracking-tight truncate">
                                     {{ $booking->transaction_id ?? 'N/A' }}
                                 </span>
-                                <span class="text-[8px] text-slate-300 font-bold uppercase mt-1">TK: {{ $booking->booking_id }}</span>
+                                <span class="text-[8px] text-slate-400 font-bold uppercase mt-1 tracking-tighter truncate">ID: {{ $booking->booking_id }}</span>
                             </div>
                         </td>
                         
                         <!-- Customer -->
-                        <td class="px-6 py-5">
+                        <td class="px-4 py-4">
                             <div class="flex flex-col">
-                                <span class="text-xs font-black text-dark tracking-tight">{{ $booking->user->name ?? 'Unknown' }}</span>
-                                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest line-clamp-1">{{ $booking->user->email ?? '' }}</span>
+                                <span class="text-[11px] font-extrabold text-dark truncate w-full">{{ $booking->user->name ?? 'Unknown' }}</span>
+                                <span class="text-[9px] text-slate-400 font-bold tracking-tight lowercase truncate w-full">{{ $booking->user->email ?? '' }}</span>
                             </div>
                         </td>
-
-                        <!-- Sender No -->
-                        <td class="px-6 py-5">
-                            <span class="text-xs font-black text-dark tracking-widest">{{ $booking->payment_number ?? 'N/A' }}</span>
+ 
+                        <!-- Sender Info -->
+                        <td class="px-4 py-4">
+                            <span class="text-[11px] font-black text-slate-600 tracking-wider truncate block w-full">{{ $booking->payment_number ?? 'N/A' }}</span>
                         </td>
-
+ 
                         <!-- Event -->
-                        <td class="px-6 py-5">
+                        <td class="px-4 py-4">
                             <div class="flex flex-col">
-                            <span class="text-xs font-black text-dark tracking-wider">{{ $booking->event->event_code ?? $booking->event->id }}</span>
-                            <span class="text-[7px] text-slate-300 font-bold uppercase mt-1 tracking-tighter truncate max-w-[100px]">{{ $booking->event->title }}</span>
-                        </div>
+                                <span class="text-[11px] font-black text-dark tracking-tighter truncate w-full">{{ $booking->event->title }}</span>
+                                <span class="text-[8px] text-slate-400 font-bold uppercase mt-0.5 tracking-widest truncate w-full">{{ $booking->event->event_code ?? $booking->event->id }}</span>
+                            </div>
                         </td>
-
+ 
                         <!-- Method -->
-                        <td class="px-6 py-5">
+                        <td class="px-4 py-4">
                             <div class="flex justify-center">
-                                <span class="px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-[8px] font-black uppercase tracking-widest text-slate-400">
+                                <span class="px-2 py-1 bg-slate-50 border border-slate-100 rounded-lg text-[8px] font-black uppercase tracking-tighter text-slate-500 whitespace-nowrap block w-full text-center truncate">
                                     {{ $booking->payment_method_name ?? $booking->payment_method ?? 'Unknown' }}
                                 </span>
                             </div>
                         </td>
-
+ 
                         <!-- Amount -->
-                        <td class="px-6 py-5">
-                            <span class="text-xs font-black text-primary tracking-tight">৳{{ number_format($booking->total_amount) }}</span>
+                        <td class="px-4 py-4 text-right">
+                            <span class="text-[11px] font-black text-dark tracking-tight truncate block w-full">৳{{ number_format($booking->total_amount) }}</span>
                         </td>
-
-                        <!-- Date & Time -->
-                        <td class="px-6 py-5">
+ 
+                        <!-- Date -->
+                        <td class="px-4 py-4 text-center">
                             <div class="flex flex-col">
-                                <span class="text-[10px] font-bold text-dark">{{ $booking->created_at->format('d M, Y') }}</span>
-                                <span class="text-[9px] font-black text-slate-300 uppercase mt-0.5 tracking-tighter">{{ $booking->created_at->format('h:i:s A') }}</span>
+                                <span class="text-[10px] font-bold text-dark truncate">{{ $booking->created_at->format('d M') }}</span>
                             </div>
                         </td>
-
+ 
                         <!-- Status -->
-                        <td class="px-6 py-5">
+                        <td class="px-4 py-4">
                             <div class="flex justify-center">
                                 @if($booking->status == 'pending')
-                                    <div class="flex flex-col gap-1 items-center">
-                                        <span class="px-4 py-1.5 bg-amber-500/10 text-amber-500 border border-amber-500/10 rounded-full text-[7px] font-black uppercase tracking-widest">Pending</span>
-                                        <span class="text-[6px] text-amber-400 font-bold uppercase tracking-[0.2em]">Verification</span>
-                                    </div>
+                                    <span class="px-2 py-1 bg-amber-500/10 text-amber-600 border border-amber-500/10 rounded-lg text-[8px] font-black uppercase tracking-widest whitespace-nowrap w-full text-center truncate">Pending</span>
                                 @elseif($booking->status == 'confirmed')
-                                    <span class="px-5 py-1.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/10 rounded-full text-[8px] font-black uppercase tracking-widest">Approved</span>
+                                    <span class="px-2 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/10 rounded-lg text-[8px] font-black uppercase tracking-widest whitespace-nowrap w-full text-center truncate">Approved</span>
                                 @else
-                                    <span class="px-5 py-1.5 bg-rose-500/10 text-rose-500 border border-rose-500/10 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm">{{ ucfirst($booking->status) }}</span>
+                                    <span class="px-2 py-1 bg-rose-500/10 text-rose-600 border border-rose-500/10 rounded-lg text-[8px] font-black uppercase tracking-widest whitespace-nowrap w-full text-center truncate">{{ $booking->status }}</span>
                                 @endif
                             </div>
                         </td>
-
+ 
                         <!-- Actions -->
-                        <td class="px-8 py-5">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('admin.finance.bookings.show', $booking->id) }}" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-dark hover:text-white transition-all shadow-sm">
-                                    <i class="fas fa-eye text-[10px]"></i>
-                                </a>
-                                @if($booking->status == 'pending')
-                                <button onclick="approveBooking({{ $booking->id }})" class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm border border-emerald-100/50">
-                                    <i class="fas fa-check text-[10px]"></i>
-                                </button>
-                                <button onclick="rejectBooking({{ $booking->id }})" class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100/50">
-                                    <i class="fas fa-times text-[10px]"></i>
-                                </button>
-                                @endif
+                        <td class="pl-4 pr-6 py-4">
+                            <div class="flex items-center justify-center">
+                                <div x-data="{ open: false }" class="relative" :class="open ? 'z-[60]' : 'z-20'">
+                                    <button @click="open = !open" @click.away="open = false" 
+                                        class="w-8 h-8 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+                                        :class="open ? 'bg-primary text-white ring-4 ring-primary/10' : ''">
+                                        <i class="fas fa-ellipsis-v text-[10px]"></i>
+                                    </button>
+                                    
+                                      <div x-show="open" 
+                                           x-transition:enter="transition ease-out duration-200"
+                                           x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                           x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                           x-transition:leave="transition ease-in duration-150"
+                                           x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                           x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                           class="absolute right-0 {{ $loop->last || ($loop->count > 1 && $loop->iteration >= $loop->count - 1) ? 'bottom-full mb-3' : 'top-full mt-3' }} w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden" 
+                                          x-cloak>
+                                        <div class="p-2 space-y-1">
+                                            <a href="{{ route('admin.finance.bookings.show', $booking->id) }}" class="flex items-center gap-3 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 hover:text-primary rounded-xl transition-all group/item">
+                                                <div class="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white transition-all"><i class="fas fa-eye"></i></div>
+                                                View Info
+                                            </a>
+                                            
+                                            @if($booking->status == 'pending')
+                                            <button @click="approveBooking({{ $booking->id }}); open = false" class="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all group/item">
+                                                <div class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center group-hover/item:bg-white transition-all"><i class="fas fa-check-circle"></i></div>
+                                                Approve
+                                            </button>
+                                            
+                                            <button @click="rejectBooking({{ $booking->id }}); open = false" class="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-50 rounded-xl transition-all group/item">
+                                                <div class="w-7 h-7 rounded-lg bg-rose-50 flex items-center justify-center group-hover/item:bg-white transition-all"><i class="fas fa-times-circle"></i></div>
+                                                Reject
+                                            </button>
+                                            @endif
+
+                                            <div class="border-t border-slate-50 my-1"></div>
+                                            
+                                            <button @click="deleteBooking({{ $booking->id }}); open = false" class="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 rounded-xl transition-all group/item">
+                                                <div class="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center group-hover/item:bg-white transition-all"><i class="fas fa-trash-alt"></i></div>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -125,20 +152,20 @@
                 </tbody>
             </table>
         </div>
-
+ 
         @if($bookings->isEmpty())
-        <div class="py-24 text-center">
-            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-50">
-                <i class="fas fa-search text-2xl text-slate-100"></i>
+        <div class="py-32 text-center flex flex-col items-center justify-center">
+            <div class="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center mb-6 text-slate-200">
+                <i class="fas fa-search text-xl"></i>
             </div>
-            <p class="text-slate-300 text-[10px] font-black uppercase tracking-[0.4em]">No transaction records found</p>
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em]">No Transaction Records Found</p>
         </div>
         @endif
     </div>
-
+ 
     @if($bookings->hasPages())
     <div class="mt-8 flex justify-end">
-        <div class="bg-white px-2 py-2 rounded-2xl shadow-sm border border-slate-50">
+        <div class="bg-white p-2 rounded-2xl shadow-premium border border-slate-100">
             {{ $bookings->links() }}
         </div>
     </div>
@@ -148,20 +175,9 @@
 <!-- Invisible Forms -->
 <form id="approve-form" method="POST" class="hidden">@csrf</form>
 <form id="reject-form" method="POST" class="hidden">@csrf</form>
+<form id="delete-form" method="POST" class="hidden">@csrf @method('DELETE')</form>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        customClass: {
-            popup: 'font-sans'
-        }
-    });
-
     function approveBooking(id) {
         Swal.fire({
             title: 'Confirm Payment?',
@@ -212,12 +228,31 @@
         })
     }
 
-    @if(session('success'))
-        Toast.fire({ icon: 'success', title: "{{ session('success') }}", background: '#10B981', color: '#ffffff' });
-    @endif
-    @if(session('error'))
-        Toast.fire({ icon: 'error', title: "{{ session('error') }}", background: '#F43F5E', color: '#ffffff' });
-    @endif
+    function deleteBooking(id) {
+        Swal.fire({
+            title: 'Delete Booking?',
+            text: "This action cannot be undone. All related data will be removed.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#F43F5E',
+            cancelButtonColor: '#475569',
+            confirmButtonText: 'Yes, Delete',
+            background: '#ffffff',
+            color: '#1e293b',
+            customClass: {
+                popup: 'rounded-[2rem] border border-slate-100 shadow-2xl font-sans',
+                confirmButton: 'rounded-xl px-10 py-4 font-black uppercase tracking-widest text-[9px]',
+                cancelButton: 'rounded-xl px-10 py-4 font-black uppercase tracking-widest text-[9px]'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('delete-form');
+                form.action = `/admin/finance/bookings/${id}`;
+                form.submit();
+            }
+        })
+    }
+
 </script>
 
 <style>

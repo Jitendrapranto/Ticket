@@ -12,17 +12,29 @@
             <p class="text-slate-400 font-medium text-sm">Comprehensive analysis of ticket volume and sales performance.</p>
         </div>
 
-        <form action="{{ route('organizer.reports.sales') }}" method="GET" class="flex flex-wrap items-center gap-3" id="filterForm">
-            <div class="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20">
+        <form action="{{ route('organizer.reports.sales') }}" method="GET" class="flex flex-wrap items-center gap-3" id="filterForm" x-data="{ filterType: '{{ request('date_filter', 'custom') }}' }">
+            <div class="flex items-center bg-white border border-slate-100 rounded-2xl px-4 py-3 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20">
+                <i class="fas fa-calendar-alt text-slate-400 mr-2"></i>
+                <select name="date_filter" x-model="filterType" class="bg-transparent outline-none cursor-pointer pr-4 uppercase text-dark font-bold font-outfit">
+                    <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+                    <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>This Week</option>
+                    <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>This Month</option>
+                    <option value="this_year" {{ request('date_filter') == 'this_year' ? 'selected' : '' }}>This Year</option>
+                    <option value="custom" {{ request('date_filter', 'custom') == 'custom' ? 'selected' : '' }}>Custom Range Date</option>
+                </select>
+            </div>
+
+            <div x-show="filterType === 'custom'" class="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20" x-transition>
                 <i class="far fa-calendar text-slate-400"></i>
                 <input type="date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" class="outline-none bg-transparent cursor-pointer">
                 <span class="text-slate-200">/</span>
                 <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="outline-none bg-transparent cursor-pointer">
             </div>
+
             <button type="submit" class="bg-dark text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2 shadow-lg shadow-dark/10">
                 <i class="fas fa-filter"></i> Apply
             </button>
-            <a href="{{ route('organizer.reports.sales.export', ['start_date' => $startDate->format('Y-m-d'), 'end_date' => $endDate->format('Y-m-d')]) }}" class="bg-white text-dark border border-slate-100 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
+            <a href="{{ route('organizer.reports.sales.export', ['date_filter' => request('date_filter', 'custom'), 'start_date' => request('start_date', $startDate->format('Y-m-d')), 'end_date' => request('end_date', $endDate->format('Y-m-d'))]) }}" class="bg-white text-dark border border-slate-100 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
                  <i class="fas fa-download"></i> Export
             </a>
         </form>

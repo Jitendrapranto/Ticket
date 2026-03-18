@@ -31,13 +31,13 @@
         </div>
 
         <!-- Two Column Layout -->
-        <div class="flex flex-col lg:flex-row gap-10 relative items-start">
+        <div class="flex flex-col lg:flex-row gap-10 relative">
 
             <!-- ── LEFT SIDE (Scrollable) ── -->
             <div class="lg:w-3/5 space-y-10">
 
                 <!-- Banner -->
-                <div id="eventBanner" class="rounded-lg overflow-hidden shadow-2xl relative group">
+                <div id="eventBanner" class="rounded-[2.5rem] overflow-hidden shadow-2xl relative group h-[400px] md:h-[500px]">
                     @if($event->image)
                         <img loading="lazy" src="{{ $event->image_url }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105">
                     @else
@@ -98,7 +98,13 @@
                         @foreach($event->artists as $artist)
                         <div class="space-y-5 text-center group">
                             <div class="aspect-square rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl transition-all duration-500 hover:scale-105 hover:shadow-2xl ring-1 ring-slate-100">
-                                <img loading="lazy" src="{{ $artist['image'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($artist['name'] ?? 'Artist') . '&background=520C6B&color=fff' }}" class="w-full h-full object-cover">
+                                @php
+                                    $artistImage = $artist['image'] ?? null;
+                                    if ($artistImage && !str_starts_with($artistImage, 'http')) {
+                                        $artistImage = asset('storage/' . $artistImage);
+                                    }
+                                @endphp
+                                <img loading="lazy" src="{{ $artistImage ?? 'https://ui-avatars.com/api/?name=' . urlencode($artist['name'] ?? 'Artist') . '&background=520C6B&color=fff' }}" class="w-full h-full object-cover">
                             </div>
                             <div>
                                 <h4 class="font-bold text-dark text-base">{{ $artist['name'] ?? 'Artist Name' }}</h4>
@@ -123,44 +129,12 @@
                 </div>
                 @endif
 
-                <!-- You May Also Like -->
-                @if($relatedEvents->count() > 0)
-                <div class="space-y-10 pt-12 border-t border-slate-200">
-                    <div class="flex items-end justify-between">
-                        <div>
-                            <span class="text-primary font-black tracking-[0.3em] text-[10px] uppercase mb-4 block text-center lg:text-left">RECOMMENDED</span>
-                            <h2 class="font-outfit text-3xl font-black text-dark tracking-tighter leading-tight">Similar <span class="text-primary">Experiences.</span></h2>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        @foreach($relatedEvents as $rEvent)
-                        <a href="{{ route('events.show', $rEvent->slug) }}" class="group block bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
-                            <div class="aspect-video relative overflow-hidden">
-                                <img loading="lazy" src="{{ $rEvent->image_url }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
-                                <div class="absolute inset-x-4 top-4">
-                                    <span class="px-3 py-1 bg-black/50 backdrop-blur-md rounded-lg text-[9px] font-bold text-white uppercase tracking-widest">
-                                        {{ $rEvent->category->name }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="font-outfit text-lg font-black text-dark group-hover:text-primary transition-colors line-clamp-1">{{ $rEvent->title }}</h4>
-                                <div class="mt-4 flex items-center justify-between">
-                                    <span class="text-xs font-bold text-slate-400"><i class="far fa-calendar-alt mr-2 text-primary"></i> {{ $rEvent->date->format('d M, Y') }}</span>
-                                    <span class="text-xs font-black text-primary uppercase">From ৳ {{ number_format($rEvent->price) }}</span>
-                                </div>
-                            </div>
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
             </div>
 
-            <!-- ── RIGHT SIDE (Fixed/Sticky) ── -->
-            <div class="lg:w-2/5 self-stretch">
-                <div class="lg:sticky lg:top-8">
-                    <div id="bookingCard" class="bg-white rounded-[2rem] border border-slate-50 shadow-sm p-5 flex flex-col justify-between animate-fadeIn">
+            <!-- ── RIGHT SIDE (Sticky) ── -->
+            <div class="lg:w-2/5 lg:block relative lg:self-stretch">
+                <div class="lg:sticky lg:top-[120px] z-20">
+                    <div id="bookingCard" class="bg-white rounded-[2rem] border border-slate-50 shadow-sm p-6 flex flex-col justify-between animate-fadeInSimple">
                         <!-- Event Details List -->
                         <div class="space-y-2">
                             <!-- Date -->
@@ -210,21 +184,46 @@
                             </button>
                         </div>
 
+                        @if($event->is_sold_out)
+                        <!-- SOLD OUT Overlay -->
+                        <div class="pt-6 border-t border-slate-100">
+                            <div class="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 text-center overflow-hidden">
+                                <div class="absolute inset-0 opacity-10">
+                                    <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px);"></div>
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                        <i class="fas fa-ticket-alt text-2xl text-red-400"></i>
+                                    </div>
+                                    <h4 class="font-outfit text-2xl font-black text-white mb-2 tracking-tight">Sold Out</h4>
+                                    <p class="text-slate-400 text-sm font-medium">All tickets for this event have been sold.</p>
+                                    <div class="mt-4 px-6 py-2.5 bg-red-500/20 border border-red-500/30 rounded-xl inline-block">
+                                        <span class="text-red-400 text-[10px] font-black uppercase tracking-[0.2em]">No Tickets Available</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @else
                         <!-- Ticket Selection -->
                         @if($event->ticketTypes->where('quantity', '>', 0)->count() > 0)
                         <div class="pt-3 border-t border-slate-100">
-                            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Select Tickets</h4>
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Tickets</h4>
+                                <span class="text-[9px] font-bold text-slate-300">{{ $event->total_available_tickets }} left</span>
+                            </div>
                             <div class="space-y-1.5">
                                 @foreach($event->ticketTypes as $tier)
                                     @if($tier->quantity > 0)
                                     <div class="flex items-center justify-between bg-white border border-slate-100 rounded-xl px-4 py-3 ticket-row {{ $loop->first ? 'first-ticket' : '' }} shadow-sm hover:border-primary/20 transition-all" 
                                          data-price="{{ $tier->price }}" 
                                          data-tier-id="{{ $tier->id }}"
-                                         data-available="{{ $tier->quantity }}">
+                                         data-available="{{ $tier->quantity }}"
+                                         data-tier-name="{{ $tier->name }}">
                                          
                                          <!-- 1. Ticket Type -->
                                          <div class="flex-1 min-w-0">
                                              <span class="text-[13px] font-black text-dark block truncate">{{ $tier->name }}</span>
+                                             <span class="text-[9px] font-medium text-slate-400">{{ $tier->quantity }} available</span>
                                          </div>
 
                                          <!-- 2. Price -->
@@ -242,6 +241,13 @@
                                                  <i class="fas fa-plus text-[8px]"></i>
                                              </button>
                                          </div>
+                                     </div>
+                                     @else
+                                     <div class="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 opacity-60">
+                                         <div class="flex-1 min-w-0">
+                                             <span class="text-[13px] font-black text-slate-400 block truncate line-through">{{ $tier->name }}</span>
+                                         </div>
+                                         <span class="px-3 py-1 bg-red-50 text-red-500 text-[9px] font-black rounded-lg border border-red-100 uppercase tracking-wider">Sold Out</span>
                                      </div>
                                      @endif
                                 @endforeach
@@ -262,19 +268,59 @@
                             <!-- Price and Book Button -->
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-xl font-black text-dark tracking-tighter">৳ <span id="totalDisplay">{{ number_format($event->ticketTypes->min('price') ?? 0) }}</span></p>
-                                    <p class="text-[9px] font-black text-orange-500 mt-0.5 uppercase tracking-[0.15em]">Filling Fast</p>
+                                    <p class="text-xl font-black text-dark tracking-tighter">৳ <span id="totalDisplay">{{ number_format($event->ticketTypes->where('quantity', '>', 0)->min('price') ?? 0) }}</span></p>
+                                    @if($event->total_available_tickets <= 10)
+                                        <p class="text-[9px] font-black text-red-500 mt-0.5 uppercase tracking-[0.15em]">Selling Out!</p>
+                                    @else
+                                        <p class="text-[9px] font-black text-orange-500 mt-0.5 uppercase tracking-[0.15em]">Filling Fast</p>
+                                    @endif
                                 </div>
                                 <button id="bookNowBtn" class="px-6 py-3 bg-[#F1556C] hover:bg-[#E1445B] text-white rounded-lg font-black text-[13px] tracking-tight transition-all shadow-xl shadow-pink-100/50 active:scale-95">
                                     Book Now
                                 </button>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <!-- Similar Experiences Section (Moved to Bottom) -->
+        @if($relatedEvents->count() > 0)
+        <div class="max-w-7xl mx-auto px-6 pb-20">
+            <div class="space-y-10 pt-12 border-t border-slate-200">
+                <div class="flex items-end justify-between">
+                    <div>
+                        <span class="text-primary font-black tracking-[0.3em] text-[10px] uppercase mb-4 block">RECOMMENDED</span>
+                        <h2 class="font-outfit text-3xl font-black text-dark tracking-tighter leading-tight">Similar <span class="text-primary">Experiences.</span></h2>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    @foreach($relatedEvents as $rEvent)
+                    <a href="{{ route('events.show', $rEvent->slug) }}" class="group block bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
+                        <div class="aspect-video relative overflow-hidden">
+                            <img loading="lazy" src="{{ $rEvent->image_url }}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110">
+                            <div class="absolute inset-x-4 top-4">
+                                <span class="px-3 py-1 bg-black/50 backdrop-blur-md rounded-lg text-[9px] font-bold text-white uppercase tracking-widest">
+                                    {{ $rEvent->category->name }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-outfit text-base font-black text-dark group-hover:text-primary transition-colors line-clamp-1">{{ $rEvent->title }}</h4>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-slate-400"><i class="far fa-calendar-alt mr-2 text-primary"></i> {{ $rEvent->date->format('d M, Y') }}</span>
+                                <span class="text-[10px] font-black text-primary uppercase">From ৳ {{ number_format($rEvent->price) }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 
@@ -294,21 +340,7 @@
 </style>
 
 <script>
-    function syncBannerHeight() {
-        const banner = document.getElementById('eventBanner');
-        const card = document.getElementById('bookingCard');
-        if (banner && card && window.innerWidth >= 1024) {
-            banner.style.height = card.offsetHeight + 'px';
-        } else if (banner) {
-            banner.style.height = 'auto';
-            banner.style.aspectRatio = '16/9';
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-        syncBannerHeight();
-        const img = document.querySelector('#eventBanner img');
-        if (img) img.addEventListener('load', syncBannerHeight);
 
         // Ticket Selection Logic
         const maxTickets = 4;
@@ -341,15 +373,40 @@
 
                 if (currentTotalQty < maxTickets) {
                     let qty = parseInt(qtyDisplay.textContent);
+                    const tierName = row.dataset.tierName || 'this tier';
                     if (qty < available) {
                         qtyDisplay.textContent = qty + 1;
                         updateTotal();
                     } else {
-                        // Optional: Toast or small message instead of alert
-                        console.log('Tier limit reached');
+                        // Professional popup for availability limit
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Limited Availability',
+                            html: `<div style="font-size:15px;color:#64748b;line-height:1.6;">Only <strong style="color:#F1556C;font-size:18px;">${available}</strong> ticket${available !== 1 ? 's' : ''} available for <strong style="color:#1B2B46;">${tierName}</strong>.</div>`,
+                            confirmButtonText: 'Got It',
+                            confirmButtonColor: '#520C6B',
+                            background: '#ffffff',
+                            showClass: { popup: 'animate__animated animate__fadeInDown animate__faster' },
+                            hideClass: { popup: 'animate__animated animate__fadeOutUp animate__faster' },
+                            customClass: {
+                                title: 'font-outfit font-black text-xl',
+                                confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                            }
+                        });
                     }
                 } else {
-                    alert('You can only purchase a maximum of 4 tickets in total.');
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Maximum Reached',
+                        html: '<div style="font-size:15px;color:#64748b;">You can only purchase a maximum of <strong style="color:#520C6B;">4 tickets</strong> in total.</div>',
+                        confirmButtonText: 'Understood',
+                        confirmButtonColor: '#520C6B',
+                        background: '#ffffff',
+                        customClass: {
+                            title: 'font-outfit font-black text-xl',
+                            confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                        }
+                    });
                 }
             });
 
@@ -443,6 +500,5 @@
         // Initial call to set total correctly based on quantities (0)
         updateTotal();
     });
-    window.addEventListener('resize', syncBannerHeight);
 </script>
 @endsection

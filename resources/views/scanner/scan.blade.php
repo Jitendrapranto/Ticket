@@ -5,50 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>QR Scanner | Ticket Kinun</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
-    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <!-- Critical Loader Styles (Inline for speed) -->
     <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+        :root { color-scheme: light; }
+        html, body { background-color: #000000 !important; margin: 0; padding: 0; }
+        #top-loader {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, #520C6B, #FFE700);
+            z-index: 10000; pointer-events: none; transition: width 0.1s ease-out;
+        }
     </style>
 
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Optimized Asset Bundle -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <!-- html5-qrcode library - use specific version -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',     // Brand Purple
-                        accent: '#FF7D52',      // Brand Orange
-                        dark: '#0F172A',
-                    },
-                    fontFamily: {
-                        sans: ['Arial', 'Helvetica', 'sans-serif'],
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.25)',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
+    @stack('styles')
 </head>
 <body class="bg-black text-white font-plus overflow-hidden h-screen flex flex-col">
 

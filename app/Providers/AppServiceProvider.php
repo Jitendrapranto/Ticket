@@ -33,12 +33,32 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('siteHeader', Cache::remember('site_header', 3600, function () {
                     return \App\Models\SiteHeader::first();
                 }));
+                $view->with('activeCategories', Cache::remember('active_event_categories', 3600, function () {
+                    return \App\Models\EventCategory::all(); // Adjust query if you have a status column
+                }));
             }
             if ($viewName === 'partials.footer') {
                 $view->with('siteFooter', Cache::remember('site_footer', 3600, function () {
                     return \App\Models\SiteFooter::first();
                 }));
             }
+        });
+
+        // Provide Admin Stats to all admin views
+        View::composer('admin.*', function ($view) {
+            $stats = [
+                'totalSales' => \App\Models\Booking::where('status', 'confirmed')->sum('total_amount'),
+                'todaySales' => \App\Models\Booking::where('status', 'confirmed')->whereDate('created_at', now())->sum('total_amount'),
+                'totalEvents' => \App\Models\Event::count(),
+                'todayEvents' => \App\Models\Event::whereDate('date', now())->count(),
+                'totalOrganizers' => \App\Models\User::where('role', 'organizer')->count(),
+                'organizerRequests' => \App\Models\User::where('role', 'pending_organizer')->count(),
+                'eventApprovalRequests' => \App\Models\Event::where('is_approved', false)->count(),
+                'paymentApprovalRequests' => \App\Models\Booking::where('status', 'pending')->count(),
+                'totalCustomers' => \App\Models\User::where('role', 'user')->count(),
+                'totalBookings' => \App\Models\Booking::count(),
+            ];
+            $view->with($stats);
         });
     }
 }

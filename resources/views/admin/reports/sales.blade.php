@@ -1,81 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platform Sales Reports | Admin Control Center</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        'primary-dark': '#1B2B46',
-                        secondary: '#1B2B46',
-                        accent: '#FF7D52',
-                        dark: '#0F172A',
-                        'brand-green': '#10B981',
-                        'slate-custom': '#F8FAFC'
-                    },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                    boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)' }
-                }
-            }
-        }
-    </script>
-    <style>
-        [x-cloak] { display: none !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F8FAFC] text-slate-800 font-plus" x-data="{ searchQuery: '' }">
-    @include('admin.sidebar')
+@extends('admin.dashboard')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
+@section('admin_content')
+<div x-data="{ searchQuery: '' }">
+
+    <div class="animate-fadeIn">
         <!-- Top Header -->
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
-            <div class="flex items-center gap-4">
-                <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="relative group hidden md:block">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" x-model="searchQuery" placeholder="Search platform analytics..." class="bg-slate-50 border border-slate-100 rounded-2xl pl-10 pr-6 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64 uppercase tracking-tighter">
-                </div>
-            </div>
-
-            <div class="flex items-center gap-6">
-                <button class="relative text-slate-400 hover:text-primary transition-colors">
-                    <i class="far fa-bell text-xl"></i>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full border-2 border-white"></span>
-                </button>
-                <div class="flex items-center gap-3 pl-6 border-l border-slate-100 mr-4">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs font-black text-dark">Super Admin</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator Account</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
+        
         <main class="p-8 flex-1">
             <!-- Header Section -->
             <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 mb-10">
@@ -84,17 +14,29 @@
                     <p class="text-slate-400 font-medium text-sm">Comprehensive analysis of ticket volume and sales performance across all organizers.</p>
                 </div>
 
-                <form action="{{ route('admin.finance.reports.sales') }}" method="GET" class="flex flex-wrap items-center gap-3">
-                    <div class="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20">
+                <form action="{{ route('admin.finance.reports.sales') }}" method="GET" class="flex flex-wrap items-center gap-3" x-data="{ filterType: '{{ request('date_filter', 'custom') }}' }">
+                    <div class="flex items-center bg-white border border-slate-100 rounded-2xl px-4 py-3 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20">
+                        <i class="fas fa-calendar-alt text-slate-400 mr-2"></i>
+                        <select name="date_filter" x-model="filterType" class="bg-transparent outline-none cursor-pointer pr-4 uppercase text-dark font-bold font-outfit">
+                            <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+                            <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>This Week</option>
+                            <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>This Month</option>
+                            <option value="this_year" {{ request('date_filter') == 'this_year' ? 'selected' : '' }}>This Year</option>
+                            <option value="custom" {{ request('date_filter', 'custom') == 'custom' ? 'selected' : '' }}>Custom Range Date</option>
+                        </select>
+                    </div>
+
+                    <div x-show="filterType === 'custom'" class="flex items-center gap-2 bg-white border border-slate-100 rounded-2xl px-4 py-2.5 shadow-sm text-[10px] font-black uppercase tracking-widest transition-all focus-within:ring-2 focus-within:ring-primary/20" x-transition>
                         <i class="far fa-calendar text-slate-400"></i>
                         <input type="date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" class="outline-none bg-transparent cursor-pointer">
                         <span class="text-slate-200">/</span>
                         <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="outline-none bg-transparent cursor-pointer">
                     </div>
+                    
                     <button type="submit" class="bg-secondary text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2">
                         <i class="fas fa-filter"></i> Apply
                     </button>
-                    <a href="{{ route('admin.finance.reports.sales.export', ['start_date' => $startDate->format('Y-m-d'), 'end_date' => $endDate->format('Y-m-d')]) }}" class="bg-white text-dark border border-slate-100 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
+                    <a href="{{ route('admin.finance.reports.sales.export', ['date_filter' => request('date_filter', 'custom'), 'start_date' => request('start_date', $startDate->format('Y-m-d')), 'end_date' => request('end_date', $endDate->format('Y-m-d'))]) }}" class="bg-white text-dark border border-slate-100 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
                          <i class="fas fa-download"></i> Export CSV
                     </a>
                     <button type="button" class="bg-primary/5 text-primary px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 transition-all flex items-center gap-2">
@@ -205,9 +147,6 @@
                         <h3 class="font-outfit text-2xl font-black text-dark tracking-tighter mb-1">Performance by Event</h3>
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cross-platform event sales analysis.</p>
                     </div>
-                    <button class="bg-white text-dark px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 flex items-center gap-2">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left whitespace-nowrap">
@@ -328,8 +267,6 @@
             }
         });
     </script>
-</body>
-</html>
-    </script>
-</body>
-</html>
+
+</div>
+@endsection

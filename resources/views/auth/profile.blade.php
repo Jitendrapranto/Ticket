@@ -49,6 +49,7 @@
                         <input type="file" id="avatar-upload" name="avatar" class="hidden" onchange="previewImage(this)">
                     </label>
                 </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4">JPG, PNG • Max 150KB</p>
                 @error('avatar') <p class="text-[10px] text-red-500 font-bold mb-4">{{ $message }}</p> @enderror
                 <h3 class="font-black text-dark uppercase tracking-widest text-xs mb-1">{{ $user->name }}</h3>
                 <p class="text-[10px] font-black text-primary uppercase tracking-tighter">
@@ -122,7 +123,7 @@
                     Security
                 </h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10" x-data="{ showPass: false, showConfirm: false }">
                     <div class="space-y-3">
                         <div class="flex justify-between items-center ml-1">
                             <label class="text-[11px] font-black text-white/50 uppercase tracking-wider block">New Password</label>
@@ -130,11 +131,11 @@
                         </div>
                         <div class="relative group">
                             <i class="fas fa-key absolute left-6 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"></i>
-                            <input type="password" id="password" name="password"
+                            <input :type="showPass ? 'text' : 'password'" id="password" name="password"
                                 class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-12 outline-none focus:border-primary/50 focus:bg-white/10 transition-all text-sm font-bold text-white"
                                 placeholder="Leave blank to keep current" autocomplete="new-password">
-                            <button type="button" onclick="togglePassword('password', 'toggle-icon-1')" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-all">
-                                <i id="toggle-icon-1" class="fas fa-eye text-xs"></i>
+                            <button type="button" @click="showPass = !showPass" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-all focus:outline-none">
+                                <i class="fas" :class="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
                             </button>
                         </div>
                     </div>
@@ -144,11 +145,11 @@
                         </div>
                         <div class="relative group">
                             <i class="fas fa-shield-alt absolute left-6 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"></i>
-                            <input type="password" id="password_confirmation" name="password_confirmation"
+                            <input :type="showConfirm ? 'text' : 'password'" id="password_confirmation" name="password_confirmation"
                                 class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-12 outline-none focus:border-primary/50 focus:bg-white/10 transition-all text-sm font-bold text-white"
                                 placeholder="Confirm new password" autocomplete="new-password">
-                            <button type="button" onclick="togglePassword('password_confirmation', 'toggle-icon-2')" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-all">
-                                <i id="toggle-icon-2" class="fas fa-eye text-xs"></i>
+                            <button type="button" @click="showConfirm = !showConfirm" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-all focus:outline-none">
+                                <i class="fas" :class="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
                             </button>
                         </div>
                     </div>
@@ -175,6 +176,17 @@
 <script>
 function previewImage(input) {
     if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 150 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Photo Too Large',
+                text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                confirmButtonColor: '#520C6B'
+            });
+            input.value = '';
+            return;
+        }
         var reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('avatar-preview').src = e.target.result;
@@ -183,22 +195,9 @@ function previewImage(input) {
                 document.getElementById('avatar-placeholder').classList.add('hidden');
             }
         }
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     }
 }
 
-function togglePassword(inputId, iconId) {
-    const input = document.getElementById(inputId);
-    const icon = document.getElementById(iconId);
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-}
 </script>
 @endsection

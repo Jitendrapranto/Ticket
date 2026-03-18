@@ -36,9 +36,6 @@ class SiteFooterController extends Controller
             'contact_phone'      => 'nullable|string|max:50',
             'contact_address'    => 'nullable|string|max:255',
             'copyright_text'     => 'nullable|string|max:500',
-            'privacy_url'        => 'nullable|string|max:255',
-            'terms_url'          => 'nullable|string|max:255',
-            'cookies_url'        => 'nullable|string|max:255',
         ]);
 
         $footer = SiteFooter::firstOrNew();
@@ -62,9 +59,6 @@ class SiteFooterController extends Controller
         $footer->contact_phone      = $data['contact_phone'];
         $footer->contact_address    = $data['contact_address'];
         $footer->copyright_text     = $data['copyright_text'];
-        $footer->privacy_url        = $data['privacy_url'];
-        $footer->terms_url          = $data['terms_url'];
-        $footer->cookies_url        = $data['cookies_url'];
         $footer->save();
 
         Cache::forget('site_footer');

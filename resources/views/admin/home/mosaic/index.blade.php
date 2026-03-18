@@ -1,28 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery Mosaic | Ticket Kinun Admin</title>
-    <style>/* FAST LOAD */ html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }</style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
-    <script>document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.add('ready')); setTimeout(() => document.documentElement.classList.add('ready'), 100);</script>
-</head>
-<body class="bg-[#F1F5F9] font-plus"
-      x-data="{
+@extends('admin.dashboard')
+
+@section('admin_content')
+<div x-data="{
           deleteModal: false,
           deleteUrl: '',
           itemName: '',
@@ -32,11 +11,12 @@
               this.deleteModal = true;
           }
       }">
-    @include('admin.sidebar')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
+    
+
+    <div class="animate-fadeIn">
         <!-- Header -->
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
+        <header class="mb-8 flex items-center justify-between shrink-0">
             <div>
                 <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Gallery Mosaic</h2>
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Homepage Gallery Section</p>
@@ -292,5 +272,6 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+
+</div>
+@endsection

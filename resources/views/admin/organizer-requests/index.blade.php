@@ -1,68 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Organizer Requests | Ticket Kinun Admin</title>
-    <style>html{visibility:hidden;opacity:0}html.ready{visibility:visible;opacity:1;transition:opacity .15s ease-in}</style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config={theme:{extend:{colors:{primary:'#520C6B',secondary:'#1B2B46',accent:'#FFE700',dark:'#0F172A'},fontFamily:{sans:['Arial','Helvetica','sans-serif'],outfit:['Arial','Helvetica','sans-serif'],plus:['Arial','Helvetica','sans-serif']},boxShadow:{'premium':'0 20px 50px -12px rgba(82,12,107,0.25)'}}}}
-    </script>
-    <style>
-        body{font-family:Arial,Helvetica,sans-serif}*{font-style:normal!important}
-        .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .animate-fadeInUp{animation:fadeInUp 0.35s ease forwards}
-    </style>
-    <script>document.addEventListener('DOMContentLoaded',function(){document.documentElement.classList.add('ready')});setTimeout(function(){document.documentElement.classList.add('ready')},100)</script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800">
+@extends('admin.dashboard')
 
-@include('admin.sidebar')
-
-<div class="lg:ml-72 min-h-screen flex flex-col">
-
-    <!-- Topbar -->
-    <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40 shadow-sm">
-        <div class="flex items-center gap-4">
-            <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div>
-                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Organizer Requests</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Review & Approve Applications</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-4" x-data="{ open: false }">
-            <div class="relative">
-                <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 focus:outline-none">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#520C6B] to-[#1B2B46] p-0.5 shadow-premium">
-                        <div class="w-full h-full rounded-[14px] bg-white flex items-center justify-center">
-                            <i class="fas fa-crown text-[#520C6B] text-xs"></i>
-                        </div>
-                    </div>
-                </button>
-                <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95 translate-y-2" x-transition:enter-end="opacity-100 scale-100 translate-y-0" class="absolute right-0 mt-3 w-52 bg-white rounded-3xl shadow-2xl border border-slate-100 py-3 z-50" style="display:none">
-                    <div class="px-5 py-3 border-b border-slate-50 mb-1">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Authenticated As</p>
-                        <p class="text-xs font-bold text-dark truncate">{{ Auth::user()->email ?? 'Admin' }}</p>
-                    </div>
-                    <a href="/" target="_blank" class="flex items-center gap-3 px-5 py-2.5 text-slate-600 hover:text-[#520C6B] hover:bg-[#520C6B]/5 transition-all text-xs font-black"><i class="fas fa-external-link-alt"></i> Live Site</a>
-                    <form action="{{ route('admin.logout') }}" method="POST" class="mt-1 pt-1 border-t border-slate-50">@csrf
-                        <button type="submit" class="w-full flex items-center gap-3 px-5 py-2.5 text-red-500 hover:bg-red-50 transition-all text-xs font-black"><i class="fas fa-power-off"></i> Logout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </header>
-
+@section('admin_content')
     <!-- Content -->
-    <main class="p-6 lg:p-10 flex-1 space-y-8">
+    <div class="space-y-8 animate-fadeIn">
 
         <!-- Toast Container -->
         <div id="toast-container" class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
@@ -80,9 +20,9 @@
                 </div>
                 <div class="p-6 space-y-4">
                     <div class="bg-slate-50 rounded-2xl p-4 space-y-1">
-                        <p class="font-black text-[#1B2B46] text-sm" id="modal-org-name">—</p>
-                        <p class="text-slate-500 font-medium text-xs" id="modal-org-institution">—</p>
-                        <p class="text-slate-400 text-xs font-medium" id="modal-org-email">—</p>
+                        <p class="font-black text-[#1B2B46] text-sm" id="modal-org-name">â€”</p>
+                        <p class="text-slate-500 font-medium text-xs" id="modal-org-institution">â€”</p>
+                        <p class="text-slate-400 text-xs font-medium" id="modal-org-email">â€”</p>
                     </div>
                     <div class="flex gap-3">
                         <button onclick="closeApproveModal()" class="flex-1 py-3 rounded-xl border-2 border-slate-100 text-slate-500 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">Cancel</button>
@@ -188,16 +128,16 @@
                                     </div>
                                     <div>
                                         <p class="text-[#1B2B46] font-black text-sm">{{ $req->name }}</p>
-                                        <p class="text-slate-400 text-xs font-medium">{{ $req->institution_name ?? '—' }}</p>
+                                        <p class="text-slate-400 text-xs font-medium">{{ $req->institution_name ?? 'â€”' }}</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-5">
                                 <p class="text-slate-700 text-sm font-bold">{{ $req->email }}</p>
-                                <p class="text-slate-400 text-xs font-medium mt-0.5">{{ $req->phone ?? '—' }}</p>
+                                <p class="text-slate-400 text-xs font-medium mt-0.5">{{ $req->phone ?? 'â€”' }}</p>
                             </td>
                             <td class="px-6 py-5">
-                                <p class="text-slate-500 text-xs font-medium max-w-[180px] leading-relaxed">{{ $req->present_address ?? '—' }}</p>
+                                <p class="text-slate-500 text-xs font-medium max-w-[180px] leading-relaxed">{{ $req->present_address ?? 'â€”' }}</p>
                             </td>
                             <td class="px-6 py-5">
                                 <p class="text-slate-600 text-sm font-bold">{{ $req->created_at->format('d M, Y') }}</p>
@@ -235,7 +175,7 @@
                                         <i class="fas fa-redo"></i>
                                     </button>
                                     @else
-                                    <span class="text-slate-300 text-xs font-bold">—</span>
+                                    <span class="text-slate-300 text-xs font-bold">-</span>
                                     @endif
                                     <button onclick="deleteRequest({{ $req->id }})"
                                         class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all text-xs" title="Delete">
@@ -248,145 +188,93 @@
                     </tbody>
                 </table>
             </div>
-            @if($requests->hasPages())
-            <div class="px-6 py-5 border-t border-slate-100">{{ $requests->appends(['status'=>$status])->links() }}</div>
-            @endif
             @endif
         </div>
+    </div>
 
-    </main>
-</div>
+    <!-- Page Scripts -->
+    <script>
+        (function() {
+            // Re-attached every time the page loads via Swup
+            console.log("Setting up Organizer action functions...");
+            
+            window.openApproveModal = function(id, name, institution, email) {
+                console.log("Opening approve modal for:", name);
+                window.currentApproveId = id;
+                const nameEl = document.getElementById('modal-org-name');
+                const instEl = document.getElementById('modal-org-institution');
+                const emailEl = document.getElementById('modal-org-email');
+                if (nameEl) nameEl.textContent = name;
+                if (instEl) instEl.textContent = institution || '-';
+                if (emailEl) emailEl.textContent = email;
+                document.getElementById('approveModal')?.classList.remove('hidden');
+            };
 
-<script>
-    // Sidebar toggle
-    const sidebarToggle = document.getElementById('toggle-sidebar');
-    const sidebar = document.getElementById('admin-sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay?.classList.toggle('hidden');
-            overlay?.classList.toggle('opacity-0');
-        });
-        overlay?.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden', 'opacity-0');
-        });
-    }
+            window.closeApproveModal = function() {
+                document.getElementById('approveModal')?.classList.add('hidden');
+                window.currentApproveId = null;
+            };
 
-    let currentApproveId = null;
-    let currentRejectId = null;
+            window.openRejectModal = function(id) {
+                console.log("Opening reject modal for ID:", id);
+                window.currentRejectId = id;
+                document.getElementById('rejectModal')?.classList.remove('hidden');
+            };
 
-    function openApproveModal(id, name, institution, email) {
-        currentApproveId = id;
-        document.getElementById('modal-org-name').textContent = name;
-        document.getElementById('modal-org-institution').textContent = institution || '—';
-        document.getElementById('modal-org-email').textContent = email;
-        document.getElementById('approveModal').classList.remove('hidden');
-    }
-    function closeApproveModal() {
-        document.getElementById('approveModal').classList.add('hidden');
-        currentApproveId = null;
-    }
-    function openRejectModal(id) {
-        currentRejectId = id;
-        document.getElementById('rejectModal').classList.remove('hidden');
-    }
-    function closeRejectModal() {
-        document.getElementById('rejectModal').classList.add('hidden');
-        currentRejectId = null;
-    }
+            window.closeRejectModal = function() {
+                document.getElementById('rejectModal')?.classList.add('hidden');
+                window.currentRejectId = null;
+            };
 
-    function confirmApprove() {
-        if (!currentApproveId) return;
-        const id = currentApproveId;
-        const btn = document.getElementById('confirmApproveBtn');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving...';
-        btn.disabled = true;
-        fetch(`/admin/organizer-requests/${id}/approve`, {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            closeApproveModal();
-            btn.innerHTML = '<i class="fas fa-check"></i> Approve Now';
-            btn.disabled = false;
-            if (data.success) {
-                showToast('success', `<strong>${data.user.name}</strong> has been approved as an Organizer!`);
-                setTimeout(() => location.reload(), 2200);
-            }
-        })
-        .catch(() => { btn.innerHTML = '<i class="fas fa-check"></i> Approve Now'; btn.disabled = false; showToast('error', 'Something went wrong.'); });
-    }
+            window.confirmApprove = function() {
+                if (!window.currentApproveId) return;
+                const id = window.currentApproveId;
+                const btn = document.getElementById('confirmApproveBtn');
+                btn.disabled = true;
+                btn.innerHTML = 'Wait...';
 
-    function confirmReject() {
-        if (!currentRejectId) return;
-        const id = currentRejectId;
-        const btn = document.getElementById('confirmRejectBtn');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rejecting...';
-        btn.disabled = true;
-        fetch(`/admin/organizer-requests/${id}/reject`, {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            closeRejectModal();
-            btn.innerHTML = '<i class="fas fa-times"></i> Reject';
-            btn.disabled = false;
-            if (data.success) {
-                showToast('warning', 'Organizer request has been rejected.');
-                setTimeout(() => location.reload(), 2200);
-            }
-        })
-        .catch(() => { btn.innerHTML = '<i class="fas fa-times"></i> Reject'; btn.disabled = false; showToast('error', 'Something went wrong.'); });
-    }
-
-    function deleteRequest(id) {
-        Swal.fire({
-            title: 'Delete Request?',
-            text: 'This organizer request will be permanently removed.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#1B2B46',
-            cancelButtonColor: '#F1556C',
-            confirmButtonText: 'Yes, Delete',
-            borderRadius: '2rem',
-            customClass: {
-                popup: 'rounded-[2rem] border border-slate-100 shadow-2xl',
-                confirmButton: 'rounded-xl px-10 py-4 font-black text-xs uppercase tracking-widest',
-                cancelButton: 'rounded-xl px-10 py-4 font-black text-xs uppercase tracking-widest'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/admin/organizer-requests/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
+                fetch(`/admin/organizer-requests/${id}/approve`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
                 })
                 .then(r => r.json())
                 .then(data => {
+                    closeApproveModal();
                     if (data.success) {
-                        const row = document.getElementById(`row-${id}`);
-                        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.3s'; setTimeout(() => row.remove(), 300); }
-                        showToast('success', 'Request deleted.');
+                        Swal.fire({ icon: 'success', title: 'Done', showConfirmButton: false, timer: 1000 });
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Try Again';
+                });
+            };
+
+            window.deleteRequest = function(id) {
+                console.log("Confirming delete for ID:", id);
+                Swal.fire({
+                    title: 'Delete this?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Delete'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/admin/organizer-requests/${id}`, {
+                            method: 'DELETE',
+                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                document.getElementById(`row-${id}`)?.remove();
+                                Swal.fire({ icon: 'success', title: 'Deleted', timer: 1000, showConfirmButton: false });
+                            }
+                        })
+                        .catch(() => Swal.fire({ icon: 'error', title: 'Failed' }));
                     }
                 });
-            }
-        });
-    }
-
-    function showToast(type, message) {
-        const container = document.getElementById('toast-container');
-        const styles = { success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', warning: 'bg-[#FFE700] text-[#1B2B46]' };
-        const icons  = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle' };
-        const toast = document.createElement('div');
-        toast.className = `pointer-events-auto flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-black transform transition-all duration-300 translate-x-20 opacity-0 ${styles[type]}`;
-        toast.innerHTML = `<i class="fas ${icons[type]}"></i><span>${message}</span>`;
-        container.appendChild(toast);
-        requestAnimationFrame(() => { toast.classList.remove('translate-x-20','opacity-0'); });
-        setTimeout(() => { toast.classList.add('translate-x-20','opacity-0'); setTimeout(() => toast.remove(), 400); }, 4500);
-    }
-</script>
-</body>
-</html>
+            };
+        })();
+    </script>
+@endsection

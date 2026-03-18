@@ -12,13 +12,33 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
+    private function getDateRange(Request $request)
+    {
+        if ($request->has('date_filter') && $request->date_filter !== 'custom') {
+            switch ($request->date_filter) {
+                case 'today':
+                    return [now()->startOfDay(), now()->endOfDay()];
+                case 'this_week':
+                    return [now()->startOfWeek(), now()->endOfWeek()];
+                case 'this_month':
+                    return [now()->startOfMonth(), now()->endOfMonth()];
+                case 'this_year':
+                    return [now()->startOfYear(), now()->endOfYear()];
+            }
+        }
+
+        $startDate = $request->input('start_date') ? Carbon::parse($request->start_date)->startOfDay() : now()->subDays(30)->startOfDay();
+        $endDate = $request->input('end_date') ? Carbon::parse($request->end_date)->endOfDay() : now()->endOfDay();
+
+        return [$startDate, $endDate];
+    }
+
     public function sales(Request $request)
     {
         $organizer_id = Auth::id();
         $eventIds = Event::where('user_id', $organizer_id)->pluck('id')->toArray();
 
-        $startDate = $request->input('start_date') ? Carbon::parse($request->start_date)->startOfDay() : now()->subDays(30)->startOfDay();
-        $endDate = $request->input('end_date') ? Carbon::parse($request->end_date)->endOfDay() : now()->endOfDay();
+        [$startDate, $endDate] = $this->getDateRange($request);
 
         if (empty($eventIds)) {
             $netEarnings = 0;
@@ -93,8 +113,7 @@ class ReportController extends Controller
         $organizer_id = Auth::id();
         $eventIds = Event::where('user_id', $organizer_id)->pluck('id')->toArray();
 
-        $startDate = $request->input('start_date') ? Carbon::parse($request->start_date)->startOfDay() : now()->subDays(30)->startOfDay();
-        $endDate = $request->input('end_date') ? Carbon::parse($request->end_date)->endOfDay() : now()->endOfDay();
+        [$startDate, $endDate] = $this->getDateRange($request);
 
         $bookings = Booking::with('event')
             ->whereIn('event_id', $eventIds)

@@ -10,12 +10,9 @@
         <div class="absolute bottom-0 left-0 w-[150px] md:w-[300px] h-[150px] md:h-[300px] bg-accent/5 rounded-full blur-[60px] md:blur-[100px] translate-y-1/2 -translate-x-1/4"></div>
 
         <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
-            <div class="inline-block px-4 py-1.5 rounded-full glass mb-4 md:mb-6">
-                <span class="text-accent font-black text-[10px] tracking-[0.2em] uppercase">{{ $hero->badge_text ?? 'CONTACT CENTER' }}</span>
-            </div>
 
             <h1 class="font-outfit text-4xl md:text-6xl lg:text-8xl font-black text-white leading-tight mb-4 md:mb-6 tracking-tighter">
-                {{ $hero->title_main ?? 'Get In' }} <span class="text-accent tracking-normal">{{ $hero->title_accent ?? 'Touch.' }}</span>
+                {{ $hero->title_main ?? 'Get In' }} <span class="text-[#FFE700] tracking-normal">{{ $hero->title_accent ?? 'Touch.' }}</span>
             </h1>
             <p class="text-slate-400 text-sm md:text-lg lg:text-xl mb-8 md:mb-12 max-w-2xl mx-auto font-light leading-relaxed px-2">
                 {{ $hero->subtitle ?? 'Have a question or need assistance with your booking? Our dedicated support team is available 24/7 to ensure your experience is flawless.' }}
@@ -138,7 +135,7 @@
                         <!-- Overlay -->
                         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(33,3,43,0.92) 0%, rgba(82,12,107,0.3) 50%, transparent 100%);"></div>
                         <!-- Content on image -->
-                        <div class="absolute inset-0 flex flex-col justify-between p-8">
+                        <div class="absolute inset-0 flex flex-col justify-between p-8 z-20">
                             <!-- Top badge -->
                             <div class="self-start">
                                 <span class="text-white/80 font-black text-[10px] tracking-[0.25em] uppercase px-3 py-1.5 rounded-full"
@@ -170,20 +167,22 @@
                                     </div>
                                 </div>
                                 <!-- Glass card -->
-                                <div class="rounded-[1.25rem] p-6"
+                                <div class="rounded-[1.25rem] p-6 relative z-30"
                                      style="background:rgba(255,255,255,0.08); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.15);">
                                     <h4 class="text-white font-black text-lg tracking-tight mb-2">{{ $support->card_title ?? 'Dedicated Support Team' }}</h4>
                                     <p class="text-white/60 text-[13px] font-medium leading-relaxed mb-6">{{ $support->card_description ?? 'Our specialists handle every request with precision and care. You\'re in good hands.' }}</p>
 
                                     <!-- Dynamic Buttons -->
-                                    <div class="flex flex-wrap gap-3">
+                                    <div x-data="{}" class="flex flex-wrap gap-3 relative z-40">
                                         @if($support->call_url)
-                                        <a href="{{ $support->call_url }}" class="flex-1 flex items-center justify-center gap-2 bg-[#EF4444] text-white py-3 rounded-xl text-[11px] font-black tracking-widest uppercase hover:bg-red-600 transition-all shadow-lg shadow-red-500/20">
+                                        <a href="{{ trim($support->call_url) }}" 
+                                           @click="if(window.innerWidth > 1024) { $event.preventDefault(); ensureSwal(() => Swal.fire({ title: '<span class=\'font-outfit font-black text-dark\'>Call from Phone</span>', html: '<p class=\'text-slate-500 font-medium\'>Please dial this number from your mobile device:<br><br><span class=\'text-2xl font-black text-primary\'>{{ $support->phone }}</span></p>', icon: 'info', confirmButtonText: 'Got it', confirmButtonColor: '#520C6B', customClass: { popup: 'rounded-[2rem]', confirmButton: 'rounded-xl font-bold uppercase tracking-widest text-xs px-8 py-3' } })) }"
+                                           class="flex-1 flex items-center justify-center gap-2 bg-[#EF4444] text-white py-3 rounded-xl text-[11px] font-black tracking-widest uppercase hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 cursor-pointer pointer-events-auto active:scale-95">
                                             <i class="fas fa-phone-alt"></i> Call Now
                                         </a>
                                         @endif
                                         @if($support->whatsapp_url)
-                                        <a href="{{ $support->whatsapp_url }}" class="flex-1 flex items-center justify-center gap-2 bg-[#22C55E] text-white py-3 rounded-xl text-[11px] font-black tracking-widest uppercase hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">
+                                        <a href="{{ trim($support->whatsapp_url) }}" class="flex-1 flex items-center justify-center gap-2 bg-[#22C55E] text-white py-3 rounded-xl text-[11px] font-black tracking-widest uppercase hover:bg-green-600 transition-all shadow-lg shadow-green-500/20 cursor-pointer pointer-events-auto active:scale-95">
                                             <i class="fab fa-whatsapp text-sm"></i> WhatsApp
                                         </a>
                                         @endif

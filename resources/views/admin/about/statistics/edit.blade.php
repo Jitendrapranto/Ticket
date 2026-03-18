@@ -1,89 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit About Statistic | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', 'primary-dark': '#1B2B46', secondary: '#1B2B46', accent: '#FF7D52', dark: '#0F172A' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F1F5F9] text-slate-800 font-plus">
-    @include('admin.sidebar')
+@extends('admin.dashboard')
 
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
-            <div>
-                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Edit Statistic</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"><a href="{{ route('admin.about.statistics.index') }}" class="hover:text-primary">About Us Statistics</a> / Edit</p>
+@section('admin_content')
+<div>
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-4">
+                <a href="{{ route('admin.about.statistics.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-dark hover:bg-slate-50 transition-all border border-slate-100 shadow-sm">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Edit Statistic</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Update data-point: {{ $statistic->label }}</p>
+                </div>
             </div>
         </header>
 
-        <main class="p-8 flex-1">
-            <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-10">
-                <form action="{{ route('admin.about.statistics.update', $statistic) }}" method="POST" class="space-y-6">
+        <main class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-[2.5rem] shadow-premium border border-slate-50 overflow-hidden text-left">
+                <form action="{{ route('admin.about.statistics.update', $statistic) }}" method="POST" class="p-10 space-y-8">
                     @csrf
                     @method('PUT')
                     
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Value (e.g. 500+)</label>
-                        <input type="text" name="value" value="{{ old('value', $statistic->value) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" required>
-                        @error('value')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Label (e.g. GLOBAL EVENTS)</label>
-                        <input type="text" name="label" value="{{ old('label', $statistic->label) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" required>
-                        @error('label')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">FontAwesome Icon (e.g. fas fa-globe)</label>
-                        <input type="text" name="icon" value="{{ old('icon', $statistic->icon) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" required>
-                        @error('icon')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                    </div>
-
-                    <div x-data="{ color: '{{ old('color', $statistic->color) }}' }">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Accent Color</label>
-                        <div class="flex items-center gap-4">
-                            <input type="color" name="color" x-model="color" class="h-12 w-20 cursor-pointer rounded-lg border-none">
-                            <input type="text" x-model="color" class="flex-1 bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-mono">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Value (e.g. 400+)</label>
+                            <input type="text" name="value" value="{{ old('value', $statistic->value) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="400+" required>
+                            @error('value')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
                         </div>
-                        @error('color')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Label (e.g. PARTNERS)</label>
+                            <input type="text" name="label" value="{{ old('label', $statistic->label) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="GLOBAL PARTNERS" required>
+                            @error('label')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sort Order</label>
-                        <input type="number" name="sort_order" value="{{ old('sort_order', $statistic->sort_order) }}" class="w-full bg-slate-50 border border-slate-200 text-dark rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold">
-                        @error('sort_order')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">FontAwesome Icon</label>
+                            <div class="relative group">
+                                <i class="fas fa-icons absolute left-6 top-1/2 -translate-y-1/2 text-primary/30"></i>
+                                <input type="text" name="icon" value="{{ old('icon', $statistic->icon) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 pl-14 pr-8 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm" placeholder="fas fa-star" required>
+                            </div>
+                            @error('icon')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
+                        </div>
+
+                        <div class="space-y-3 text-left" x-data="{ color: '{{ old('color', $statistic->color) }}' }">
+                            <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Accent Color</label>
+                            <div class="flex items-center gap-3">
+                                <div class="w-16 h-16 rounded-2xl overflow-hidden border border-slate-100 shadow-sm shrink-0">
+                                    <input type="color" name="color" x-model="color" class="w-full h-full cursor-pointer scale-150 border-none">
+                                </div>
+                                <input type="text" x-model="color" class="flex-1 bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-mono text-xs font-bold uppercase">
+                            </div>
+                            @error('color')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
+                        </div>
                     </div>
 
-                    <div class="pt-6 flex gap-4">
-                        <a href="{{ route('admin.about.statistics.index') }}" class="flex-1 text-center py-4 rounded-xl font-black tracking-widest uppercase hover:bg-slate-100 transition-all text-slate-500">Cancel</a>
-                        <button type="submit" class="flex-1 bg-primary text-white py-4 rounded-xl font-black tracking-widest uppercase hover:bg-primary-dark transition-all shadow-lg hover:shadow-primary/20">
+                    <div class="space-y-3 text-left">
+                        <label class="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase ml-4">Sort Order</label>
+                        <input type="number" name="sort_order" value="{{ old('sort_order', $statistic->sort_order) }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-5 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
+                        @error('sort_order')<p class="text-red-500 text-[10px] font-bold mt-1 ml-4">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <a href="{{ route('admin.about.statistics.index') }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-dark transition-all">Cancel Update</a>
+                        <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 transition-all active:scale-95 uppercase">
                             Update Statistic
                         </button>
                     </div>
@@ -91,5 +73,5 @@
             </div>
         </main>
     </div>
-</body>
-</html>
+</div>
+@endsection

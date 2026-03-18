@@ -17,7 +17,7 @@
                     <h3 class="font-outfit text-3xl font-black text-dark tracking-tighter">৳{{ number_format($availableBalance, 2) }}</h3>
                 </div>
             </div>
-            <button @click="showModal = true" class="bg-primary text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 active:scale-95">
+            <button @click="showModal = true" class="bg-primary text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-secondary transition-all shadow-xl shadow-primary/20 active:scale-95">
                 New Request
             </button>
         </div>
@@ -103,56 +103,95 @@
          x-transition:leave-end="opacity-0"
          x-cloak>
         
-        <div class="bg-white rounded-[3rem] w-full max-w-lg overflow-hidden shadow-2xl"
+        <div class="bg-white rounded-[3rem] w-full max-w-md overflow-hidden shadow-2xl"
              @click.away="showModal = false"
              x-transition:enter="transition ease-out duration-500"
              x-transition:enter-start="opacity-0 scale-90 translate-y-10"
              x-transition:enter-end="opacity-100 scale-100 translate-y-0">
             
-            <div class="p-10 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
-                <div>
-                    <h3 class="font-outfit text-2xl font-black text-dark tracking-tight">Request Widthdraw</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Submit your payout details below.</p>
+            <div class="p-6 border-b border-slate-100 bg-white flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-[1rem] bg-primary/5 text-primary flex items-center justify-center text-lg shadow-inner border border-primary/10">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-outfit text-2xl font-black text-dark tracking-tighter">New Withdrawal</h3>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Submit your payout details below.</p>
+                    </div>
                 </div>
-                <button @click="showModal = false" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-red-500 transition-colors">
+                <button @click="showModal = false" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all shadow-sm">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
-            <form action="{{ route('organizer.payout.requests.store') }}" method="POST" class="p-10 space-y-6">
+            <form action="{{ route('organizer.payout.requests.store') }}" method="POST" class="p-6 bg-slate-50/30">
                 @csrf
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Withdraw Amount</label>
-                    <div class="relative">
-                        <span class="absolute left-5 top-1/2 -translate-y-1/2 text-primary font-black text-sm">৳</span>
-                        <input type="number" name="amount" required step="0.01" max="{{ $availableBalance }}"
-                               class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-10 pr-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-black text-sm"
-                               placeholder="0.00">
+                
+                <div class="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 mb-5 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center text-[10px]">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <span class="text-[11px] font-black text-indigo-900 tracking-wide uppercase">Available Balance</span>
+                    </div>
+                    <span class="font-black text-indigo-700 text-lg tracking-tight">৳{{ number_format($availableBalance, 2) }}</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-2">Withdraw Amount</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-primary font-black text-sm border border-slate-200">৳</span>
+                            </div>
+                            <input type="number" name="amount" required step="0.01" max="{{ $availableBalance }}"
+                                   class="w-full bg-white border border-slate-200 rounded-2xl py-3 pl-14 pr-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-dark font-black text-base shadow-sm placeholder:text-slate-300 placeholder:font-medium"
+                                   placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-2">Payment Method</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                                <i class="fas fa-building-columns text-slate-400"></i>
+                            </div>
+                            <select name="method" required class="w-full bg-white border border-slate-200 rounded-2xl py-3 pl-12 pr-10 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-dark font-bold text-sm appearance-none cursor-pointer shadow-sm">
+                                <option value="" disabled selected>Select a method...</option>
+                                @foreach($paymentMethods as $paymentMethod)
+                                    <option value="{{ $paymentMethod->name }}">{{ $paymentMethod->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none">
+                                <i class="fas fa-chevron-down text-[10px] text-slate-400"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-2">Account Details</label>
+                        <div class="relative">
+                            <div class="absolute top-4 left-6 pointer-events-none">
+                                <i class="fas fa-file-invoice text-slate-400"></i>
+                            </div>
+                            <textarea name="account_details" rows="2" required
+                                      class="w-full bg-white border border-slate-200 rounded-2xl py-3 pl-14 pr-6 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-dark font-medium text-sm shadow-sm placeholder:text-slate-300 leading-relaxed"
+                                      placeholder="e.g. Dutch Bangla Bank, AC: 102.XXXX.XXXX"></textarea>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment Method</label>
-                    <select name="method" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm appearance-none cursor-pointer">
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="bKash">bKash</option>
-                        <option value="Nagad">Nagad</option>
-                        <option value="Rocket">Rocket</option>
-                    </select>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Account Details</label>
-                    <textarea name="account_details" rows="3" required
-                              class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-medium text-sm"
-                              placeholder="Enter bank name, AC number, or mobile wallet number..."></textarea>
-                </div>
-
-                <div class="pt-4">
-                    <button type="submit" class="w-full bg-dark text-white py-5 rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-primary transition-all shadow-xl active:scale-95">
-                        Submit Request
+                <div class="mt-6 pt-5 border-t border-slate-100">
+                    <button type="submit" class="w-full relative overflow-hidden group bg-dark text-white py-3 rounded-2xl font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all shadow-xl shadow-dark/20 active:scale-95">
+                        <span class="relative z-10 flex items-center justify-center gap-3">
+                            <i class="fas fa-paper-plane group-hover:-translate-y-1 transition-transform"></i>
+                            Submit Withdraw Request
+                        </span>
+                        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                     </button>
-                    <p class="text-center text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-6">Admin will process your request within 48 hours.</p>
+                    <p class="text-center text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-4 flex items-center justify-center gap-2">
+                        <i class="fas fa-shield-alt text-emerald-500"></i> Securely encrypted & processed within 48h.
+                    </p>
                 </div>
             </form>
         </div>

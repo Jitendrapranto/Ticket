@@ -56,9 +56,13 @@
                 
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Email Address</label>
-                    <input name="email" type="email" required value="{{ old('email') }}"
-                        class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3.5 px-4 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner"
-                        placeholder="john@example.com">
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                        <input name="email" type="email" required value="{{ old('email') }}"
+                            oninput="this.value = this.value.toLowerCase()"
+                            class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3.5 pl-11 pr-4 outline-none focus:border-primary/30 focus:bg-white transition-all text-sm font-bold shadow-inner"
+                            placeholder="john@example.com">
+                    </div>
                     @error('email') <p class="text-[9px] text-red-500 font-bold ml-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -72,10 +76,7 @@
                         placeholder="••••••••">
                 </div>
 
-                <div class="flex items-center">
-                    <input id="remember" name="remember" type="checkbox" class="w-4 h-4 rounded border-slate-200 text-primary focus:ring-primary/20">
-                    <label for="remember" class="ml-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Keep me logged in</label>
-                </div>
+
 
                 <button type="submit" class="w-full bg-primary hover:bg-[#3D0851] text-white py-4 rounded-xl font-black text-xs tracking-widest transition-all shadow-xl shadow-primary/10 active:scale-[0.98] uppercase">
                     Secure Login

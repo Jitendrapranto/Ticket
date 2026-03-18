@@ -4,81 +4,68 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative mt-7 pt-6 md:pt-12 lg:pt-20 pb-12 bg-white overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 md:px-6">
-            <div class="relative flex flex-col lg:flex-row items-stretch gap-6 h-auto lg:h-[480px]">
+    <section class="relative -mt-16 md:mt-0 pt-0 md:pt-6 lg:pt-8 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-0 md:px-6">
+            <div class="relative flex flex-col lg:flex-row items-stretch gap-6 h-screen md:h-[600px] lg:h-[480px]">
 
-                <!-- Left Side: Featured Event Banner Only -->
-                <div class="flex-1 relative group rounded-[2.5rem] overflow-hidden shadow-premium border border-slate-50">
-                    <div id="hero-slider" class="flex h-full transition-transform duration-700 ease-in-out">
+                <!-- Main Slider / Banner -->
+                <div class="absolute inset-0 md:relative md:flex-1 md:rounded-[2.5rem] overflow-hidden shadow-premium border-b md:border border-slate-50 z-0 group">
+                    <div id="hero-slider" class="flex items-stretch h-full w-full transition-transform duration-700 ease-in-out bg-slate-900">
                         @forelse($featuredEvents as $event)
-                        <div class="min-w-full h-full relative overflow-hidden">
+                        <div class="min-w-full h-full relative overflow-hidden flex items-center justify-center">
                             @if($event->image)
-                                <img src="{{ $event->image_url }}" 
-                                     @if($loop->first) fetchpriority="high" @else loading="lazy" @endif 
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <img src="{{ $event->image_url }}"
+                                     @if($loop->first) fetchpriority="high" @else loading="lazy" @endif
+                                     class="absolute inset-0 w-full h-full object-cover md:group-hover:scale-105 transition-transform duration-[1.5s] ease-out-expo">
                             @else
-                                <div class="w-full h-full bg-slate-50 flex items-center justify-center">
-                                    <i class="fas fa-calendar-star text-6xl text-slate-200"></i>
+                                <div class="absolute inset-0 w-full h-full bg-slate-100 flex items-center justify-center">
+                                    <i class="fas fa-calendar-star text-7xl text-slate-300"></i>
                                 </div>
                             @endif
 
                             <!-- Featured Tag -->
-                            <div class="absolute top-6 left-6 z-10">
-                                <span class="bg-primary text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg flex items-center gap-2">
-                                    <i class="fas fa-star text-[8px]"></i> FEATURED
+                            <div class="absolute top-24 md:top-6 left-6 z-10">
+                                <span class="bg-primary/95 backdrop-blur-md text-white px-5 py-2.5 rounded-2xl text-[10px] font-black tracking-[0.2em] uppercase shadow-xl flex items-center gap-2 border border-white/20">
+                                    <i class="fas fa-star text-[8px] animate-pulse"></i> FEATURED
                                 </span>
                             </div>
 
-                            <!-- Subtle Gradient Overlay at Bottom -->
-                            <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent"></div>
+                            <!-- Premium Gradient Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 pointer-events-none z-0"></div>
                         </div>
                         @empty
-                        <!-- Fallback when no featured events -->
-                        <div class="min-w-full h-full relative flex items-center bg-slate-50 overflow-hidden">
-                            <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/islamic-exercise.png')]"></div>
-                            <div class="relative z-10 w-full text-center flex flex-col items-center justify-center h-full">
-                                <i class="fas fa-calendar-star text-6xl text-slate-200 mb-6"></i>
-                                <h3 class="font-outfit text-2xl font-black text-dark/60">No Featured Events</h3>
-                                <p class="text-slate-400 text-sm mt-2">Check back soon for exciting events!</p>
-                            </div>
+                        <div class="min-w-full h-full bg-slate-50 flex items-center justify-center">
+                            <i class="fas fa-calendar-star text-5xl text-slate-200"></i>
                         </div>
                         @endforelse
                     </div>
 
-                    <!-- Navigation Controls -->
+                    <!-- Navigation Controls (Desktop) -->
                     @if($featuredEvents->count() > 1)
-                    <button id="hero-prev" class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 backdrop-blur shadow-2xl rounded-full flex items-center justify-center text-dark hover:bg-primary hover:text-white transition-all z-20 opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0">
+                    <button id="hero-prev" class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 backdrop-blur shadow-2xl rounded-full hidden md:flex items-center justify-center text-dark hover:bg-primary hover:text-white transition-all z-20 opacity-0 group-hover:opacity-100">
                         <i class="fas fa-chevron-left text-sm"></i>
                     </button>
-                    <button id="hero-next" class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 backdrop-blur shadow-2xl rounded-full flex items-center justify-center text-dark hover:bg-primary hover:text-white transition-all z-20 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0">
+                    <button id="hero-next" class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 backdrop-blur shadow-2xl rounded-full hidden md:flex items-center justify-center text-dark hover:bg-primary hover:text-white transition-all z-20 opacity-0 group-hover:opacity-100">
                         <i class="fas fa-chevron-right text-sm"></i>
                     </button>
-
-                    <!-- Indicators -->
-                    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                        @foreach($featuredEvents as $index => $evt)
-                        <div class="hero-dot w-8 h-1 {{ $index === 0 ? 'bg-white' : 'bg-white/40' }} rounded-full transition-all cursor-pointer hover:bg-white"></div>
-                        @endforeach
-                    </div>
                     @endif
                 </div>
 
-                <!-- Right Side: Event Details Card -->
-                <div class="lg:w-[380px] bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 flex flex-col justify-between relative overflow-hidden group shadow-premium border border-slate-100 animate-fadeInUp" style="animation-delay: 0.2s">
+                <!-- Right Side: Event Details Card (Floating on Mobile) -->
+                <div class="absolute bottom-10 inset-x-4 md:static md:w-[380px] bg-[#EDF2F7] rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-2xl md:shadow-premium border border-white/20 md:border-slate-100 animate-fadeInUp z-10" style="animation-delay: 0.2s">
                     <div class="relative z-10 h-full flex flex-col">
-                        <span class="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-6 block">Quick Overview</span>
+                        <span class="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-4 md:mb-6 block">Quick Overview</span>
 
                         @if($featuredEvents->count() > 0)
                         <div id="overview-card" class="flex-1 flex flex-col">
-                            <h2 id="overview-title" class="font-outfit text-3xl md:text-4xl font-black text-dark leading-tight mb-8 tracking-tight transition-all duration-500">
+                            <h2 id="overview-title" class="font-outfit text-2xl md:text-3xl font-black text-dark leading-tight mb-6 md:mb-8 tracking-tight transition-all duration-500">
                                 {{ $featuredEvents[0]->title }}
                             </h2>
 
-                            <div class="space-y-5 mb-10 text-left">
+                            <div class="space-y-4 md:space-y-5 mb-8 md:mb-10 text-left">
                                 <div class="flex items-center gap-4 group/item">
-                                    <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary/20 transition-all">
-                                        <i class="fas fa-calendar-alt text-sm text-primary"></i>
+                                    <div class="w-12 h-12 rounded-2xl bg-[#520C6B]/10 flex items-center justify-center group-hover/item:bg-primary/20 transition-all">
+                                        <i class="fas fa-calendar-alt text-sm text-[#520C6B]"></i>
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">Date</span>
@@ -87,8 +74,8 @@
                                 </div>
 
                                 <div class="flex items-center gap-4 group/item">
-                                    <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center group-hover/item:bg-accent/20 transition-all">
-                                        <i class="fas fa-map-marker-alt text-sm text-accent"></i>
+                                    <div class="w-12 h-12 rounded-2xl bg-[#2563EB]/10 flex items-center justify-center group-hover/item:bg-accent/20 transition-all">
+                                        <i class="fas fa-map-marker-alt text-sm text-[#2563EB]"></i>
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">Location</span>
@@ -98,33 +85,16 @@
                             </div>
                         </div>
 
-                        <!-- Book Your Seat Button -->
-                        <a href="{{ route('events.show', $featuredEvents[0]->slug) }}" id="overview-book-btn" data-slug="{{ $featuredEvents[0]->slug }}" class="group/btn relative inline-flex items-center gap-3 bg-dark w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-premium">
+                        <a href="{{ route('events.show', $featuredEvents[0]->slug) }}" id="overview-book-btn" class="group/btn relative inline-flex items-center gap-3 bg-[#1B2B46] w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-xl">
                             <span class="relative z-10 flex items-center gap-3">
                                 Book Your Seat
                                 <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                             </span>
                         </a>
-                        @else
-                        <div class="flex-1 flex flex-col items-center justify-center text-center">
-                            <i class="fas fa-calendar-xmark text-4xl text-slate-200 mb-4"></i>
-                            <h2 class="font-outfit text-2xl font-black text-dark mb-3 tracking-tight">No Events Yet</h2>
-                            <p class="text-slate-400 text-sm mb-8">Stay tuned for upcoming featured events.</p>
-                        </div>
-
-                        <a href="{{ route('events') }}" class="group/btn relative inline-flex items-center gap-3 bg-dark w-full py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] uppercase hover:bg-primary transition-all overflow-hidden justify-center text-white mt-auto shadow-premium">
-                            <span class="relative z-10 flex items-center gap-3">
-                                Explore All Events
-                                <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
-                            </span>
-                        </a>
                         @endif
                     </div>
-
-                    <!-- Decorative Elements -->
-                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-                    <div class="absolute -left-16 -top-16 w-48 h-48 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -132,7 +102,7 @@
 
 
     <!-- Featured Events Carousel Section -->
-    <section id="trending" class="py-12 md:py-24 bg-[#E4EDF7] overflow-hidden">
+    <section id="trending" class="py-12 mt-2 md:py-24 bg-[#E4EDF7] overflow-hidden">
         <!-- Header aligned with main container -->
         <div class="max-w-7xl mx-auto px-4 md:px-6 mb-8 md:mb-12">
             <div>
@@ -162,10 +132,16 @@
                                 <span class="px-4 py-2 bg-primary rounded-xl text-[10px] font-black text-white tracking-wider uppercase shadow-lg">
                                     {{ $event->category ? $event->category->name : 'Featured' }}
                                 </span>
+                                @if($event->is_sold_out)
+                                <span class="px-4 py-2 bg-red-600 rounded-xl text-[10px] font-black text-white tracking-wider flex items-center gap-1.5 shadow-lg shadow-red-600/30 uppercase">
+                                    <i class="fas fa-ban text-[8px]"></i> Sold Out
+                                </span>
+                                @else
                                 <span class="px-4 py-2 bg-emerald-500 rounded-xl text-[10px] font-black text-white tracking-wider flex items-center gap-2 shadow-lg">
                                     <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                                     Live Now
                                 </span>
+                                @endif
                             </div>
                         </div>
 
@@ -199,13 +175,19 @@
                             <!-- Spacer -->
                             <div class="flex-1 min-h-2"></div>
 
+                            @if($event->is_sold_out)
+                            <span class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-slate-200 text-slate-500 font-black text-[10px] tracking-[0.15em] uppercase cursor-not-allowed">
+                                <i class="fas fa-ban text-[9px]"></i> Sold Out
+                            </span>
+                            @else
                             <span class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-secondary text-white font-black text-[10px] tracking-[0.15em] uppercase transition-all group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-translate-y-1">
                                 Book Your Seat <i class="fas fa-arrow-right text-[9px]"></i>
                             </span>
+                            @endif
                         </div>
                     </a>
                     @empty
-                    <div class="w-full py-20 text-center">
+                    <div class="w-full py-20 text-center bg-white rounded-[2rem] border border-slate-100 shadow-sm">
                         <i class="fas fa-calendar-xmark text-5xl text-slate-200 mb-4"></i>
                         <p class="text-slate-400 font-bold uppercase tracking-widest">No featured events at the moment.</p>
                     </div>
@@ -214,11 +196,13 @@
             </div>
 
             <!-- Mobile Navigation Dots -->
-            <div class="flex md:hidden justify-center gap-2 mt-8">
-                @for($i = 0; $i < min(ceil($featuredEvents->count()), 3); $i++)
-                <button class="featured-dot w-3 h-3 rounded-full {{ $i === 0 ? 'bg-primary' : 'bg-slate-300' }} transition-all"></button>
-                @endfor
+            @if($featuredEvents->count() > 1)
+            <div class="flex md:hidden justify-center gap-3 mt-10">
+                @foreach($featuredEvents as $index => $event)
+                <button class="featured-dot w-2.5 h-2.5 rounded-full {{ $index === 0 ? 'bg-primary ring-4 ring-primary/10' : 'bg-slate-300 transition-all hover:bg-slate-400' }}"></button>
+                @endforeach
             </div>
+            @endif
 
             <!-- View All Link -->
             <div class="flex justify-center mt-10">
@@ -278,10 +262,16 @@
                             <span class="px-4 py-2 bg-primary rounded-xl text-[10px] font-black text-white tracking-wider uppercase shadow-lg">
                                 {{ $event->category ? $event->category->name : 'General' }}
                             </span>
+                            @if($event->is_sold_out)
+                            <span class="px-4 py-2 bg-red-600 rounded-xl text-[10px] font-black text-white tracking-wider flex items-center gap-1.5 shadow-lg shadow-red-600/30 uppercase">
+                                <i class="fas fa-ban text-[8px]"></i> Sold Out
+                            </span>
+                            @else
                             <span class="px-4 py-2 bg-emerald-500 rounded-xl text-[10px] font-black text-white tracking-wider flex items-center gap-2 shadow-lg">
                                 <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                                 Live Now
                             </span>
+                            @endif
                         </div>
                     </div>
 
@@ -315,9 +305,15 @@
                         <!-- Spacer -->
                         <div class="flex-1 min-h-2"></div>
 
+                        @if($event->is_sold_out)
+                        <span class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-slate-200 text-slate-500 font-black text-[10px] tracking-[0.15em] uppercase cursor-not-allowed">
+                            <i class="fas fa-ban text-[9px]"></i> Sold Out
+                        </span>
+                        @else
                         <span class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-secondary text-white font-black text-[10px] tracking-[0.15em] uppercase transition-all group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-translate-y-1">
                             Book Your Seat <i class="fas fa-arrow-right text-[9px]"></i>
                         </span>
+                        @endif
                     </div>
                 </a>
                 @empty
@@ -522,23 +518,27 @@
              </div>
 
              @if($galleryList->count())
-             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[340px]">
                 @foreach($galleryList as $index => $gImg)
                 @php
-                    // Auto-assign grid sizes: first image gets 2x2, rest are 1x1 or 2x1
-                    if($index === 0) { $colClass = 'col-span-2'; $rowClass = 'row-span-2'; $heightClass = 'h-[700px]'; $roundClass = 'rounded-[3.5rem]'; }
-                    elseif($index === 3 || $index === 4) { $colClass = 'col-span-1'; $rowClass = ''; $heightClass = 'h-[340px]'; $roundClass = 'rounded-[2.5rem]'; }
-                    else { $colClass = 'col-span-1'; $rowClass = ''; $heightClass = 'h-[340px]'; $roundClass = 'rounded-[2.5rem]'; }
+                    // Optimization for exactly 5 images:
+                    // Index 0: 2x2 span
+                    // Indices 1-4: 1x1 span
+                    if($index === 0) {
+                        $gridClass = 'col-span-2 row-span-2 h-full rounded-[3.5rem]';
+                    } else {
+                        $gridClass = 'col-span-1 row-span-1 h-full rounded-[2.5rem]';
+                    }
                 @endphp
-                <div class="{{ $colClass }} {{ $rowClass }} {{ $roundClass }} overflow-hidden group relative {{ $heightClass }} cursor-zoom-in"
+                <div class="{{ $gridClass }} overflow-hidden group relative cursor-zoom-in shadow-sm hover:shadow-xl transition-all duration-500"
                      @click="open({{ $index }})">
                     <img src="{{ $gImg->image_url }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" loading="lazy" alt="{{ $gImg->title ?? '' }}">
                     <!-- Hover overlay -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-between p-8">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-between p-8">
                         @if($gImg->title)
-                        <h4 class="text-white font-black text-xl leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{{ $gImg->title }}</h4>
+                        <h4 class="text-white font-black text-xl leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500 line-clamp-2 max-w-[80%]">{{ $gImg->title }}</h4>
                         @endif
-                        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center translate-y-4 group-hover:translate-y-0 transition-transform duration-500 shrink-0 ml-auto">
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center translate-y-4 group-hover:translate-y-0 transition-transform duration-500 shrink-0 ml-auto border border-white/20">
                             <i class="fas fa-expand text-white text-sm"></i>
                         </div>
                     </div>
@@ -546,20 +546,21 @@
                 @endforeach
              </div>
              @else
-             {{-- fallback static gallery --}}
-             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+             {{-- fallback static gallery optimized for 5 images --}}
+             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[340px]">
                 @php $fallbacks = [
-                    ['src'=>'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1000&q=80','caption'=>'Neon World Tour Final','cls'=>'col-span-2 row-span-2 rounded-[3.5rem] h-[700px]'],
-                    ['src'=>'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=600&q=80','caption'=>'Light Trails','cls'=>'col-span-1 rounded-[2.5rem] h-[340px]'],
-                    ['src'=>'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=600&q=80','caption'=>'Festival Energy','cls'=>'col-span-1 rounded-[2.5rem] h-[340px]'],
-                    ['src'=>'https://images.unsplash.com/photo-1472653425572-ca97664ff3AD?auto=format&fit=crop&w=1200&q=80','caption'=>'Experience The Unseen','cls'=>'col-span-2 rounded-[2.5rem] h-[340px]'],
+                    ['src'=>'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1000&q=80','caption'=>'Neon World Tour Final','cls'=>'col-span-2 row-span-2 rounded-[3.5rem]'],
+                    ['src'=>'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=600&q=80','caption'=>'Light Trails','cls'=>'col-span-1 rounded-[2.5rem]'],
+                    ['src'=>'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=600&q=80','caption'=>'Festival Energy','cls'=>'col-span-1 rounded-[2.5rem]'],
+                    ['src'=>'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80','caption'=>'Mainstage Crowd','cls'=>'col-span-1 rounded-[2.5rem]'],
+                    ['src'=>'https://images.unsplash.com/photo-1472653425572-ca97664ff3AD?auto=format&fit=crop&w=1200&q=80','caption'=>'Experience The Unseen','cls'=>'col-span-1 rounded-[2.5rem]'],
                 ]; @endphp
                 @foreach($fallbacks as $fi => $fb)
-                <div class="{{ $fb['cls'] }} overflow-hidden group relative cursor-zoom-in" @click="open({{ $fi }})">
+                <div class="{{ $fb['cls'] }} overflow-hidden group relative cursor-zoom-in shadow-sm hover:shadow-xl transition-all duration-500" @click="open({{ $fi }})">
                     <img src="{{ $fb['src'] }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" alt="{{ $fb['caption'] }}">
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-between p-8">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-between p-8">
                         <h4 class="text-white font-black text-xl leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{{ $fb['caption'] }}</h4>
-                        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shrink-0 ml-2">
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 ml-2 border border-white/20">
                             <i class="fas fa-expand text-white text-sm"></i>
                         </div>
                     </div>
@@ -677,16 +678,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const baseUrl = '{{ url("/events") }}';
 
     function updateSlider() {
+        if (!slider) return;
         slider.style.transform = `translateX(-${currentSlide * 100}%)`;
 
         // Update Swipe Dots
-        dots.forEach((dot, index) => {
+        const dotInners = document.querySelectorAll('.hero-dot-inner');
+        dotInners.forEach((dot, index) => {
             if (index === currentSlide) {
-                dot.classList.remove('bg-white/40');
-                dot.classList.add('bg-white');
+                dot.classList.remove('bg-white/40', 'w-4');
+                dot.classList.add('bg-white', 'w-8');
             } else {
-                dot.classList.remove('bg-white');
-                dot.classList.add('bg-white/40');
+                dot.classList.remove('bg-white', 'w-8');
+                dot.classList.add('bg-white/40', 'w-4');
             }
         });
 
@@ -710,6 +713,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }
     }
+
+    // Add click listeners to hero dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            updateSlider();
+        });
+    });
 
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
@@ -765,11 +776,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update dots for mobile
             featuredDots.forEach((dot, i) => {
                 if (i === featuredIndex) {
-                    dot.classList.remove('bg-slate-300');
-                    dot.classList.add('bg-primary');
+                    dot.classList.remove('bg-slate-300', 'w-2.5');
+                    dot.classList.add('bg-primary', 'w-6', 'ring-4', 'ring-primary/10');
                 } else {
-                    dot.classList.remove('bg-primary');
-                    dot.classList.add('bg-slate-300');
+                    dot.classList.remove('bg-primary', 'w-6', 'ring-4', 'ring-primary/10');
+                    dot.classList.add('bg-slate-300', 'w-2.5');
                 }
             });
         }

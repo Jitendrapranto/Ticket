@@ -5,47 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Manual Check-in | Ticket Kinun</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
-    <!-- Prevent FOUC: Hide body until styles are ready -->
+    <!-- Critical Loader Styles (Inline for speed) -->
     <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
+        :root { color-scheme: light; }
+        html, body { background-color: #F8FAFC !important; margin: 0; padding: 0; }
+        #top-loader {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, #520C6B, #FFE700);
+            z-index: 10000; pointer-events: none; transition: width 0.1s ease-out;
+        }
     </style>
 
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Optimized Asset Bundle -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        dark: '#0F172A',
-                    },
-                    fontFamily: {
-                        sans: ['Arial', 'Helvetica', 'sans-serif'],
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
+    @stack('styles')
 </head>
 <body class="bg-[#F8FAFC] text-slate-800" x-data="{ sidebarOpen: false, ...checkinHandler() }">
 
@@ -81,8 +57,12 @@
                         <p class="text-xs font-black text-dark leading-none pb-1">{{ Auth::user()->name }}</p>
                         <p class="text-[10px] font-bold text-primary uppercase tracking-widest leading-none">Authorized Scanner</p>
                     </div>
-                    <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-black shadow-lg shadow-primary/20">
-                        {{ substr(Auth::user()->name, 0, 1) }}
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 border-2 border-white shadow-lg flex items-center justify-center overflow-hidden">
+                        @if(Auth::user()->avatar)
+                            <img loading="lazy" src="{{ asset('storage/'.Auth::user()->avatar) }}" class="w-full h-full object-cover">
+                        @else
+                            <span class="text-primary text-sm font-black">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                        @endif
                     </div>
                     <i class="fas fa-chevron-down text-[10px] text-slate-400 transition-transform duration-300" :class="open ? 'rotate-180' : ''"></i>
                 </button>

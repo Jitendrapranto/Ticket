@@ -189,24 +189,10 @@
                     <p id="str-text" class="text-[10px] font-bold text-slate-400 ml-1"></p>
                 </div>
 
-                <!-- Terms and Conditions Checkbox -->
-                <div class="flex items-start gap-3 mt-2">
-                    <div class="relative mt-0.5">
-                        <input type="checkbox" name="terms" id="terms" required
-                            class="peer w-5 h-5 rounded-md border-2 border-slate-200 appearance-none cursor-pointer checked:bg-[#4F0B67] checked:border-[#4F0B67] transition-all">
-                        <i class="fas fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-[9px] pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i>
-                    </div>
-                    <label for="terms" class="text-xs text-slate-500 font-medium leading-relaxed cursor-pointer">
-                        I agree to the <a href="#" class="text-[#4F0B67] font-bold hover:underline">Terms and Conditions</a> 
-                        and <a href="#" class="text-[#4F0B67] font-bold hover:underline">Privacy Policy</a> of Ticket Kinun.
-                    </label>
-                </div>
-                @error('terms') <p class="text-[10px] text-red-500 font-bold ml-1 -mt-2">{{ $message }}</p> @enderror
 
                 <!-- Submit Button -->
                 <button type="submit" id="submitBtn"
-                    class="w-full bg-[#4F0B67] hover:bg-[#3D0851] text-white py-4 rounded-xl font-black text-xs tracking-widest transition-all shadow-xl shadow-[#4F0B67]/20 active:scale-[0.98] uppercase flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled>
+                    class="w-full bg-[#4F0B67] hover:bg-[#3D0851] text-white py-4 rounded-xl font-black text-xs tracking-widest transition-all shadow-xl shadow-[#4F0B67]/20 active:scale-[0.98] uppercase flex items-center justify-center gap-2">
                     <i class="fas fa-user-plus text-sm"></i>
                     Create Organizer Account
                 </button>
@@ -284,11 +270,5 @@
         }
     });
 
-    // Enable submit only when terms is checked
-    const termsCheckbox = document.getElementById('terms');
-    const submitBtn = document.getElementById('submitBtn');
-    termsCheckbox.addEventListener('change', function () {
-        submitBtn.disabled = !this.checked;
-    });
 </script>
 @endsection

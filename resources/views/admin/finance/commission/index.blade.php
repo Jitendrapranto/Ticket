@@ -1,151 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commission Settings | Ticket Kinun Admin</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+@extends('admin.dashboard')
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        'primary-dark': '#1B2B46',
-                        secondary: '#1B2B46',
-                        accent: '#FF7D52',
-                        dark: '#0F172A',
-                    },
-                    fontFamily: {
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.15)',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F8FAFC] text-slate-800 font-plus overflow-x-hidden">
+@section('admin_content')
+<div class="animate-fadeIn">
+    <!-- Page Header -->
+    <div class="mb-10 flex justify-between items-end">
+        <div>
+            <h1 class="font-outfit text-3xl font-black text-dark tracking-tight mb-2">Commission <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Settings.</span></h1>
+            <p class="text-slate-400 font-medium text-sm">Configure how much commission you earn per ticket sale.</p>
+        </div>
+    </div>
 
-    @include('admin.sidebar')
+    @if(session('success'))
+    <div class="mb-8 p-6 bg-emerald-50 border border-emerald-100 rounded-[1.5rem] flex items-center gap-4 text-emerald-700">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-lg">
+            <i class="fas fa-check"></i>
+        </div>
+        <div>
+            <h4 class="font-black text-sm uppercase">Success</h4>
+            <p class="text-xs font-medium">{{ session('success') }}</p>
+        </div>
+    </div>
+    @endif
 
-    <!-- Main Content wrapper -->
-    <div class="lg:ml-72 min-h-screen flex flex-col transition-all duration-300">
+    <form action="{{ route('admin.finance.commission.update') }}" method="POST">
+        @csrf
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-8">
+                <div class="bg-white rounded-[2rem] p-8 shadow-premium border border-slate-50">
+                    <h3 class="font-outfit text-xl font-black text-dark tracking-tight mb-6 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm"><i class="fas fa-percentage"></i></span>
+                        Commission Model
+                    </h3>
 
-        <!-- Topbar -->
-        <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40">
-            <div class="flex items-center gap-6">
-                <!-- Mobile Menu Button -->
-                <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark hover:bg-slate-100 transition-colors">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-
-            <div class="flex items-center gap-6">
-                <div class="text-right">
-                    <p class="text-xs font-black text-dark">{{ Auth::user()->name }}</p>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="p-10 flex-1 max-w-7xl mx-auto w-full">
-
-            <!-- Page Header -->
-            <div class="mb-10 flex justify-between items-end">
-                <div>
-                    <h1 class="font-outfit text-3xl font-black text-dark tracking-tight mb-2">Commission Settings</h1>
-                    <p class="text-slate-400 font-medium text-sm">Configure how much commission you earn per ticket sale.</p>
-                </div>
-            </div>
-
-            @if(session('success'))
-            <div class="mb-8 p-6 bg-green-50 border border-green-100 rounded-[1.5rem] flex items-center gap-4 text-green-700">
-                <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center text-lg">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div>
-                    <h4 class="font-black text-sm">Success</h4>
-                    <p class="text-xs font-medium">{{ session('success') }}</p>
-                </div>
-            </div>
-            @endif
-
-            <form action="{{ route('admin.finance.commission.update') }}" method="POST">
-                @csrf
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                    <div class="space-y-8">
-                        <div class="bg-white rounded-[2rem] p-8 shadow-premium border border-slate-50">
-                            <h3 class="font-outfit text-xl font-black text-dark tracking-tight mb-6 flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm"><i class="fas fa-percentage"></i></span>
-                                Commission Model
-                            </h3>
-
-                            <div class="space-y-6">
-                                <div>
-                                    <label class="text-xs font-bold text-slate-500 mb-2 block">Revenue Model</label>
-                                    <select name="revenue_model" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
-                                        <option value="percentage" {{ ($setting->revenue_model ?? 'percentage') == 'percentage' ? 'selected' : '' }}>Percentage of Ticket Price (%)</option>
-                                        <option value="fixed" {{ ($setting->revenue_model ?? 'percentage') == 'fixed' ? 'selected' : '' }}>Fixed Amount per Ticket (৳)</option>
-                                    </select>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="text-xs font-bold text-slate-500 mb-2 block">Percentage (%)</label>
-                                        <input type="number" step="0.01" name="default_percentage" value="{{ $setting->default_percentage ?? '10.00' }}" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-black text-xl text-center placeholder:text-slate-300">
-                                    </div>
-                                    <div>
-                                        <label class="text-xs font-bold text-slate-500 mb-2 block">Fixed Amount (৳)</label>
-                                        <input type="number" step="0.01" name="fixed_amount" value="{{ $setting->fixed_amount ?? '0.00' }}" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-black text-xl text-center placeholder:text-slate-300">
-                                    </div>
-                                </div>
-                                <div class="pt-4 border-t border-slate-100">
-                                    <label class="flex items-center gap-4 cursor-pointer group">
-                                        <div class="relative">
-                                            <input type="checkbox" name="is_active" class="sr-only peer" {{ ($setting->is_active ?? true) ? 'checked' : '' }}>
-                                            <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-black text-dark group-hover:text-primary transition-colors">Apply Commission</p>
-                                            <p class="text-[10px] font-bold text-slate-400 mt-0.5">If disabled, the platform will earn 0% from organizers.</p>
-                                        </div>
-                                    </label>
-                                </div>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 mb-2 block uppercase tracking-widest">Revenue Model</label>
+                            <select name="revenue_model" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-bold text-sm">
+                                <option value="percentage" {{ ($setting->revenue_model ?? 'percentage') == 'percentage' ? 'selected' : '' }}>Percentage of Ticket Price (%)</option>
+                                <option value="fixed" {{ ($setting->revenue_model ?? 'percentage') == 'fixed' ? 'selected' : '' }}>Fixed Amount per Ticket (৳)</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 mb-2 block uppercase tracking-widest">Percentage (%)</label>
+                                <input type="number" step="0.01" name="default_percentage" value="{{ $setting->default_percentage ?? '10.00' }}" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-black text-xl text-center placeholder:text-slate-300">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 mb-2 block uppercase tracking-widest">Fixed Amount (৳)</label>
+                                <input type="number" step="0.01" name="fixed_amount" value="{{ $setting->fixed_amount ?? '0.00' }}" class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 px-6 outline-none focus:border-primary/30 focus:bg-white transition-all text-dark font-black text-xl text-center placeholder:text-slate-300">
                             </div>
                         </div>
-
-                        <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-50 flex flex-col justify-center">
-                            <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl text-xs font-black tracking-widest hover:bg-primary-dark hover:-translate-y-1 transition-all uppercase shadow-xl shadow-primary/20 flex justify-center items-center gap-2">
-                                Save Settings <i class="fas fa-save"></i>
-                            </button>
+                        <div class="pt-4 border-t border-slate-100">
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <div class="relative">
+                                    <input type="checkbox" name="is_active" class="sr-only peer" {{ ($setting->is_active ?? true) ? 'checked' : '' }}>
+                                    <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-dark group-hover:text-primary transition-colors uppercase tracking-tight">Apply Commission</p>
+                                    <p class="text-[10px] font-bold text-slate-400 mt-0.5">If disabled, the platform will earn 0% from organizers.</p>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
-            </form>
-        </main>
-    </div>
-</body>
-</html>
+
+                <div class="bg-white/50 backdrop-blur-sm rounded-[2rem] p-4 shadow-sm border border-slate-100">
+                    <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl text-xs font-black tracking-widest hover:bg-dark hover:-translate-y-1 transition-all uppercase shadow-xl shadow-primary/20 flex justify-center items-center gap-2">
+                        Save System Configuration <i class="fas fa-save shadow-sm"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Side Info Card -->
+            <div class="hidden lg:block">
+                 <div class="bg-secondary text-white rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden">
+                     <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+                     <div class="relative z-10">
+                         <h3 class="text-2xl font-black mb-6">Revenue <span class="text-primary italic">Intelligence</span></h3>
+                         <div class="space-y-6">
+                             <div class="flex gap-4">
+                                 <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0"><i class="fas fa-shield-halved"></i></div>
+                                 <p class="text-[11px] text-white/60 font-medium leading-relaxed">System-wide commission settings apply to all organizers unless a custom agreement is set via individual contracts.</p>
+                             </div>
+                             <div class="flex gap-4">
+                                 <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0"><i class="fas fa-bolt"></i></div>
+                                 <p class="text-[11px] text-white/60 font-medium leading-relaxed">Changes reflected instantly in the checkout process for all new bookings.</p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </form>
+</div>
+@endsection

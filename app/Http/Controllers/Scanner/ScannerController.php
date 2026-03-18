@@ -25,13 +25,14 @@ class ScannerController extends Controller
             ->count();
 
         // 2. Total purchased tickets for live events today
-        $attendeesQuery = BookingAttendee::whereHas('booking', function($q) use ($organizerId, $today) {
-            $q->whereHas('event', function($eq) use ($organizerId, $today) {
-                $eq->where('user_id', $organizerId)
-                   ->where('status', 'Live')
-                   ->whereDate('date', $today);
-            })->where('payment_status', 'paid');
-        });
+        $attendeesQuery = BookingAttendee::whereHas('booking', function ($q) use ($organizerId, $today) {
+            $q->whereHas('event', function ($eq) use ($organizerId, $today) {
+                    $eq->where('user_id', $organizerId)
+                        ->where('status', 'Live')
+                        ->whereDate('date', $today);
+                }
+                )->where('payment_status', 'paid');
+            });
 
         $totalPurchasedToday = (clone $attendeesQuery)->count();
 
@@ -42,7 +43,7 @@ class ScannerController extends Controller
         $pendingToday = (clone $attendeesQuery)->where('is_scanned', false)->count();
 
         // 5. Total sales for events today
-        $totalSalesToday = $attendeesQuery->with('ticketType')->get()->sum(function($attendee) {
+        $totalSalesToday = $attendeesQuery->with('ticketType')->get()->sum(function ($attendee) {
             return $attendee->ticketType->price ?? 0;
         });
 
@@ -63,7 +64,7 @@ class ScannerController extends Controller
     public function processScan(Request $request)
     {
         $ticket_number = trim($request->ticket_number);
-        
+
         // 1. First, search specifically for the ticket number
         $attendee = BookingAttendee::with(['booking.event', 'ticketType', 'booking.user'])
             ->where('ticket_number', $ticket_number)
@@ -71,7 +72,7 @@ class ScannerController extends Controller
 
         // 2. If not found, try to search by booking ID (e.g. they scanned the main QR or typed the Order ID)
         if (!$attendee) {
-            $booking = \App\Models\Booking::with(['attendees' => function($q) {
+            $booking = \App\Models\Booking::with(['attendees' => function ($q) {
                 $q->with('ticketType');
             }, 'event', 'user'])->where('booking_id', $ticket_number)->first();
 
@@ -101,7 +102,7 @@ class ScannerController extends Controller
         }
 
         if ($attendee->booking->event->status !== 'Live') {
-             return response()->json([
+            return response()->json([
                 'status' => 'error',
                 'message' => 'The associated event is currently ' . $attendee->booking->event->status . ' (not scan-able).'
             ]);
@@ -116,7 +117,7 @@ class ScannerController extends Controller
         }
 
         if ($attendee->booking->payment_status !== 'paid') {
-             return response()->json([
+            return response()->json([
                 'status' => 'invalid',
                 'message' => 'Ticket is invalid: Payment is ' . $attendee->booking->payment_status,
                 'attendee' => $attendee

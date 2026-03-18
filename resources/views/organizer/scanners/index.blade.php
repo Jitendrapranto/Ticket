@@ -54,7 +54,7 @@
                             <span class="text-xs font-bold text-slate-600">{{ $scanner->email }}</span>
                         </td>
                         <td class="px-12 py-8 text-right">
-                            <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="flex items-center justify-end gap-3 transition-all">
                                 <a href="{{ route('organizer.scanners.edit', $scanner->id) }}" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-soft group/edit">
                                     <i class="fas fa-edit text-xs"></i>
                                 </a>

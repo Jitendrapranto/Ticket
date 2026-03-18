@@ -5,15 +5,6 @@
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div class="flex items-center gap-6">
             <a href="{{ route('admin.contact.messages.index') }}" class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary/20 transition-all shadow-sm">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <div>
-                <h1 class="text-3xl font-black text-dark tracking-tighter">Message <span class="text-primary">Intel.</span></h1>
-                <p class="text-[10px] text-slate-400 font-black uppercase tracking-[0.3em]">Contact Hub / Detailed View</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-             <form id="delete-form-single" action="{{ route('admin.contact.messages.destroy', $message->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="button" onclick="confirmDelete('delete-form-single', 'This message Intel will be erased from the system.')" class="bg-vibrant/5 text-vibrant px-8 py-4 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-vibrant hover:text-white transition-all flex items-center gap-3 shadow-sm">

@@ -73,16 +73,16 @@
         </div>
 
         <!-- Table Area -->
-        <div class="overflow-x-auto flex-1">
-            <table class="w-full text-left whitespace-nowrap">
+        <div class="flex-1">
+            <table class="w-full text-left table-fixed">
                 <thead>
                     <tr class="bg-slate-50/50 text-[10px] font-black tracking-widest text-slate-400 uppercase">
-                        <th class="px-8 py-6">Event ID</th>
-                        <th class="px-8 py-6">Event Details</th>
-                        <th class="px-8 py-6">Category</th>
-                        <th class="px-8 py-6">Date & Venue</th>
-                        <th class="px-8 py-6">Status</th>
-                        <th class="px-8 py-6 text-right">Actions</th>
+                        <th class="px-4 py-6 font-black w-[10%] min-w-[70px]">Event ID</th>
+                        <th class="px-4 py-6 font-black w-[28%] min-w-[150px]">Event Details</th>
+                        <th class="px-4 py-6 font-black w-[12%] min-w-[90px]">Category</th>
+                        <th class="px-4 py-6 font-black w-[22%] min-w-[150px]">Date & Venue</th>
+                        <th class="px-4 py-6 font-black w-[16%] min-w-[120px]">Status</th>
+                        <th class="px-4 py-6 font-black w-[12%] min-w-[110px] text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -94,65 +94,65 @@
                     @endphp
                     <tr class="hover:bg-slate-50/50 transition-colors group"
                         x-show="searchQuery === '' || '{{ strtolower($event->title) }}'.includes(searchQuery.toLowerCase())">
-                        <td class="px-8 py-6">
-                            <span class="text-xs font-black text-slate-400 tracking-tighter uppercase">{{ $event->event_code ?? '#ORD-'.strtoupper(substr($event->id . '000000', 0, 4)) }}</span>
+                        <td class="px-4 py-6">
+                            <span class="text-[10px] font-black text-slate-400 tracking-tighter uppercase break-words">{{ $event->event_code ?? '#ORD-'.strtoupper(substr($event->id . '000000', 0, 4)) }}</span>
                         </td>
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-4 min-w-[300px]">
-                                <div class="w-16 h-12 rounded-xl bg-slate-100 flex-shrink-0 overflow-hidden shadow-inner border border-slate-100">
+                        <td class="px-4 py-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden shadow-inner border border-slate-100">
                                     @if($event->image)
                                         <img loading="lazy" src="{{ $event->image_url }}" class="w-full h-full object-cover">
                                     @else
-                                        <div class="w-full h-full flex items-center justify-center text-slate-200 uppercase text-[10px] font-black">N/A</div>
+                                        <div class="w-full h-full flex items-center justify-center text-slate-200 uppercase text-[8px] font-black">N/A</div>
                                     @endif
                                 </div>
-                                <div>
-                                    <p class="font-black text-dark text-sm tracking-tight mb-0.5 group-hover:text-primary transition-colors">{{ $event->title }}</p>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">{{ $event->category->name }} Exp.</p>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-black text-dark text-xs tracking-tight mb-0.5 group-hover:text-primary transition-colors truncate" title="{{ $event->title }}">{{ $event->title }}</p>
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tight truncate">{{ $event->category->name ?? 'Events' }} Exp.</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-8 py-6">
-                            <span class="px-4 py-1.5 rounded-full border border-slate-100 bg-white text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ $event->category->name }}</span>
+                        <td class="px-4 py-6">
+                            <span class="px-3 py-1 rounded-full border border-slate-100 bg-white text-[8px] font-black text-slate-400 uppercase tracking-widest break-words text-center block">{{ $event->category->name ?? 'N/A' }}</span>
                         </td>
-                        <td class="px-8 py-6">
-                            <div class="flex flex-col gap-1.5 min-w-[180px]">
+                        <td class="px-4 py-6">
+                            <div class="flex flex-col gap-1">
                                 <div class="flex items-center gap-2 text-slate-500">
-                                    <i class="far fa-calendar-alt text-[10px]"></i>
-                                    <span class="text-[11px] font-bold">{{ $event->date->format('M d, Y') }}</span>
+                                    <i class="far fa-calendar-alt text-[9px] shrink-0"></i>
+                                    <span class="text-[10px] font-bold">{{ $event->date->format('M d, Y') }}</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-slate-400">
-                                    <i class="fas fa-map-marker-alt text-[10px]"></i>
-                                    <span class="text-[10px] font-medium truncate max-w-[150px]">{{ $event->venue_name ?? $event->location }}</span>
+                                    <i class="fas fa-map-marker-alt text-[9px] shrink-0"></i>
+                                    <span class="text-[9px] font-medium truncate" title="{{ $event->venue_name ?? $event->location }}">{{ $event->venue_name ?? $event->location }}</span>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-8 py-6">
+                        <td class="px-4 py-6">
                             @if($event->is_approved)
-                                <div class="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-xl border border-emerald-100 max-w-fit">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                                    <span class="text-[10px] font-black uppercase tracking-wider">Live & Approved</span>
+                                <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-lg border border-emerald-100 w-fit">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
+                                    <span class="text-[8px] font-black uppercase tracking-wider">Approved</span>
                                 </div>
                             @else
-                                <div class="flex items-center gap-2 bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl border border-orange-100 max-w-fit">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></div>
-                                    <span class="text-[10px] font-black uppercase tracking-wider">Awaiting Review</span>
+                                <div class="flex items-center gap-1.5 bg-orange-50 text-orange-600 px-2.5 py-1 rounded-lg border border-orange-100 w-fit">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse shrink-0"></div>
+                                    <span class="text-[8px] font-black uppercase tracking-wider">Pending</span>
                                 </div>
                             @endif
                         </td>
-                        <td class="px-8 py-6 text-right">
-                            <div class="flex justify-end items-center gap-2">
-                                <a href="{{ route('organizer.events.bookings', $event) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-violet-600 hover:text-white hover:scale-110 transition-all shadow-sm group/btn" title="Attendees">
+                        <td class="px-4 xl:px-6 py-6 text-right">
+                            <div class="flex justify-end items-center gap-1.5">
+                                <a href="{{ route('organizer.events.bookings', $event) }}" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-violet-600 hover:text-white hover:scale-110 transition-all shadow-sm group/btn" title="Attendees">
                                     <i class="fas fa-users text-[10px]"></i>
                                 </a>
-                                <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-primary hover:text-white hover:scale-110 transition-all shadow-sm" title="Preview">
+                                <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-primary hover:text-white hover:scale-110 transition-all shadow-sm" title="Preview">
                                     <i class="far fa-eye text-[10px]"></i>
                                 </a>
-                                <a href="{{ route('organizer.events.edit', $event) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-sm" title="Edit">
+                                <a href="{{ route('organizer.events.edit', $event) }}" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-sm" title="Edit">
                                     <i class="fas fa-pen text-[10px]"></i>
                                 </a>
                                 <button @click="confirmDelete('{{ route('organizer.events.destroy', $event) }}', '{{ $event->title }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-red-500 hover:text-white hover:scale-110 transition-all shadow-sm" title="Delete">
+                                        class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-red-500 hover:text-white hover:scale-110 transition-all shadow-sm" title="Delete">
                                     <i class="fas fa-trash-alt text-[10px]"></i>
                                 </button>
                             </div>

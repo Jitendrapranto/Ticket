@@ -17,6 +17,8 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->merge(['email' => strtolower($request->email)]);
+        
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -51,11 +53,12 @@ class AuthController extends Controller
 
     public function signup(Request $request)
     {
+        $request->merge(['email' => strtolower($request->email)]);
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'terms' => 'accepted',
         ]);
 
         if ($validator->fails()) {

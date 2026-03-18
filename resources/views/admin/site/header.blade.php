@@ -1,68 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header Settings | Ticket Kinun Admin</title>
-    <style>/* FAST LOAD */ html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }</style>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#520C6B', secondary: '#1B2B46', accent: '#2563EB', dark: '#0F172A', 'slate-custom': '#F8FAFC' },
-                    fontFamily: { outfit: ['Arial', 'Helvetica', 'sans-serif'], plus: ['Arial', 'Helvetica', 'sans-serif'] },
-                    boxShadow: { 'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.25)' }
-                }
-            }
-        }
-    </script>
-    <script>document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.add('ready')); setTimeout(() => document.documentElement.classList.add('ready'), 100);</script>
-</head>
-<body class="bg-[#F1F5F9] font-plus"
-      x-data="{
-          successModal: {{ session('success') ? 'true' : 'false' }},
-          showToast: {{ session('success') ? 'true' : 'false' }},
-          toastMessage: '{{ session('success') ?? '' }}',
-          navLinks: {{ json_encode(old('nav_links', $header->nav_links ?? [['label'=>'HOME','url'=>'/'],['label'=>'EVENTS','url'=>'/events'],['label'=>'GALLERY','url'=>'/gallery'],['label'=>'ABOUT','url'=>'/about'],['label'=>'CONTACT','url'=>'/contact']])) }},
-          logoPreview: '{{ $header && $header->logo_path ? (str_starts_with($header->logo_path, 'site/') ? asset('storage/'.$header->logo_path) : asset($header->logo_path)) : asset('Blue_Simple_Technology_Logo.png') }}',
-      }"
-      x-init="if(showToast) { setTimeout(() => showToast = false, 4000); }">
+@extends('admin.dashboard')
 
-    @include('admin.sidebar')
+@section('admin_content')
+<div x-data="{
+        navLinks: Object.values({{ json_encode(old('nav_links', $header->nav_links ?? [['label'=>'HOME','url'=>'/'],['label'=>'EVENTS','url'=>'/events'],['label'=>'GALLERY','url'=>'/gallery'],['label'=>'ABOUT','url'=>'/about'],['label'=>'CONTACT','url'=>'/contact']])) }} || {}),
+        logoPreview: '{{ $header && $header->logo_path ? (str_starts_with($header->logo_path, 'site/') ? asset('storage/'.$header->logo_path) : asset($header->logo_path)) : asset('Blue_Simple_Technology_Logo.png') }}',
+    }" class="px-8 py-8 flex-1 animate-fadeIn">
 
-    <!-- Toast Notification -->
-    <div x-show="showToast" x-cloak
-         x-transition:enter="transition ease-out duration-500"
-         x-transition:enter-start="opacity-0 translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 -translate-y-2"
-         class="fixed top-6 right-6 z-[9999] flex items-center gap-3 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl shadow-green-500/30">
-        <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center">
-            <i class="fas fa-check text-sm"></i>
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h2 class="font-outfit text-2xl font-black text-dark tracking-tight">Header Settings</h2>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Site Settings — Header Configuration</p>
         </div>
-        <span class="text-sm font-bold" x-text="toastMessage"></span>
-        <button @click="showToast = false" class="ml-2 text-white/60 hover:text-white"><i class="fas fa-times text-xs"></i></button>
     </div>
-
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <!-- Header Bar -->
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
-            <div>
-                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Header Settings</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Site Settings — Header Configuration</p>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 bg-slate-100 text-slate-600 px-5 py-2.5 rounded-xl text-xs font-black tracking-widest hover:bg-slate-200 transition-all uppercase">
-                <i class="fas fa-th-large"></i> Dashboard
-            </a>
-        </header>
-
-        <main class="p-8 flex-1">
             @if($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-2xl p-5 mb-6 flex items-start gap-4">
                 <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
@@ -132,7 +81,7 @@
                                 <h3 class="font-outfit font-black text-dark text-lg">
                                     <i class="fas fa-link text-primary mr-2"></i> Navigation Links
                                 </h3>
-                                <button type="button" @click="navLinks.push({label:'', url:''})"
+                                <button type="button" @click="navLinks = [...navLinks, {label:'', url:''}]"
                                         class="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-xl text-xs font-black tracking-widest hover:bg-primary/20 transition-all uppercase">
                                     <i class="fas fa-plus"></i> Add Link
                                 </button>
@@ -199,34 +148,5 @@
                     </div>
                 </div>
             </form>
-        </main>
-    </div>
-
-    <!-- Success Popup Modal -->
-    <div x-show="successModal" x-cloak
-         class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100">
-        <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm" @click="successModal = false"></div>
-        <div class="relative bg-white rounded-3xl p-10 max-w-sm w-full shadow-2xl text-center"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 scale-90"
-             x-transition:enter-end="opacity-100 scale-100">
-            <div class="w-20 h-20 bg-green-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check-circle text-green-500 text-4xl"></i>
-            </div>
-            <h3 class="font-outfit font-black text-dark text-2xl mb-2">Header Updated!</h3>
-            <p class="text-slate-400 text-sm font-medium mb-8">The site header has been updated successfully and is now live across all pages.</p>
-            <div class="flex gap-3">
-                <button @click="successModal = false" class="flex-1 py-3.5 bg-slate-100 text-slate-600 font-black text-xs tracking-widest uppercase rounded-2xl hover:bg-slate-200 transition-all">
-                    Close
-                </button>
-                <a href="/" target="_blank" class="flex-1 py-3.5 bg-primary text-white font-black text-xs tracking-widest uppercase rounded-2xl hover:bg-secondary transition-all text-center">
-                    View Site
-                </a>
-            </div>
         </div>
-    </div>
-</body>
-</html>
+@endsection

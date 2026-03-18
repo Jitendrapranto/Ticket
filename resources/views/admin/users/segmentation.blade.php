@@ -1,87 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Segmentation | Ticket Kinun</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+@extends('admin.dashboard')
+
+@section('admin_content')
+<div>
+
+
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        secondary: '#1B2B46',
-                        accent: '#2563EB',
-                        dark: '#0F172A',
-                        'brand-green': '#10B981',
-                        'brand-red': '#EF4444',
-                        'brand-amber': '#F59E0B',
-                    },
-                    fontFamily: {
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 25px 60px -15px rgba(82, 12, 107, 0.08)',
-                        'soft': '0 4px 20px -5px rgba(0, 0, 0, 0.05)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: Arial, Helvetica, sans-serif; background: #F8FAFC; }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
-    </style>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="text-slate-800">
-
-    @include('admin.sidebar')
-
-    <div class="lg:ml-72 min-h-screen flex flex-col">
+    <div class="animate-fadeIn">
         <!-- Topbar -->
-        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-50">
-            <div class="flex items-center gap-4">
-                <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="flex flex-col">
-                    <h2 class="font-outfit text-xl font-black text-dark tracking-tight leading-none mb-1">Customer Segmentation</h2>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Audience Intelligence Dashboard</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
-                    <div class="text-right">
-                        <p class="text-xs font-black text-dark">Super Admin</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-slate-200 border-2 border-white shadow-sm overflow-hidden transform rotate-3">
-                        <img loading="lazy" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
-                    </div>
-                </div>
-            </div>
-        </header>
+        
 
         <main class="p-10 flex-1 max-w-[1600px] mx-auto w-full">
             <!-- Header Section -->
@@ -398,5 +325,6 @@
 </body>
 </html>
     </script>
-</body>
-</html>
+
+</div>
+@endsection

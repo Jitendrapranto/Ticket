@@ -1,94 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Database | Ticket Kinun</title>
-    <!-- Prevent FOUC: Hide body until styles are ready -->
-    <style>
-        /* FAST LOAD */
-        html.ready { visibility: visible; opacity: 1; transition: opacity 0.15s ease-in; }
-    </style>
-    <!-- Tailwind & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@extends('admin.dashboard')
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#520C6B',
-                        secondary: '#1B2B46',
-                        accent: '#FF7D52',
-                        dark: '#0F172A',
-                        'brand-green': '#10B981',
-                        'brand-red': '#EF4444',
-                        'brand-amber': '#F59E0B',
-                    },
-                    fontFamily: {
-                        outfit: ['Arial', 'Helvetica', 'sans-serif'],
-                        plus: ['Arial', 'Helvetica', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(82, 12, 107, 0.05)',
-                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: Arial, Helvetica, sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-    <!-- Reveal page once Tailwind is ready -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.documentElement.classList.add('ready');
-        });
-        setTimeout(function() { document.documentElement.classList.add('ready'); }, 100);
-    </script>
-</head>
-<body class="bg-[#F8FAFC] text-slate-800">
-
-    @include('admin.sidebar')
-
-    <div class="lg:ml-72 min-h-screen flex flex-col">
-        <!-- Topbar -->
-        <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40">
-            <div class="flex items-center gap-4">
-                <button id="toggle-sidebar" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-dark">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="relative group">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within:text-primary"></i>
-                    <input type="text" placeholder="Search platform resources.." class="bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-primary/10 transition-all w-80">
-                </div>
-            </div>
-
-            <div class="flex items-center gap-6">
-                <button class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400">
-                    <i class="far fa-bell"></i>
-                    <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                </button>
-                <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
-                    <div class="text-right">
-                        <p class="text-xs font-black text-dark">Super Admin</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
-                        <img loading="lazy" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <main class="p-10 flex-1 max-w-[1600px] mx-auto w-full">
+@section('admin_content')
+<div class="animate-fadeIn w-full relative z-10 isolate transform-gpu">
             <!-- Header Section -->
             <div class="flex items-end justify-between mb-10">
                 <div>
@@ -119,7 +32,7 @@
                             <i class="fas fa-arrow-up text-[10px]"></i> +12% <span class="text-white/50 font-medium ml-1">from last month</span>
                         </p>
                     </div>
-                    <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl backdrop-blur-md transition-all relative z-10">
+                    <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl transition-all relative z-10">
                         <i class="far fa-user"></i>
                     </div>
                 </div>
@@ -134,7 +47,7 @@
                         <h3 class="text-4xl font-outfit font-black text-white tracking-tighter mb-1">{{ number_format($activeSessions) }}</h3>
                         <p class="text-[11px] font-bold text-white/80">Currently online</p>
                     </div>
-                    <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl backdrop-blur-md transition-all relative z-10">
+                    <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl transition-all relative z-10">
                         <i class="far fa-check-circle"></i>
                     </div>
                 </div>
@@ -149,14 +62,14 @@
                         <h3 class="text-4xl font-outfit font-black text-white tracking-tighter mb-1">৳{{ number_format($averageLTV, 2) }}</h3>
                         <p class="text-[11px] font-bold text-white/80">Lifetime Value</p>
                     </div>
-                    <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl backdrop-blur-md transition-all relative z-10">
+                    <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-xl transition-all relative z-10">
                         <i class="fas fa-coins text-sm"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Table Card -->
-            <div class="bg-white rounded-[2.5rem] shadow-premium border border-white overflow-hidden">
+            <div class="bg-white rounded-[2.5rem] shadow-premium border border-white overflow-visible">
                 <div class="p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-1">All Customers</h3>
@@ -235,7 +148,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto xl:overflow-visible">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50/30 text-[10px] font-black tracking-widest text-slate-400 uppercase border-y border-slate-50">
@@ -335,7 +248,7 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        <button type="button" onclick="confirmDelete({{ $customer->id }})" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center hover:bg-brand-red hover:text-white hover:border-brand-red transition-all shadow-sm group/btn">
+                                        <button type="button" onclick="confirmDelete('delete-form-{{ $customer->id }}', 'This customer\'s profile and data will be permanently archived.')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center hover:bg-brand-red hover:text-white hover:border-brand-red transition-all shadow-sm group/btn">
                                             <i class="fas fa-trash text-[11px]"></i>
                                         </button>
 
@@ -378,7 +291,7 @@
                 </div>
 
                 <!-- Footer / Pagination -->
-                <div class="p-10 bg-slate-50/50 border-t border-slate-50 flex items-center justify-between">
+                <div class="p-10 bg-slate-50/50 border-t border-slate-50 flex items-center justify-between rounded-b-[2.5rem]">
                     <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
                         Showing <span class="text-dark">{{ $customers->firstItem() }}</span> to <span class="text-dark">{{ $customers->lastItem() }}</span> of <span class="text-dark">{{ $customers->total() }}</span> records
                     </p>
@@ -387,129 +300,64 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+@endsection
 
-        <footer class="px-10 py-8 text-center text-[10px] font-black text-slate-400 tracking-widest uppercase border-t border-slate-100 bg-white/50 backdrop-blur-md">
-            Ticket Kinun • Administrative Management System • © 2026
-        </footer>
-    </div>
-
-    <!-- SweetAlert2 Delete Confirmation -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Confirm Removal',
-                text: "This customer's profile and data will be permanently archived.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#1B2B46',
-                cancelButtonColor: '#F1F5F9',
-                confirmButtonText: 'Yes, Delete!',
-                cancelButtonText: 'Cancel',
-                padding: '2.5rem',
-                borderRadius: '2.5rem',
-                customClass: {
-                    popup: 'rounded-[2.5rem] border-white/10 shadow-2xl',
-                    confirmButton: 'bg-secondary px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest',
-                    cancelButton: 'bg-slate-100 text-slate-500 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            })
-        }
-
-        function confirmReset(id, name) {
-            Swal.fire({
-                title: 'Change Password',
-                text: `Update password for ${name}`,
-                html: `
-                    <div class="relative mt-4">
-                        <input type="password" id="swal-input-password" class="swal2-input !m-0 !w-full rounded-xl border-slate-200 text-sm font-bold p-4 pr-12" placeholder="Enter custom password">
-                        <button type="button" onclick="toggleSwalPassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
-                            <i id="password-toggle-icon" class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonColor: '#520C6B',
-                cancelButtonColor: '#F1F5F9',
-                confirmButtonText: 'Change Now',
-                cancelButtonText: 'Cancel',
-                padding: '2.5rem',
-                borderRadius: '2.5rem',
-                preConfirm: () => {
-                    const password = Swal.getPopup().querySelector('#swal-input-password').value;
-                    if (!password) {
-                        Swal.showValidationMessage('You need to enter a password!');
-                    } else if (password.length < 8) {
-                        Swal.showValidationMessage('Password must be at least 8 characters long!');
-                    }
-                    return password;
-                },
-                customClass: {
-                    popup: 'rounded-[2.5rem] border-white/10 shadow-2xl',
-                    confirmButton: 'bg-primary px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest',
-                    cancelButton: 'bg-slate-100 text-slate-500 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('reset-password-input-' + id).value = result.value;
-                    document.getElementById('reset-form-' + id).submit();
-                }
-            })
-        }
-
-        function toggleSwalPassword() {
-            const input = document.getElementById('swal-input-password');
-            const icon = document.getElementById('password-toggle-icon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-    </script>
-
-    @if(session('success'))
-    <script>
+@push('scripts')
+<script>
+    function confirmReset(id, name) {
         Swal.fire({
-            title: 'Action Successful',
-            text: "{{ session('success') }}",
-            icon: 'success',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            background: '#ffffff',
-            color: '#0F172A',
-            iconColor: '#520C6B',
-        });
-    </script>
-    @endif
-
-    <!-- Mobile Sidebar Interaction Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('admin-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const toggleBtn = document.getElementById('toggle-sidebar');
-
-            function toggleMenu() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
+            title: 'Change Password',
+            text: `Update password for ${name}`,
+            html: `
+                <div class="relative mt-4">
+                    <input type="password" id="swal-input-password" class="swal2-input !m-0 !w-full rounded-xl border-slate-200 text-sm font-bold p-4 pr-12" placeholder="Enter custom password">
+                    <button type="button" onclick="toggleSwalPassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
+                        <i id="password-toggle-icon" class="fas fa-eye"></i>
+                    </button>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#520C6B',
+            cancelButtonColor: '#F1F5F9',
+            confirmButtonText: 'Change Now',
+            cancelButtonText: 'Cancel',
+            padding: '2.5rem',
+            borderRadius: '2.5rem',
+            preConfirm: () => {
+                const password = Swal.getPopup().querySelector('#swal-input-password').value;
+                if (!password) {
+                    Swal.showValidationMessage('You need to enter a password!');
+                } else if (password.length < 8) {
+                    Swal.showValidationMessage('Password must be at least 8 characters long!');
+                }
+                return password;
+            },
+            customClass: {
+                popup: 'rounded-[2.5rem] border-white/10 shadow-2xl',
+                confirmButton: 'bg-primary px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest',
+                cancelButton: 'bg-slate-100 text-slate-500 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest'
             }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('reset-password-input-' + id).value = result.value;
+                document.getElementById('reset-form-' + id).submit();
+            }
+        })
+    }
 
-            if (toggleBtn) toggleBtn.addEventListener('click', toggleMenu);
-            if (overlay) overlay.addEventListener('click', toggleMenu);
-        });
-    </script>
-</body>
-</html>
+    function toggleSwalPassword() {
+        const input = document.getElementById('swal-input-password');
+        const icon = document.getElementById('password-toggle-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+@endpush

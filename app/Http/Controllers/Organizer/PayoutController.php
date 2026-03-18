@@ -31,7 +31,9 @@ class PayoutController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('organizer.payout.requests', compact('requests', 'availableBalance', 'totalNetEarnings'));
+        $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->orderBy('sort_order')->get();
+
+        return view('organizer.payout.requests', compact('requests', 'availableBalance', 'totalNetEarnings', 'paymentMethods'));
     }
 
     public function history()

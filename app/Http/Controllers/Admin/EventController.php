@@ -73,8 +73,8 @@ class EventController extends Controller
             'artists' => 'nullable|array',
             'artists.*.name' => 'required_with:artists|string|max:255',
             'artists.*.role' => 'nullable|string|max:255',
-            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:150',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:150',
             'sort_order' => 'required|integer|min:0',
             'is_featured' => 'nullable|boolean',
             'tickets' => 'nullable|array',
@@ -118,6 +118,9 @@ class EventController extends Controller
             $data['artists'] = $artists;
 
             $event = Event::create($data);
+            $event->update([
+                'event_code' => 'EVP-' . str_pad($event->id, 5, '0', STR_PAD_LEFT)
+            ]);
 
             if ($request->has('tickets')) {
                 foreach ($request->tickets as $ticket) {
@@ -166,9 +169,9 @@ class EventController extends Controller
             'artists' => 'nullable|array',
             'artists.*.name' => 'required_with:artists|string|max:255',
             'artists.*.role' => 'nullable|string|max:255',
-            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'artists.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:150',
             'artists.*.old_image' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:150',
             'sort_order' => 'required|integer|min:0',
             'is_featured' => 'nullable|boolean',
             'tickets' => 'nullable|array',
@@ -220,10 +223,31 @@ class EventController extends Controller
             $event->update($data);
 
             if ($request->has('tickets')) {
-                $event->ticketTypes()->delete();
+                $providedTicketIds = [];
+                $existingTickets = $event->ticketTypes->keyBy('id');
+                
                 foreach ($request->tickets as $ticket) {
-                    $event->ticketTypes()->create($ticket);
+                    if (!empty($ticket['id']) && $existingTickets->has($ticket['id'])) {
+                        $ticketType = $existingTickets[$ticket['id']];
+                        $ticketType->update([
+                            'name' => $ticket['name'],
+                            'price' => $ticket['price'],
+                            'quantity' => $ticket['quantity'],
+                        ]);
+                        $providedTicketIds[] = $ticketType->id;
+                    } else {
+                        $newTicket = $event->ticketTypes()->create([
+                            'name' => $ticket['name'],
+                            'price' => $ticket['price'],
+                            'quantity' => $ticket['quantity'],
+                        ]);
+                        $providedTicketIds[] = $newTicket->id;
+                    }
                 }
+                
+                $event->ticketTypes()->whereNotIn('id', $providedTicketIds)->delete();
+            } else {
+                $event->ticketTypes()->delete();
             }
 
             // Save form fields
@@ -340,14 +364,10 @@ class EventController extends Controller
         return redirect()->back()->with('success', 'Event removed successfully!');
     }
 
-    /**
-     * Save dynamic form fields for an event.
-     */
     private function saveFormFields(Event $event, $formFieldsRaw)
     {
-        $event->formFields()->delete();
-
-        // Always create the 4 default fields
+        $defaultFields = $event->formFields()->where('is_default', true)->get()->keyBy('label');
+        
         $defaults = [
             ['label' => 'Name', 'type' => 'text', 'is_required' => true, 'is_default' => true, 'sort_order' => 0],
             ['label' => 'Email', 'type' => 'email', 'is_required' => true, 'is_default' => true, 'sort_order' => 1],
@@ -356,8 +376,12 @@ class EventController extends Controller
         ];
 
         foreach ($defaults as $field) {
-            $event->formFields()->create($field);
+            if (!$defaultFields->has($field['label'])) {
+                $event->formFields()->create($field);
+            }
         }
+
+        $keepFieldIds = $event->formFields()->where('is_default', true)->pluck('id')->toArray();
 
         // Save custom fields
         if ($formFieldsRaw) {
@@ -365,17 +389,34 @@ class EventController extends Controller
             if (is_array($customFields)) {
                 foreach ($customFields as $index => $field) {
                     if (!empty($field['label']) && !empty($field['type'])) {
-                        $event->formFields()->create([
-                            'label' => $field['label'],
-                            'type' => $field['type'],
-                            'options' => isset($field['options']) && is_array($field['options']) ? $field['options'] : null,
-                            'is_required' => $field['is_required'] ?? false,
-                            'is_default' => false,
-                            'sort_order' => $index + 4,
-                        ]);
+                        if (!empty($field['id'])) {
+                            $formField = $event->formFields()->find($field['id']);
+                            if ($formField) {
+                                $formField->update([
+                                    'label' => $field['label'],
+                                    'type' => $field['type'],
+                                    'options' => isset($field['options']) && is_array($field['options']) ? $field['options'] : null,
+                                    'is_required' => $field['is_required'] ?? false,
+                                    'sort_order' => $index + 4,
+                                ]);
+                                $keepFieldIds[] = $formField->id;
+                            }
+                        } else {
+                            $newField = $event->formFields()->create([
+                                'label' => $field['label'],
+                                'type' => $field['type'],
+                                'options' => isset($field['options']) && is_array($field['options']) ? $field['options'] : null,
+                                'is_required' => $field['is_required'] ?? false,
+                                'is_default' => false,
+                                'sort_order' => $index + 4,
+                            ]);
+                            $keepFieldIds[] = $newField->id;
+                        }
                     }
                 }
             }
         }
+        
+        $event->formFields()->whereNotIn('id', $keepFieldIds)->delete();
     }
 }

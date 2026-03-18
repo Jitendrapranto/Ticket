@@ -28,6 +28,13 @@ class BookingController extends Controller
             if ($qty > 0) {
                 $ticketType = $event->ticketTypes->find($id);
                 if ($ticketType) {
+                    // Check if requested qty exceeds available
+                    if ($qty > $ticketType->quantity) {
+                        $availableMsg = $ticketType->quantity > 0
+                            ? "Only {$ticketType->quantity} tickets are available for {$ticketType->name}."
+                            : "{$ticketType->name} tickets are sold out.";
+                        return redirect()->back()->with('ticket_error', $availableMsg);
+                    }
                     $ticketsData[] = [
                         'id' => $id,
                         'name' => $ticketType->name,
@@ -95,9 +102,17 @@ class BookingController extends Controller
         $mainTicketId = $request->main_ticket_id;
         $attendeesData = $request->get('attendees', []);
         $formData = $request->get('form_data', []);
+        $ticketQuantities = $request->get('ticket_quantities', []);
 
         // Handle file uploads from 'file' type form fields
         if ($request->hasFile('form_data_files')) {
+            $request->validate([
+                'form_data_files.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:150'
+            ], [
+                'form_data_files.*.max' => 'Each uploaded file must not exceed 150KB.',
+                'form_data_files.*.mimes' => 'Allowed file types are PDF, JPG, JPEG, and PNG.'
+            ]);
+
             foreach ($request->file('form_data_files') as $fieldId => $file) {
                 if ($file->isValid()) {
                     $path = $file->store('form_uploads', 'public');
@@ -111,17 +126,21 @@ class BookingController extends Controller
             $totalAmount = 0;
             $ticketSummary = [];
             
-            // Re-calculate total and verify tickets exist for this event
+            // Use the explicit ticket_quantities from hidden form fields
+            // This is more reliable than counting attendees data, because
+            // the main booker's attendee fields are hidden in the form
             foreach ($event->ticketTypes as $tier) {
-                $qtyKey = "tickets[{$tier->id}]";
-                // Since tickets come from URL params in the previous step, we might need a better way to track them.
-                // For now, let's assume the attendees data reflects the intended quantity.
-                $qty = 0;
-                if (isset($attendeesData[$tier->id])) {
-                    $qty = count($attendeesData[$tier->id]);
-                }
+                $qty = (int) ($ticketQuantities[$tier->id] ?? 0);
 
                 if ($qty > 0) {
+                    // Server-side availability check
+                    if ($qty > $tier->quantity) {
+                        throw new \Exception(
+                            $tier->quantity > 0
+                                ? "Only {$tier->quantity} tickets are available for {$tier->name}."
+                                : "{$tier->name} tickets are sold out."
+                        );
+                    }
                     $totalAmount += ($tier->price * $qty);
                     $ticketSummary[$tier->id] = $qty;
                 }
@@ -224,7 +243,8 @@ class BookingController extends Controller
     {
         $booking = Booking::with(['event', 'attendees.ticketType'])->where('booking_id', $booking_id)->firstOrFail();
         $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->orderBy('sort_order')->get();
-        return view('events.checkout', compact('booking', 'paymentMethods'));
+        $support = \App\Models\ContactSupport::first();
+        return view('events.checkout', compact('booking', 'paymentMethods', 'support'));
     }
 
     public function complete(Request $request, $booking_id)
@@ -235,7 +255,7 @@ class BookingController extends Controller
             'payment_method' => 'required',
             'transaction_id' => 'required|string',
             'payment_number' => 'required|string',
-            'payment_screenshot' => 'nullable|image|max:2048'
+            'payment_screenshot' => 'nullable|image|max:150'
         ]);
 
         // Global check for Unique Transaction ID

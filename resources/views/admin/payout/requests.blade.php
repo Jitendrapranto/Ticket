@@ -187,7 +187,7 @@
     }
 
     @if(session('success'))
-        const Toast = Swal.mixin({
+        const PayoutToast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
@@ -198,7 +198,7 @@
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
         });
-        Toast.fire({
+        PayoutToast.fire({
             icon: 'success',
             title: "{{ session('success') }}"
         });
