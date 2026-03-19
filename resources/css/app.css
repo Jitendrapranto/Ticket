@@ -4,6 +4,8 @@
 /* Tailwind 4 Theme Configuration */
 @theme {
     --color-primary: #520C6B;
+    --color-primary-dark: #3b084d;
+    --color-primary-light: #7a2099;
     --color-secondary: #1B2B46;
     --color-accent: #FF7D52;
     --color-dark: #0F172A;

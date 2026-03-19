@@ -29,8 +29,8 @@ class ProfileController extends Controller
         ]);
 
         if ($request->has('avatar') && !$request->hasFile('avatar') && $request->file('avatar') === null) {
-             // This happens if the file exceeds PHP's upload_max_filesize
-             return back()->withErrors(['avatar' => 'The uploaded file is too large for the server configuration.'])->withInput();
+            // This happens if the file exceeds PHP's upload_max_filesize
+            return back()->withErrors(['avatar' => 'The uploaded file is too large for the server configuration.'])->withInput();
         }
 
         $data = [

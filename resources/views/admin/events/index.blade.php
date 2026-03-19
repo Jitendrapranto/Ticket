@@ -23,7 +23,7 @@
                 <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.4em]">Operations Hub • Control & Monitoring</p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.events.export') }}" class="bg-white text-dark px-6 py-2.5 rounded-xl text-[9px] font-black tracking-widest uppercase border border-slate-100 flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm">
+                <a href="{{ route('admin.events.export') }}" target="_blank" class="bg-white text-dark px-6 py-2.5 rounded-xl text-[9px] font-black tracking-widest uppercase border border-slate-100 flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm">
                     <i class="fas fa-download text-[10px] text-primary"></i> Export System Logs
                 </a>
                 <a href="{{ route('admin.events.create') }}" class="bg-dark text-white px-6 py-2.5 rounded-xl text-[9px] font-black tracking-widest uppercase flex items-center gap-2 hover:bg-primary transition-all shadow-xl shadow-dark/10">

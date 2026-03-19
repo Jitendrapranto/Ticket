@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="flex gap-3">
                                     @if($booking->status === 'confirmed' || $booking->payment_status === 'paid')
-                                        <a href="{{ route('bookings.download', $booking->booking_id) }}" class="bg-emerald-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:-translate-y-1 transition-all flex items-center gap-2">
+                                        <a href="{{ route('bookings.download', $booking->booking_id) }}" target="_blank" class="bg-emerald-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:-translate-y-1 transition-all flex items-center gap-2">
                                             <i class="fas fa-download"></i> Download E-Ticket
                                         </a>
                                     @elseif($booking->status === 'pending')

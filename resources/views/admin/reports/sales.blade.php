@@ -36,7 +36,7 @@
                     <button type="submit" class="bg-secondary text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2">
                         <i class="fas fa-filter"></i> Apply
                     </button>
-                    <a href="{{ route('admin.finance.reports.sales.export', ['date_filter' => request('date_filter', 'custom'), 'start_date' => request('start_date', $startDate->format('Y-m-d')), 'end_date' => request('end_date', $endDate->format('Y-m-d'))]) }}" class="bg-white text-dark border border-slate-100 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
+                    <a href="{{ route('admin.finance.reports.sales.export', ['date_filter' => request('date_filter', 'custom'), 'start_date' => request('start_date', $startDate->format('Y-m-d')), 'end_date' => request('end_date', $endDate->format('Y-m-d'))]) }}" target="_blank" class="bg-white text-dark border border-slate-100 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
                          <i class="fas fa-download"></i> Export CSV
                     </a>
                     <button type="button" class="bg-primary/5 text-primary px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 transition-all flex items-center gap-2">

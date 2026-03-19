@@ -107,9 +107,9 @@ class BookingController extends Controller
         // Handle file uploads from 'file' type form fields
         if ($request->hasFile('form_data_files')) {
             $request->validate([
-                'form_data_files.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:150'
+                'form_data_files.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
             ], [
-                'form_data_files.*.max' => 'Each uploaded file must not exceed 150KB.',
+                'form_data_files.*.max' => 'Each uploaded file must not exceed 2MB.',
                 'form_data_files.*.mimes' => 'Allowed file types are PDF, JPG, JPEG, and PNG.'
             ]);
 
@@ -255,7 +255,7 @@ class BookingController extends Controller
             'payment_method' => 'required',
             'transaction_id' => 'required|string',
             'payment_number' => 'required|string',
-            'payment_screenshot' => 'nullable|image|max:150'
+            'payment_screenshot' => 'nullable|image|max:2048'
         ]);
 
         // Global check for Unique Transaction ID

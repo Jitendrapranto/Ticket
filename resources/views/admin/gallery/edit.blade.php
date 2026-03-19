@@ -1,34 +1,8 @@
 @extends('admin.dashboard')
 
 @section('admin_content')
-<script>
-    function galleryEditForm() {
-        return {
-            preview: @json(str_starts_with($image->image_path, "http") ? $image->image_path : asset("storage/" . $image->image_path)),
-            handleFile(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    if (file.size > 150 * 1024) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Asset Too Large',
-                            text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
-                            confirmButtonColor: '#520C6B'
-                        });
-                        event.target.value = "";
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.preview = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        };
-    }
-</script>
-<div x-data="galleryEditForm()">
+<div x-data="{ preview: null }" x-ref="galleryEditForm"
+     x-init="preview = '{{ str_starts_with($image->image_path, "http") ? $image->image_path : asset("storage/" . $image->image_path) }}'">
 
     
 
@@ -182,7 +156,7 @@
                     <!-- Image Upload Hub -->
                     <div class="bg-white rounded-[3rem] p-10 shadow-premium border border-slate-50 flex flex-col items-center justify-center text-center space-y-8 min-h-[500px]">
                         <!-- Single Hidden File Input -->
-                        <input type="file" id="imageInput" name="image" class="hidden" accept="image/*" @change="handleFile($event)">
+                        <input type="file" id="galleryEditImageInput" name="image" class="hidden" accept="image/*">
 
                         <div x-show="!preview" class="space-y-6 flex flex-col items-center">
                             <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 text-4xl shadow-inner animate-pulse">
@@ -192,7 +166,7 @@
                                 <h3 class="font-outfit text-xl font-black text-dark tracking-tight uppercase">Update Visual</h3>
                                 <p class="text-slate-400 text-sm font-medium mt-2">Recommended: 16:9 Aspect • Max 150KB</p>
                             </div>
-                            <button type="button" @click="document.getElementById('imageInput').click()" class="bg-primary text-white px-10 py-5 rounded-2xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-black transition-all shadow-xl shadow-primary/10">
+                            <button type="button" onclick="document.getElementById('galleryEditImageInput').click()" class="bg-primary text-white px-10 py-5 rounded-2xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-black transition-all shadow-xl shadow-primary/10">
                                 <i class="fas fa-folder-open mr-3"></i> Replace Asset
                             </button>
                         </div>
@@ -200,7 +174,7 @@
                         <div x-show="preview" x-cloak class="w-full h-full relative group rounded-[2rem] overflow-hidden bg-slate-50 shadow-inner">
                             <img loading="lazy" :src="preview" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-dark/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <button type="button" @click="document.getElementById('imageInput').click()" class="bg-white text-dark px-8 py-4 rounded-xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-primary hover:text-white transition-all">
+                                <button type="button" onclick="document.getElementById('galleryEditImageInput').click()" class="bg-white text-dark px-8 py-4 rounded-xl font-black text-xs tracking-widest uppercase cursor-pointer hover:bg-primary hover:text-white transition-all">
                                     <i class="fas fa-sync mr-2"></i> Change Asset
                                 </button>
                             </div>
@@ -212,4 +186,34 @@
     </div>
 
 </div>
+
+<script>
+    (function() {
+        var input = document.getElementById('galleryEditImageInput');
+        if (!input) return;
+        input.addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            var maxSize = 150 * 1024;
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Asset Too Large',
+                    text: 'File size (' + (file.size / 1024).toFixed(2) + 'KB) exceeds the 150KB limit.',
+                    confirmButtonColor: '#520C6B'
+                });
+                event.target.value = "";
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var el = document.querySelector('[x-ref="galleryEditForm"]');
+                if (el && window.Alpine) {
+                    window.Alpine.$data(el).preview = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    })();
+</script>
 @endsection

@@ -18,7 +18,7 @@
                     <p class="text-slate-400 font-medium text-base leading-relaxed">Break down your event attendance by ticket categories, attendee behavior, and specific registration data to better understand your audience.</p>
                 </div>
                 <div>
-                    <a href="{{ route('admin.customers.segmentation.export', request()->all()) }}" class="bg-secondary text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-4 shadow-2xl shadow-secondary/20 group">
+                    <a href="{{ route('admin.customers.segmentation.export', request()->all()) }}" target="_blank" class="bg-secondary text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-4 shadow-2xl shadow-secondary/20 group">
                         <i class="fas fa-cloud-download-alt text-[14px] group-hover:-translate-y-1 transition-transform"></i>
                         <span>Download Segment Data</span>
                     </a>

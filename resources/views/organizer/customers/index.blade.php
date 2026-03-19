@@ -12,7 +12,7 @@
             <p class="text-slate-400 font-medium text-sm">Analyze and interact with customers engaged with your events.</p>
         </div>
         <div class="flex items-center gap-4">
-            <a href="{{ route('organizer.customers.export', request()->all()) }}" class="bg-white border border-slate-200 text-slate-600 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
+            <a href="{{ route('organizer.customers.export', request()->all()) }}" target="_blank" class="bg-white border border-slate-200 text-slate-600 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
                 <i class="fas fa-download text-[10px]"></i> Export Database
             </a>
         </div>

@@ -19,7 +19,7 @@
 
 <div x-data="{ isMobileNavOpen: false, searchOpen: false }">
     <header style="background-color: #ffffff !important;" 
-            class="fixed top-0 left-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
+            class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
 
     {{-- ═══════════════════════════════════════
          TOP ROW: Logo · Search · Auth · Burger
@@ -220,7 +220,7 @@
      x-transition:leave="transition ease-in-out duration-500 transform"
      x-transition:leave-start="translate-x-0"
      x-transition:leave-end="translate-x-full"
-     class="fixed top-0 right-0 h-full z-[70] flex flex-col w-[280px] bg-white shadow-2xl"
+     class="fixed top-0 right-0 h-screen z-[70] flex flex-col w-[280px] bg-white shadow-2xl"
      x-cloak>
 
     {{-- Drawer Header --}}
@@ -247,7 +247,7 @@
     </div>
 
     {{-- Scrollable body --}}
-    <div class="flex-1 overflow-y-auto overscroll-contain">
+    <div class="flex-1 overflow-y-auto overscroll-contain min-h-0" style="-webkit-overflow-scrolling: touch;">
         <div class="p-4 space-y-1 pt-5">
 
             {{-- Section label --}}

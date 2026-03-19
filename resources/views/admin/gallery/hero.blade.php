@@ -59,10 +59,14 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
-                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none text-left">Live Content Sync Active</p>
-                            <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 hover:shadow-2xl transition-all active:scale-95 uppercase flex items-center gap-3">
-                                <i class="fas fa-paper-plane text-[10px]"></i> Update Hero Section
+                        <div class="pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Live Sync Ready</p>
+                            </div>
+                            <button type="submit" class="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-[1.5rem] font-black text-[11px] tracking-[0.2em] shadow-lg shadow-primary/20 hover:bg-dark hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/30 transition-all active:scale-95 uppercase flex items-center justify-center gap-3 group">
+                                <i class="fas fa-paper-plane text-[10px] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i> 
+                                Update Hero Section
                             </button>
                         </div>
                     </form>
@@ -70,7 +74,7 @@
 
                 <!-- Interactive Preview -->
                 <div class="mt-12 bg-dark rounded-[3.5rem] p-16 text-white relative overflow-hidden group border border-white/5 shadow-2xl">
-                    <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent"></div>
+                    <div class="absolute inset-0 bg-primary/10"></div>
                     <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] translate-x-1/4 -translate-y-1/4"></div>
 
                     <div class="max-w-xl relative z-10 text-center mx-auto sm:text-left sm:mx-0">

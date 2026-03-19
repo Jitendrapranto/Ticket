@@ -225,7 +225,7 @@ class EventController extends Controller
             if ($request->has('tickets')) {
                 $providedTicketIds = [];
                 $existingTickets = $event->ticketTypes->keyBy('id');
-                
+
                 foreach ($request->tickets as $ticket) {
                     if (!empty($ticket['id']) && $existingTickets->has($ticket['id'])) {
                         $ticketType = $existingTickets[$ticket['id']];
@@ -235,7 +235,8 @@ class EventController extends Controller
                             'quantity' => $ticket['quantity'],
                         ]);
                         $providedTicketIds[] = $ticketType->id;
-                    } else {
+                    }
+                    else {
                         $newTicket = $event->ticketTypes()->create([
                             'name' => $ticket['name'],
                             'price' => $ticket['price'],
@@ -244,9 +245,10 @@ class EventController extends Controller
                         $providedTicketIds[] = $newTicket->id;
                     }
                 }
-                
+
                 $event->ticketTypes()->whereNotIn('id', $providedTicketIds)->delete();
-            } else {
+            }
+            else {
                 $event->ticketTypes()->delete();
             }
 
@@ -367,7 +369,7 @@ class EventController extends Controller
     private function saveFormFields(Event $event, $formFieldsRaw)
     {
         $defaultFields = $event->formFields()->where('is_default', true)->get()->keyBy('label');
-        
+
         $defaults = [
             ['label' => 'Name', 'type' => 'text', 'is_required' => true, 'is_default' => true, 'sort_order' => 0],
             ['label' => 'Email', 'type' => 'email', 'is_required' => true, 'is_default' => true, 'sort_order' => 1],
@@ -401,7 +403,8 @@ class EventController extends Controller
                                 ]);
                                 $keepFieldIds[] = $formField->id;
                             }
-                        } else {
+                        }
+                        else {
                             $newField = $event->formFields()->create([
                                 'label' => $field['label'],
                                 'type' => $field['type'],
@@ -416,7 +419,7 @@ class EventController extends Controller
                 }
             }
         }
-        
+
         $event->formFields()->whereNotIn('id', $keepFieldIds)->delete();
     }
 }

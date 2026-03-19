@@ -222,7 +222,7 @@
                     <h2 class="font-outfit text-2xl md:text-4xl font-black text-dark mb-2 tracking-tighter">All <span class="text-primary">Events</span></h2>
                     <p class="text-slate-400 text-sm md:text-base font-medium tracking-wide">Explore our full library of experiences across every category.</p>
                 </div>
-                <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                <div class="flex gap-3 overflow-x-auto pb-4 no-scrollbar w-full -mx-4 px-4 sm:mx-0 sm:px-0" style="-webkit-overflow-scrolling: touch;">
                     <button @click="activeCategory = 'all'"
                             :class="activeCategory === 'all' ? 'bg-dark text-white border-dark shadow-lg' : 'bg-white text-slate-500 border-slate-200 hover:border-dark hover:text-dark'"
                             class="px-6 py-2.5 rounded-full font-black text-[10px] tracking-widest transition-all border whitespace-nowrap">
@@ -798,39 +798,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Start auto sliding
         function startAutoSlide() {
-            autoSlideInterval = setInterval(autoSlide, 3000); // Slide every 3 seconds
+            if (autoSlideInterval) clearInterval(autoSlideInterval);
+            if (totalCards > getCardsPerView()) {
+                autoSlideInterval = setInterval(autoSlide, 4000);
+            }
         }
 
         // Pause on hover
         featuredCarousel.addEventListener('mouseenter', () => {
-            clearInterval(autoSlideInterval);
+            if (autoSlideInterval) clearInterval(autoSlideInterval);
         });
 
-        featuredCarousel.addEventListener('mouseleave', () => {
-            startAutoSlide();
-        });
+        featuredCarousel.addEventListener('mouseleave', startAutoSlide);
 
         // Handle dot clicks on mobile
         featuredDots.forEach((dot, i) => {
             dot.addEventListener('click', () => {
                 featuredIndex = Math.min(i, getMaxIndex());
                 updateFeaturedCarousel();
-                // Reset auto slide timer
-                clearInterval(autoSlideInterval);
                 startAutoSlide();
             });
         });
 
         // Handle resize
         window.addEventListener('resize', () => {
-            cardsPerView = getCardsPerView();
             featuredIndex = Math.min(featuredIndex, getMaxIndex());
             updateFeaturedCarousel();
+            startAutoSlide();
         });
 
-        // Initialize
-        updateFeaturedCarousel();
-        startAutoSlide();
+        // Initialize after a small delay to ensure layout is ready
+        setTimeout(() => {
+            updateFeaturedCarousel();
+            startAutoSlide();
+        }, 800);
+
+        // Re-initialize once everything is fully loaded
+        window.addEventListener('load', () => {
+            updateFeaturedCarousel();
+            startAutoSlide();
+        });
 
         // Touch/Swipe support for mobile
         let touchStartX = 0;
@@ -838,7 +845,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         featuredCarousel.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
-            clearInterval(autoSlideInterval);
+            if (autoSlideInterval) clearInterval(autoSlideInterval);
         }, { passive: true });
 
         featuredCarousel.addEventListener('touchend', (e) => {

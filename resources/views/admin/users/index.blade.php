@@ -9,7 +9,7 @@
                     <p class="text-slate-400 font-medium">Manage and analyze your platform's customer base.</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.customers.export') }}" class="bg-white border border-slate-200 text-slate-600 px-6 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
+                    <a href="{{ route('admin.customers.export') }}" target="_blank" class="bg-white border border-slate-200 text-slate-600 px-6 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
                         <i class="fas fa-download text-[10px]"></i> Export
                     </a>
                     <a href="{{ route('admin.customers.create') }}" class="bg-secondary text-white px-8 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-xl">

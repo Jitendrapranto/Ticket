@@ -37,7 +37,7 @@ const initScrollReveal = () => {
 const initHeaderScroll = () => {
     const header = document.querySelector('header');
     if (!header) return;
-    
+
     const handleScroll = () => {
         if (window.scrollY > 20) {
             header.classList.add('shadow-xl', 'bg-white/100');
@@ -45,7 +45,7 @@ const initHeaderScroll = () => {
             header.classList.remove('shadow-xl', 'bg-white/100');
         }
     };
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
 };
@@ -79,7 +79,7 @@ const swup = new Swup({
 const initAll = () => {
     initScrollReveal();
     initHeaderScroll();
-    
+
     // Sidebar Toggle for Organizer Dashboard
     const sidebar = document.getElementById('organizer-sidebar');
     const toggleBtn = document.getElementById('toggle-sidebar');

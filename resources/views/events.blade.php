@@ -84,7 +84,7 @@
     </section>
 
     <!-- Filter Section -->
-    <section class="py-4 md:py-6 bg-white border-b border-slate-100 sticky top-16 md:top-20 z-40 shadow-sm">
+    <section class="py-4 md:py-6 bg-white border-b border-slate-100 sticky top-16 md:top-20 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
                 <!-- Status Tabs -->
@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- Category Filters -->
-                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto pb-2 lg:pb-0 scroll-smooth">
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto pb-4 lg:pb-0 scroll-smooth -mx-6 px-6 md:mx-0 md:px-0" style="-webkit-overflow-scrolling: touch;">
                     <span class="text-[10px] font-black text-primary uppercase tracking-widest mr-4 whitespace-nowrap flex items-center gap-2">
                         <i class="fas fa-sliders-h"></i> Filter:
                     </span>
@@ -181,12 +181,12 @@
     @endif --}}
 
     <!-- Events Grid -->
-    <section class="py-16 bg-[#F8FAFC] event-grid-section">
+    <section class="py-16 bg-[#F8FAFC] event-grid-section relative z-40">
         <div class="max-w-7xl mx-auto px-2">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 @forelse($events as $event)
                 @php $catSlug = $event->category ? $event->category->slug : 'none'; @endphp
-                <div class="event-card group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-slate-100 overflow-hidden cursor-pointer"
+                <div class="event-card group bg-white rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-slate-100 overflow-hidden cursor-pointer relative z-40 hover:z-50"
                      style="border-color: #EDDDDD;"
                      x-show="matchEvent({{ json_encode($catSlug) }}, {{ json_encode($event->title) }}, {{ json_encode($event->location ?? '') }}, {{ json_encode($event->category ? $event->category->name : '') }})"
                      x-transition:enter="transition ease-out duration-300"

@@ -59,7 +59,7 @@
 
                     <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
                         <p class="text-[10px] font-bold text-slate-400">Last updated: {{ $hero->updated_at ? $hero->updated_at->diffForHumans() : 'Never' }}</p>
-                        <button type="submit" class="bg-gradient-to-r from-primary to-secondary text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:-translate-y-1 transition-all uppercase">
+                        <button type="submit" class="bg-primary text-white px-12 py-5 rounded-[1.5rem] font-black text-xs tracking-[0.2em] shadow-premium hover:bg-secondary hover:-translate-y-1 transition-all uppercase">
                             Update Hero Section
                         </button>
                     </div>

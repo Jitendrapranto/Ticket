@@ -12,7 +12,7 @@
             <p class="text-slate-400 font-medium text-base leading-relaxed">Isolate specific attendee groups by event registration, ticket tiers, and individual data for more effective communication and planning.</p>
         </div>
         <div>
-            <a href="{{ route('organizer.customers.segmentation.export', request()->all()) }}" class="bg-dark text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-4 shadow-2xl shadow-dark/10 group text-center">
+            <a href="{{ route('organizer.customers.segmentation.export', request()->all()) }}" target="_blank" class="bg-dark text-white px-10 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-4 shadow-2xl shadow-dark/10 group text-center">
                 <i class="fas fa-file-csv text-[14px] group-hover:-translate-y-1 transition-transform"></i>
                 <span>Download Segment</span>
             </a>

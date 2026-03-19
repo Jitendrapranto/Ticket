@@ -7,6 +7,13 @@
     itemName: '',
     confirmDelete(url, name) { this.deleteUrl = url; this.itemName = name; this.deleteModal = true; }
 }">
+    <div class="animate-fadeIn">
+        <header class="mb-8 flex items-center justify-between shrink-0">
+            <div>
+                <h2 class="font-outfit text-xl font-black text-dark tracking-tight">Platform Features</h2>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Homepage Feature Cards</p>
+            </div>
+            <a href="{{ route('admin.home.features.create') }}" class="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl text-xs font-black tracking-widest hover:bg-secondary transition-all uppercase shadow-lg shadow-primary/20">
                 <i class="fas fa-plus mr-2"></i> Add Feature
             </a>
         </header>

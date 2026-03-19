@@ -20,18 +20,18 @@
     </section>
 
     <!-- Gallery Categories -->
-    <section class="py-5 bg-white border-b border-slate-100 sticky top-20 z-40">
+    <section class="py-5 bg-white border-b border-slate-100 sticky top-20 z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="flex flex-wrap justify-center gap-2 sm:gap-4">
+            <div class="flex items-center justify-start md:justify-center gap-2 sm:gap-4 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0" style="-webkit-overflow-scrolling: touch;">
                 <button @click="activeCategory = 'all'" 
                         :class="activeCategory === 'all' ? 'bg-[#1B2B46] text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50'"
-                        class="gallery-filter-btn px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
+                        class="gallery-filter-btn px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all whitespace-nowrap">
                     ALL
                 </button>
                 @foreach($galleryCategories as $cat)
                     <button @click="activeCategory = '{{ strtolower($cat->name) }}'"
                             :class="activeCategory === '{{ strtolower($cat->name) }}' ? 'bg-[#1B2B46] text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:text-[#1B2B46] hover:bg-purple-50'"
-                            class="gallery-filter-btn px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all">
+                            class="gallery-filter-btn px-5 sm:px-8 py-2.5 sm:py-3 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest transition-all whitespace-nowrap">
                         {{ strtoupper($cat->name) }}
                     </button>
                 @endforeach
@@ -40,7 +40,7 @@
     </section>
 
     <!-- Gallery Grid -->
-    <section class="py-12 sm:py-20 bg-[#f8fafc]">
+    <section class="py-12 sm:py-20 bg-[#f8fafc] relative z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
             <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
@@ -217,7 +217,7 @@
     <!-- ===== END LIGHTBOX MODAL ===== -->
 
     <!-- CTA Section -->
-    <section class="py-24 sm:py-40 bg-[#1B2B46] text-white relative overflow-hidden">
+    <section class="py-24 sm:py-40 bg-[#1B2B46] text-white relative overflow-hidden z-20">
         <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2"></div>
         <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <h2 class="font-outfit text-4xl sm:text-5xl md:text-7xl font-black mb-8 sm:mb-10 tracking-tighter leading-[0.9]">Make Your Own <br><span class="text-accent">Memories.</span></h2>
