@@ -332,6 +332,9 @@
     .animate-fadeIn {
         animation: fadeIn 0.8s ease-out forwards;
     }
+    .animate-fadeInSimple {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
     #eventBanner img, #eventBanner > div {
         width: 100%;
         height: 100%;
@@ -340,132 +343,119 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    (function() {
+        /**
+         * Initialize the Booking / Ticket selection logic.
+         * We wrap this in a function or IIFE to handle both initial page load 
+         * and Swup-based content swaps.
+         */
+        const initBooking = () => {
+            const ticketRows = document.querySelectorAll('.ticket-row');
+            const totalDisplay = document.getElementById('totalDisplay');
+            const bookNowBtn = document.getElementById('bookNowBtn');
+            const maxTickets = 4;
 
-        // Ticket Selection Logic
-        const maxTickets = 4;
-        const ticketRows = document.querySelectorAll('.ticket-row');
-        const totalDisplay = document.getElementById('totalDisplay');
+            if (!ticketRows.length || !totalDisplay || !bookNowBtn) return;
 
-        function updateTotal() {
-            let total = 0;
-            let totalQty = 0;
-            ticketRows.forEach(row => {
-                const qty = parseInt(row.querySelector('.qty-display').textContent);
-                const price = parseFloat(row.dataset.price);
-                total += qty * price;
-                totalQty += qty;
-            });
-            
-            // Format number for display
-            totalDisplay.textContent = total.toLocaleString();
-        }
-
-        ticketRows.forEach(row => {
-            const incrementBtn = row.querySelector('.increment-qty');
-            const decrementBtn = row.querySelector('.decrement-qty');
-            const qtyDisplay = row.querySelector('.qty-display');
-            const available = parseInt(row.dataset.available);
-
-            incrementBtn.addEventListener('click', () => {
-                let currentTotalQty = 0;
-                ticketRows.forEach(r => currentTotalQty += parseInt(r.querySelector('.qty-display').textContent));
-
-                if (currentTotalQty < maxTickets) {
-                    let qty = parseInt(qtyDisplay.textContent);
-                    const tierName = row.dataset.tierName || 'this tier';
-                    if (qty < available) {
-                        qtyDisplay.textContent = qty + 1;
-                        updateTotal();
-                    } else {
-                        // Professional popup for availability limit
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Limited Availability',
-                            html: `<div style="font-size:15px;color:#64748b;line-height:1.6;">Only <strong style="color:#F1556C;font-size:18px;">${available}</strong> ticket${available !== 1 ? 's' : ''} available for <strong style="color:#1B2B46;">${tierName}</strong>.</div>`,
-                            confirmButtonText: 'Got It',
-                            confirmButtonColor: '#520C6B',
-                            background: '#ffffff',
-                            showClass: { popup: 'animate__animated animate__fadeInDown animate__faster' },
-                            hideClass: { popup: 'animate__animated animate__fadeOutUp animate__faster' },
-                            customClass: {
-                                title: 'font-outfit font-black text-xl',
-                                confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
-                            }
-                        });
+            function updateTotal() {
+                let total = 0;
+                let totalQty = 0;
+                ticketRows.forEach(row => {
+                    const qtyDisplay = row.querySelector('.qty-display');
+                    if (qtyDisplay) {
+                        const qty = parseInt(qtyDisplay.textContent);
+                        const price = parseFloat(row.dataset.price);
+                        total += qty * price;
+                        totalQty += qty;
                     }
-                } else {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Maximum Reached',
-                        html: '<div style="font-size:15px;color:#64748b;">You can only purchase a maximum of <strong style="color:#520C6B;">4 tickets</strong> in total.</div>',
-                        confirmButtonText: 'Understood',
-                        confirmButtonColor: '#520C6B',
-                        background: '#ffffff',
-                        customClass: {
-                            title: 'font-outfit font-black text-xl',
-                            confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                });
+                
+                // Format number for display
+                totalDisplay.textContent = total.toLocaleString();
+            }
+
+            ticketRows.forEach(row => {
+                const incrementBtn = row.querySelector('.increment-qty');
+                const decrementBtn = row.querySelector('.decrement-qty');
+                const qtyDisplay = row.querySelector('.qty-display');
+                const available = parseInt(row.dataset.available);
+
+                if (incrementBtn && qtyDisplay) {
+                    incrementBtn.addEventListener('click', () => {
+                        let currentTotalQty = 0;
+                        ticketRows.forEach(r => {
+                            const q = r.querySelector('.qty-display');
+                            if (q) currentTotalQty += parseInt(q.textContent);
+                        });
+
+                        if (currentTotalQty < maxTickets) {
+                            let qty = parseInt(qtyDisplay.textContent);
+                            const tierName = row.dataset.tierName || 'this tier';
+                            if (qty < available) {
+                                qtyDisplay.textContent = qty + 1;
+                                updateTotal();
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Limited Availability',
+                                    html: `<div style="font-size:15px;color:#64748b;line-height:1.6;">Only <strong style="color:#F1556C;font-size:18px;">${available}</strong> ticket${available !== 1 ? 's' : ''} available for <strong style="color:#1B2B46;">${tierName}</strong>.</div>`,
+                                    confirmButtonText: 'Got It',
+                                    confirmButtonColor: '#520C6B',
+                                    customClass: {
+                                        title: 'font-outfit font-black text-xl',
+                                        confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                                    }
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Maximum Reached',
+                                html: `<div style="font-size:15px;color:#64748b;">You can only purchase a maximum of <strong style="color:#520C6B;">${maxTickets} tickets</strong> in total.</div>`,
+                                confirmButtonText: 'Understood',
+                                confirmButtonColor: '#520C6B',
+                                customClass: {
+                                    title: 'font-outfit font-black text-xl',
+                                    confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
+                                }
+                            });
+                        }
+                    });
+                }
+
+                if (decrementBtn && qtyDisplay) {
+                    decrementBtn.addEventListener('click', () => {
+                        let qty = parseInt(qtyDisplay.textContent);
+                        const minQty = row.classList.contains('first-ticket') ? 1 : 0;
+                        if (qty > minQty) {
+                            qtyDisplay.textContent = qty - 1;
+                            updateTotal();
                         }
                     });
                 }
             });
 
-            decrementBtn.addEventListener('click', () => {
-                let qty = parseInt(qtyDisplay.textContent);
-                const minQty = row.classList.contains('first-ticket') ? 1 : 0;
-                if (qty > minQty) {
-                    qtyDisplay.textContent = qty - 1;
-                    updateTotal();
-                }
-            });
-        });
-        
-        // Book Now Redirect
-        const bookNowBtn = document.getElementById('bookNowBtn');
-        const isRegistrationClosed = {{ ($event->registration_deadline && $event->registration_deadline->isPast()) ? 'true' : 'false' }};
+            // Book Now Redirect
+            const isRegistrationClosed = {{ ($event->registration_deadline && $event->registration_deadline->isPast()) ? 'true' : 'false' }};
 
-        if (bookNowBtn) {
             if (isRegistrationClosed) {
-                // Change button text and style if closed
                 bookNowBtn.innerText = 'Registration Closed';
                 bookNowBtn.classList.remove('bg-[#F1556C]', 'hover:bg-[#E1445B]');
                 bookNowBtn.classList.add('bg-slate-400', 'cursor-not-allowed');
             }
 
-            bookNowBtn.addEventListener('click', () => {
+            bookNowBtn.addEventListener('click', (e) => {
                 if (isRegistrationClosed) {
-                    // Show Professional Popup
                     Swal.fire({
                         title: 'Registration Closed!',
                         text: 'We are sorry, the registration date for this event has already passed.',
                         icon: 'info',
-                        showConfirmButton: true,
                         confirmButtonText: 'Got it',
-                        confirmButtonColor: '#520C6B', // Brand Purple
-                        background: '#ffffff',
+                        confirmButtonColor: '#520C6B',
                         customClass: {
                             title: 'font-outfit font-black text-2xl',
-                            content: 'font-medium text-slate-500',
                             confirmButton: 'rounded-xl px-8 py-3 font-black text-xs uppercase tracking-widest'
                         }
-                    }).then(() => {
-                        // Toast Message
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        });
-
-                        Toast.fire({
-                            icon: 'warning',
-                            title: 'The booking window is closed.'
-                        });
                     });
                     return;
                 }
@@ -474,11 +464,14 @@
                 let hasTickets = false;
                 
                 ticketRows.forEach(row => {
-                    const qty = parseInt(row.querySelector('.qty-display').textContent);
-                    const tierId = row.dataset.tierId;
-                    if (qty > 0) {
-                        params.append(`tickets[${tierId}]`, qty);
-                        hasTickets = true;
+                    const qD = row.querySelector('.qty-display');
+                    if (qD) {
+                        const qty = parseInt(qD.textContent);
+                        const tierId = row.dataset.tierId;
+                        if (qty > 0) {
+                            params.append(`tickets[${tierId}]`, qty);
+                            hasTickets = true;
+                        }
                     }
                 });
 
@@ -495,10 +488,13 @@
                     });
                 }
             });
-        }
-        
-        // Initial call to set total correctly based on quantities (0)
-        updateTotal();
-    });
+
+            // Initial total calculation
+            updateTotal();
+        };
+
+        // Run immediately as script is at the end of content
+        initBooking();
+    })();
 </script>
 @endsection

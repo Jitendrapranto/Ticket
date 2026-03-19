@@ -51,8 +51,8 @@ class ReportController extends Controller
             
             return view('organizer.reports.sales', compact(
                 'netEarnings', 'totalCommission', 'grossRevenue', 
-                'totalTickets', 'avgOrderValue', 'monthlyTrends', 
-                'eventStats', 'startDate', 'endDate'
+                'totalTickets', 'avgOrderValue', 'trends', 
+                'eventStats', 'startDate', 'endDate', 'trendType'
             ));
         }
 
@@ -71,17 +71,39 @@ class ReportController extends Controller
 
         $avgOrderValue = $query->count() > 0 ? $grossRevenue / $query->count() : 0;
 
-        // Monthly Trends (for Chart)
-        $monthlyTrends = Booking::whereIn('event_id', $eventIds)
+        // Trends (for Chart) - supports daily, weekly, monthly
+        $trendType = $request->input('trend_type', 'monthly');
+        $trendsQuery = Booking::whereIn('event_id', $eventIds)
             ->where('status', 'confirmed')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->select(
-                DB::raw('MONTHNAME(created_at) as label'),
-                DB::raw('SUM(total_amount) as value') 
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($trendType === 'daily') {
+            $trendsQuery->select(
+                DB::raw('DATE_FORMAT(created_at, "%b %d") as label'),
+                DB::raw('SUM(total_amount) as value'),
+                DB::raw('DATE(created_at) as sort_date')
+            )
+            ->groupBy('label', 'sort_date')
+            ->orderBy('sort_date', 'asc');
+        } elseif ($trendType === 'weekly') {
+            $trendsQuery->select(
+                DB::raw('CONCAT("Week ", WEEK(created_at)) as label'),
+                DB::raw('SUM(total_amount) as value'),
+                DB::raw('MIN(created_at) as sort_date')
             )
             ->groupBy('label')
-            ->orderBy('created_at', 'asc')
-            ->get();
+            ->orderBy('sort_date', 'asc');
+        } else {
+            // monthly (default)
+            $trendsQuery->select(
+                DB::raw('DATE_FORMAT(created_at, "%b %Y") as label'),
+                DB::raw('SUM(total_amount) as value'),
+                DB::raw('MIN(created_at) as sort_date')
+            )
+            ->groupBy('label')
+            ->orderBy('sort_date', 'asc');
+        }
+        $trends = $trendsQuery->get();
 
         // Event Breakdown
         $eventStats = Event::where('user_id', $organizer_id)
@@ -102,9 +124,16 @@ class ReportController extends Controller
                 return $event;
             });
 
+        if ($request->ajax()) {
+            return response()->json([
+                'labels' => $trends->pluck('label'),
+                'values' => $trends->pluck('value'),
+            ]);
+        }
+
         return view('organizer.reports.sales', compact(
             'totalTickets', 'grossRevenue', 'totalCommission', 'netEarnings',
-            'avgOrderValue', 'monthlyTrends', 'eventStats', 'startDate', 'endDate'
+            'avgOrderValue', 'trends', 'eventStats', 'startDate', 'endDate', 'trendType'
         ));
     }
 
@@ -115,23 +144,7 @@ class ReportController extends Controller
 
         [$startDate, $endDate] = $this->getDateRange($request);
 
-        $bookings = Booking::with('event')
-            ->whereIn('event_id', $eventIds)
-            ->where('status', 'confirmed')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $filename = "sales_report_" . now()->format('Y-m-d') . ".csv";
-        $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
-
-        // Fetching event summary data again to ensure it's in the export scope
+        // Fetching event summary data
         $eventStats = Event::where('user_id', $organizer_id)
             ->with(['category'])
             ->get()
@@ -157,44 +170,83 @@ class ReportController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $callback = function() use($eventStats, $bookings) {
-            $file = fopen('php://output', 'w');
-            
-            // Section 1: Event Summary
-            fputcsv($file, ['--- EVENT PERFORMANCE SUMMARY ---']);
-            fputcsv($file, ['Event Name', 'Category', 'Tickets Sold', 'Gross Revenue', 'Organizer Profit']);
-            foreach ($eventStats as $event) {
-                fputcsv($file, [
-                    $event->title,
-                    $event->category->name ?? 'N/A',
-                    $event->tickets_sold,
-                    '৳' . number_format($event->gross_revenue, 2),
-                    '৳' . number_format($event->organizer_profit, 2)
-                ]);
-            }
-            
-            fputcsv($file, []); // Spacer
-            fputcsv($file, []);
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $phpWord->getSettings()->setUpdateFields(true);
 
-            // Section 2: Transaction Details
-            fputcsv($file, ['--- INDIVIDUAL BOOKING TRANSACTIONS ---']);
-            fputcsv($file, ['Date', 'Booking ID', 'Event Name', 'Tickets', 'Gross Amount', 'Commission', 'Net Profit']);
+        $section = $phpWord->addSection([
+            'orientation' => 'landscape',
+            'pageSizeW' => \PhpOffice\PhpWord\Shared\Converter::cmToEmu(35),
+            'pageSizeH' => \PhpOffice\PhpWord\Shared\Converter::cmToEmu(21),
+            'marginTop'    => 800,
+            'marginBottom' => 800,
+            'marginLeft'   => 800,
+            'marginRight'  => 800,
+        ]);
 
-            foreach ($bookings as $booking) {
-                fputcsv($file, [
-                    $booking->created_at->format('Y-m-d H:i'),
-                    $booking->booking_id,
-                    $booking->event->title ?? 'N/A',
-                    $booking->attendees->count(),
-                    '৳' . number_format($booking->total_amount, 2),
-                    '৳' . number_format($booking->commission_amount, 2),
-                    '৳' . number_format($booking->subtotal_amount, 2)
-                ]);
-            }
+        // Title
+        $section->addText(
+            'Organizer Sales Performance Report — ' . date('Y-m-d'),
+            ['bold' => true, 'size' => 16, 'color' => '4F0B67'],
+            ['spaceAfter' => 400, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
 
-            fclose($file);
-        };
+        // --- Section 1: Event Summary ---
+        $section->addText('Event Performance Summary', ['bold' => true, 'size' => 12]);
+        $styleTable = ['borderSize' => 6, 'borderColor' => 'E2E8F0', 'cellMargin' => 80];
+        $styleFirstRow = ['bgColor' => '4F0B67', 'bold' => true];
+        $phpWord->addTableStyle('EventSummaryTable', $styleTable, $styleFirstRow);
+        $table1 = $section->addTable('EventSummaryTable');
 
-        return response()->stream($callback, 200, $headers);
+        $headers1 = ['Event Name', 'Category', 'Tickets Sold', 'Gross Revenue', 'Organizer Profit'];
+        $colWidths1 = [4000, 2500, 1500, 2500, 2500];
+        $table1->addRow(600);
+        foreach ($headers1 as $i => $hdr) {
+            $table1->addCell($colWidths1[$i])->addText($hdr, ['bold' => true, 'color' => 'FFFFFF', 'size' => 9]);
+        }
+
+        foreach ($eventStats as $event) {
+            $table1->addRow(500);
+            $table1->addCell($colWidths1[0])->addText($event->title, ['size' => 8]);
+            $table1->addCell($colWidths1[1])->addText($event->category->name ?? 'N/A', ['size' => 8]);
+            $table1->addCell($colWidths1[2])->addText((string)$event->tickets_sold, ['size' => 8]);
+            $table1->addCell($colWidths1[3])->addText('৳' . number_format($event->gross_revenue, 2), ['size' => 8]);
+            $table1->addCell($colWidths1[4])->addText('৳' . number_format($event->organizer_profit, 2), ['size' => 8]);
+        }
+
+        $section->addTextBreak(2);
+
+        // --- Section 2: Transaction Details ---
+        $section->addText('Individual Booking Transactions', ['bold' => true, 'size' => 12]);
+        $phpWord->addTableStyle('TransactionTable', $styleTable, $styleFirstRow);
+        $table2 = $section->addTable('TransactionTable');
+
+        $headers2 = ['Date', 'Booking ID', 'Event Name', 'Tickets', 'Gross Amount', 'Commission', 'Net Earnings'];
+        $colWidths2 = [2000, 2000, 3500, 1000, 1500, 1500, 1500];
+        $table2->addRow(600);
+        foreach ($headers2 as $i => $hdr) {
+            $table2->addCell($colWidths2[$i])->addText($hdr, ['bold' => true, 'color' => 'FFFFFF', 'size' => 9]);
+        }
+
+        foreach ($bookings as $booking) {
+            $table2->addRow(500);
+            $table2->addCell($colWidths2[0])->addText($booking->created_at->format('Y-m-d H:i'), ['size' => 8]);
+            $table2->addCell($colWidths2[1])->addText($booking->booking_id, ['size' => 8]);
+            $table2->addCell($colWidths2[2])->addText($booking->event->title ?? 'N/A', ['size' => 8]);
+            $table2->addCell($colWidths2[3])->addText((string)$booking->attendees->count(), ['size' => 8]);
+            $table2->addCell($colWidths2[4])->addText('৳' . number_format($booking->total_amount, 2), ['size' => 8]);
+            $table2->addCell($colWidths2[5])->addText('৳' . number_format($booking->commission_amount, 2), ['size' => 8]);
+            $table2->addCell($colWidths2[6])->addText('৳' . number_format($booking->subtotal_amount, 2), ['size' => 8]);
+        }
+
+        // Save to temp file and stream
+        $tmpFile = tempnam(sys_get_temp_dir(), 'sales_word_') . '.docx';
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $writer->save($tmpFile);
+
+        $fileName = 'sales_report_' . date('Y-m-d') . '.docx';
+
+        return response()->download($tmpFile, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ])->deleteFileAfterSend(true);
     }
 }

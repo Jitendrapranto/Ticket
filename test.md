@@ -338,3 +338,25 @@ Check the super admin dashboard here delete icon does not work where delete icon
 
 Here photo uploaded not allowed first time i visit when reload the page then photo uploaded is allowed but here need to first time also photo uploaded allowed...fix it 
 You onlY permit to change the code for gallerY section....
+
+
+I want to all listing like customer database,segmentation ,events list  not horizontal scrolling.i want to all column will be visible in the screen....
+
+
+Here Platforms sales data trend does not show the graph and here buttons like Daily , Weekly , Monthly are not working...I want to here show the sales data trend graph and also make the buttons functional for filtering 
+
+
+But when clicked the button its does not show the graph and reload the page its showed ...and it reload the top of the page when clicked button but I want to when clicked the button then it will show the graph according to the button clicked....
+
+
+But needs to reload the page to show the graph and and when clicked then it will go to the top of the page but i want to it will show the graph not reload the page....
+
+
+When Customer booking a event then he need to fill up the registration form ...I need to all data filled up the form
+will be shown in the customer segmentation section of the super admin dashboard as well as in the organizer dashboard segmentation section 
+
+
+Here Hero banner of the home page is not sliding but when reload the page then it will slide but here need to first time also sliding the hero banner...fix it....
+
+
+I want to here will exist three . then when clicked then it will open 

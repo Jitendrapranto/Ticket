@@ -198,25 +198,50 @@
                                 </div>
                             </td>
                             <td class="px-4 py-4 text-right pr-6">
-                                <div class="flex justify-end items-center gap-1.5">
-                                    @if(!$event->is_approved)
-                                    <form action="{{ route('admin.events.approve', $event) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-emerald-600 hover:text-white hover:scale-110 transition-all shadow-sm group/btn" title="Approve">
-                                            <i class="fas fa-check text-[9px]"></i>
-                                        </button>
-                                    </form>
-                                    @endif
-                                    <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-50 text-slate-600 hover:bg-primary hover:text-white hover:scale-110 transition-all shadow-sm" title="Preview">
-                                        <i class="far fa-eye text-[10px]"></i>
-                                    </a>
-                                    <a href="{{ route('admin.events.edit', $event) }}" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-sm" title="Edit">
-                                        <i class="fas fa-pen text-[9px]"></i>
-                                    </a>
-                                    <button @click="confirmDelete('{{ route('admin.events.destroy', $event) }}', '{{ addslashes($event->title) }}')"
-                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-50 text-red-400 hover:bg-red-500 hover:text-white hover:scale-110 transition-all shadow-sm" title="Delete">
-                                        <i class="fas fa-trash-alt text-[9px]"></i>
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" @click.away="open = false" class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-white hover:text-primary hover:border-primary/20 transition-all shadow-sm">
+                                        <i class="fas fa-ellipsis-h text-xs"></i>
                                     </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                        class="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-premium border border-slate-50 py-2 z-10 overflow-hidden"
+                                        style="display: none;">
+                                        
+                                        @if(!$event->is_approved)
+                                        <form action="{{ route('admin.events.approve', $event) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 transition-all group/item text-left">
+                                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-check"></i></div>
+                                                <span class="text-[9px] font-black uppercase tracking-widest">Approve Event</span>
+                                            </button>
+                                        </form>
+                                        @endif
+
+                                        <a href="{{ route('events.show', $event->slug) }}" target="_blank" class="flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="far fa-eye"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Preview Page</span>
+                                        </a>
+
+                                        <a href="{{ route('admin.events.edit', $event) }}" class="flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-pen"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Edit Details</span>
+                                        </a>
+
+                                        <div class="h-px bg-slate-50 my-1 mx-4"></div>
+
+                                        <button @click="confirmDelete('{{ route('admin.events.destroy', $event) }}', '{{ addslashes($event->title) }}'); open = false"
+                                                class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-red-500 hover:bg-red-50 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px] text-red-400 group-hover/item:text-red-500"><i class="fas fa-trash-alt"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Remove Event</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

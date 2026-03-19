@@ -46,7 +46,7 @@
         <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-8 rounded-[2.5rem] shadow-xl shadow-blue-500/20 relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
             <p class="text-[10px] font-black tracking-[0.2em] text-white/50 uppercase mb-4 relative z-10">Tickets Sold</p>
-            <h3 class="font-outfit text-4xl font-black text-white mb-1 relative z-10">{{ number_format($totalTickets) }}</h3>
+            <h3 class="font-outfit text-2xl md:text-3xl xl:text-4xl font-black text-white mb-1 relative z-10 truncate">{{ number_format($totalTickets) }}</h3>
             <p class="text-[10px] font-bold text-blue-200 uppercase tracking-widest relative z-10">Total Volume</p>
         </div>
 
@@ -54,7 +54,7 @@
         <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-8 rounded-[2.5rem] shadow-xl shadow-emerald-500/20 relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
             <p class="text-[10px] font-black tracking-[0.2em] text-white/50 uppercase mb-4 relative z-10">Gross Revenue</p>
-            <h3 class="font-outfit text-4xl font-black text-white mb-1 relative z-10">৳{{ number_format($grossRevenue, 2) }}</h3>
+            <h3 class="font-outfit text-2xl md:text-3xl xl:text-4xl font-black text-white mb-1 relative z-10 truncate">৳{{ number_format($grossRevenue, 2) }}</h3>
             <p class="text-[10px] font-bold text-emerald-100 uppercase tracking-widest relative z-10">Confirmed Sales</p>
         </div>
 
@@ -62,7 +62,7 @@
         <div class="bg-gradient-to-br from-slate-600 to-slate-800 p-8 rounded-[2.5rem] shadow-xl shadow-slate-700/20 relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/5 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
             <p class="text-[10px] font-black tracking-[0.2em] text-white/40 uppercase mb-4 relative z-10">Charge / Fees</p>
-            <h3 class="font-outfit text-4xl font-black text-white mb-1 relative z-10">৳{{ number_format($totalCommission, 2) }}</h3>
+            <h3 class="font-outfit text-2xl md:text-3xl xl:text-4xl font-black text-white mb-1 relative z-10 truncate">৳{{ number_format($totalCommission, 2) }}</h3>
             <p class="text-[10px] font-bold text-slate-300 uppercase tracking-widest relative z-10">Platform Service</p>
         </div>
 
@@ -70,23 +70,42 @@
         <div class="bg-gradient-to-br from-indigo-500 to-primary p-8 rounded-[2.5rem] shadow-xl shadow-primary/20 relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
             <p class="text-[10px] font-black tracking-[0.2em] text-white/60 uppercase mb-4 relative z-10">Net Profit</p>
-            <h3 class="font-outfit text-4xl font-black text-white mb-1 relative z-10">৳{{ number_format($netEarnings, 2) }}</h3>
+            <h3 class="font-outfit text-2xl md:text-3xl xl:text-4xl font-black text-white mb-1 relative z-10 truncate">৳{{ number_format($netEarnings, 2) }}</h3>
             <p class="text-[10px] font-bold text-indigo-100 uppercase tracking-widest relative z-10">Total Earnings</p>
         </div>
     </div>
 
     <!-- Charts Section -->
-    <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12" x-data="salesTrendComponent()">
         <div class="xl:col-span-8">
-            <div class="bg-white p-10 rounded-[3rem] shadow-premium border border-slate-50 overflow-hidden">
-                <div class="flex items-center justify-between mb-10">
-                    <div>
-                        <h3 class="font-outfit text-xl font-black text-dark tracking-tight">Sales Trends</h3>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Daily Revenue Analysis</p>
+            <div class="bg-white p-10 rounded-[3rem] shadow-premium border border-slate-50 overflow-hidden relative">
+                <!-- Loading Overlay -->
+                <div x-show="loading" x-transition class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex items-center justify-center rounded-[3rem]">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                        <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Syncing Data...</p>
                     </div>
                 </div>
-                <div class="h-[350px]">
-                    <canvas id="salesTrendsChart"></canvas>
+
+                <div class="flex flex-col sm:flex-row shadow-sm border items-center justify-between mb-10 p-4 rounded-3xl gap-4 bg-slate-50/30">
+                    <div>
+                        <h3 class="font-outfit text-xl font-black text-dark tracking-tight mb-2">Sales Trends</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Revenue Analysis over time</p>
+                    </div>
+                    <div class="bg-slate-100 p-1.5 rounded-2xl flex gap-1">
+                        <button @click="changeTrend('daily')" 
+                           :class="trend === 'daily' ? 'bg-white shadow-sm text-dark' : 'text-slate-400 hover:text-slate-600'"
+                           class="px-5 py-2 rounded-xl text-[9px] font-black uppercase transition-all">Daily</button>
+                        <button @click="changeTrend('weekly')" 
+                           :class="trend === 'weekly' ? 'bg-white shadow-sm text-dark' : 'text-slate-400 hover:text-slate-600'"
+                           class="px-5 py-2 rounded-xl text-[9px] font-black uppercase transition-all">Weekly</button>
+                        <button @click="changeTrend('monthly')" 
+                           :class="trend === 'monthly' ? 'bg-white shadow-sm text-dark' : 'text-slate-400 hover:text-slate-600'"
+                           class="px-5 py-2 rounded-xl text-[9px] font-black uppercase transition-all">Monthly</button>
+                    </div>
+                </div>
+                <div class="h-[350px] relative">
+                    <canvas id="salesTrendsChart" data-labels='@json($trends->pluck("label"))' data-values='@json($trends->pluck("value"))'></canvas>
                 </div>
             </div>
         </div>
@@ -98,32 +117,31 @@
                     <i class="fas fa-robot text-accent"></i>
                 </div>
                 <h4 class="font-outfit text-2xl font-black mb-4 tracking-tight">AI Analysis</h4>
-                <p class="text-xs font-medium leading-relaxed opacity-50 mb-10">Generate growth insights based on current sales trajectory.</p>
-                <button class="w-full bg-white text-dark py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all shadow-xl">Run Insights</button>
+                <p class="text-xs font-medium leading-relaxed opacity-50">Generate growth insights based on current sales trajectory.</p>
             </div>
         </div>
     </div>
 
     <!-- Event Breakdown -->
-    <div class="bg-white rounded-[3rem] shadow-premium border border-slate-50 overflow-hidden">
+    <div class="bg-white rounded-[3rem] shadow-premium border border-slate-50 overflow-hidden" id="eventBreakdownTable">
         <div class="p-10 border-b border-slate-50 bg-slate-50/10">
             <h3 class="font-outfit text-2xl font-black text-dark tracking-tighter mb-1">Event-Wise Breakdown</h3>
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Individual project performance metrics.</p>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left whitespace-nowrap">
+        <div class="">
+            <table class="w-full text-left table-fixed border-collapse">
                 <thead>
-                    <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] bg-white border-b border-slate-50">
-                        <th class="px-10 py-6">Event Identity</th>
-                        <th class="px-8 py-6 text-center">Tickets Sold</th>
-                        <th class="px-8 py-6 text-center">Gross</th>
-                        <th class="px-10 py-6 text-right">Net Profit</th>
+                    <tr class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] bg-white border-b border-slate-50">
+                        <th class="px-8 py-6 w-[40%]">Event Identity</th>
+                        <th class="px-6 py-6 text-center w-[20%]">Tickets Sold</th>
+                        <th class="px-6 py-6 text-center w-[20%]">Gross</th>
+                        <th class="px-10 py-6 text-right w-[20%]">Net Profit</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50 font-medium">
                     @forelse($eventStats as $event)
                     <tr class="group hover:bg-slate-50/50 transition-all">
-                        <td class="px-10 py-8">
+                        <td class="px-8 py-8">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-10 rounded-xl bg-slate-100 overflow-hidden border border-slate-100">
                                     @if($event->image)
@@ -132,19 +150,19 @@
                                         <div class="w-full h-full flex items-center justify-center text-[10px] text-slate-200 uppercase font-black">EV</div>
                                     @endif
                                 </div>
-                                <div>
-                                    <p class="text-sm font-black text-dark group-hover:text-primary transition-colors">{{ $event->title }}</p>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ $event->category->name }}</p>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-black text-dark group-hover:text-primary transition-colors truncate" title="{{ $event->title }}">{{ $event->title }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate">{{ $event->category->name }}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-8 py-8 text-center">
-                            <span class="text-sm font-black text-dark">{{ number_format($event->tickets_sold) }}</span>
+                        <td class="px-6 py-8 text-center text-sm font-black text-dark">
+                            {{ number_format($event->tickets_sold) }}
                         </td>
-                        <td class="px-8 py-8 text-center text-sm font-black text-dark/60">
+                        <td class="px-6 py-8 text-center text-sm font-black text-dark/60">
                             ৳{{ number_format($event->gross_revenue, 2) }}
                         </td>
-                        <td class="px-10 py-8 text-right text-sm font-black text-emerald-500">
+                        <td class="px-10 py-8 text-right text-sm font-black text-brand-green">
                             ৳{{ number_format($event->organizer_profit, 2) }}
                         </td>
                     </tr>
@@ -163,60 +181,110 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('salesTrendsChart').getContext('2d');
-        const labels = @json($monthlyTrends ? $monthlyTrends->pluck('label') : []);
-        const values = @json($monthlyTrends ? $monthlyTrends->pluck('value') : []);
+    function salesTrendComponent() {
+        return {
+            trend: '{{ $trendType }}',
+            loading: false,
 
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Gross Revenue',
-                        data: values,
-                        backgroundColor: '#1B2B46',
-                        borderRadius: 14,
-                        barThickness: 'flex',
-                        maxBarThickness: 45,
-                        hoverBackgroundColor: '#520C6B'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0F172A',
-                            padding: 15,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return '৳' + context.parsed.y.toLocaleString();
+            init() {
+                this.initChart();
+                document.addEventListener('swup:contentReplaced', () => this.initChart());
+            },
+
+            initChart() {
+                const canvas = document.getElementById('salesTrendsChart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                const initialLabels = JSON.parse(canvas.getAttribute('data-labels'));
+                const initialValues = JSON.parse(canvas.getAttribute('data-values'));
+
+                if (window.salesChart) {
+                    window.salesChart.destroy();
+                }
+
+                window.salesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: initialLabels,
+                        datasets: [{
+                            label: 'Gross Revenue',
+                            data: initialValues,
+                            backgroundColor: '#1B2B46',
+                            borderRadius: 14,
+                            barThickness: 'flex',
+                            maxBarThickness: 45,
+                            hoverBackgroundColor: '#520C6B'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#0F172A',
+                                padding: 15,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return '৳' + context.parsed.y.toLocaleString();
+                                    }
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#F1F5F9', drawBorder: false },
-                            ticks: {
-                                font: { size: 10, weight: '700' },
-                                color: '#94a3b8',
-                                callback: function(value) { return '৳' + value.toLocaleString(); }
-                            }
                         },
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 10, weight: '700' }, color: '#94a3b8' }
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: '#F1F5F9', drawBorder: false },
+                                ticks: {
+                                    font: { size: 10, weight: '700' },
+                                    color: '#94a3b8',
+                                    callback: function(value) { return '৳' + value.toLocaleString(); }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { size: 10, weight: '700' }, color: '#94a3b8' }
+                            }
                         }
                     }
+                });
+            },
+
+            async changeTrend(type) {
+                if (this.trend === type) return;
+                this.loading = true;
+                this.trend = type;
+
+                try {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('trend_type', type);
+                    
+                    const response = await fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (window.salesChart) {
+                        window.salesChart.data.labels = data.labels;
+                        window.salesChart.data.datasets[0].data = data.values;
+                        window.salesChart.update();
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch trend statistics:', error);
+                } finally {
+                    this.loading = false;
                 }
-            });
+            }
         }
-    });
+    }
 </script>
 @endpush

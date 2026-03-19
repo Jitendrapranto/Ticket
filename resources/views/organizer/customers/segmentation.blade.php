@@ -131,6 +131,21 @@
                                     @if($attendee->booking->user)
                                         <p class="text-[10px] font-bold text-slate-400 mt-1.5">{{ $attendee->booking->user->email }}</p>
                                     @endif
+
+                                    @if($attendee->booking->form_data && $attendee->booking->event && $attendee->booking->event->formFields->count())
+                                    <div class="flex flex-wrap gap-y-1.5 gap-x-2 mt-3 pt-3 border-t border-slate-50">
+                                        @foreach($attendee->booking->event->formFields as $field)
+                                            @php 
+                                                $val = $attendee->booking->form_data[$field->id] ?? null; 
+                                                if (!$val || $field->type === 'file') continue;
+                                            @endphp
+                                            <div class="flex items-center gap-1.5 bg-slate-50/80 border border-slate-100/50 px-2.5 py-1 rounded-lg text-[9px] font-bold text-slate-500 hover:bg-white hover:border-primary/20 transition-all cursor-default group/tag" title="{{ $field->label }}">
+                                                <span class="text-primary/60 font-black uppercase tracking-tighter group-hover/tag:text-primary transition-colors">{{ $field->label }}:</span>
+                                                <span class="text-dark">{{ is_array($val) ? implode(', ', $val) : $val }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </td>

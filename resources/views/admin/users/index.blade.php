@@ -69,7 +69,7 @@
             </div>
 
             <!-- Table Card -->
-            <div class="bg-white rounded-[2.5rem] shadow-premium border border-white overflow-visible">
+            <div class="bg-white rounded-[2.5rem] shadow-premium border border-white overflow-hidden min-w-0">
                 <div class="p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <h3 class="font-outfit text-2xl font-black text-dark tracking-tight mb-1">All Customers</h3>
@@ -148,17 +148,17 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto xl:overflow-visible">
+                <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50/30 text-[10px] font-black tracking-widest text-slate-400 uppercase border-y border-slate-50">
-                                <th class="px-10 py-5 w-[25%] font-black">Customer</th>
-                                <th class="px-8 py-5 w-[25%] font-black">Contact</th>
-                                <th class="px-8 py-5 w-[15%] font-black">Activity</th>
+                                <th class="px-10 py-5 w-[20%] font-black">Customer</th>
+                                <th class="px-8 py-5 w-[20%] font-black">Contact</th>
+                                <th class="px-8 py-5 w-[12%] font-black text-center">Activity</th>
                                 <th class="px-8 py-5 w-[15%] font-black text-center">Joined Date</th>
-                                <th class="px-8 py-5 w-[10%] font-black text-center">Account Type</th>
-                                <th class="px-8 py-5 w-[10%] font-black text-center">Status</th>
-                                <th class="px-10 py-5 w-[10%] font-black text-right">Actions</th>
+                                <th class="px-8 py-5 w-[11%] font-black text-center">Account Type</th>
+                                <th class="px-8 py-5 w-[11%] font-black text-center">Status</th>
+                                <th class="px-10 py-5 w-[11%] font-black text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
@@ -176,9 +176,9 @@
                                             @endif
                                         </div>
                                         <div>
-                                            <p class="text-sm font-black text-dark group-hover:text-primary transition-colors leading-tight">{{ $customer->name }}</p>
+                                            <p class="text-sm font-black text-dark group-hover:text-primary transition-colors leading-tight truncate max-w-[150px]">{{ $customer->name }}</p>
                                             @if($customer->institution_name)
-                                                <p class="text-[9px] font-bold text-primary uppercase tracking-wider mt-0.5">{{ $customer->institution_name }}</p>
+                                                <p class="text-[9px] font-bold text-primary uppercase tracking-wider mt-0.5 truncate max-w-[150px]">{{ $customer->institution_name }}</p>
                                             @endif
                                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">ID: #C-{{ str_pad($customer->id, 4, '0', STR_PAD_LEFT) }}</p>
                                         </div>
@@ -186,9 +186,9 @@
                                 </td>
                                 <td class="px-8 py-7">
                                     <div class="space-y-1.5">
-                                        <div class="flex items-center gap-2.5 text-slate-500 hover:text-primary transition-colors cursor-pointer">
-                                            <i class="far fa-envelope text-[11px] mt-0.5"></i>
-                                            <span class="text-xs font-bold underline underline-offset-4 decoration-slate-200 group-hover:decoration-primary/30">{{ $customer->email }}</span>
+                                        <div class="flex items-center gap-2.5 text-slate-500 hover:text-primary transition-colors cursor-pointer min-w-0">
+                                            <i class="far fa-envelope text-[11px] mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-xs font-bold underline underline-offset-4 decoration-slate-200 group-hover:decoration-primary/30 truncate">{{ $customer->email }}</span>
                                             @if($customer->email_verified_at)
                                                 <i class="fas fa-check-circle text-[9px] text-brand-green" title="Verified"></i>
                                             @endif
@@ -238,50 +238,49 @@
                                     </span>
                                 </td>
                                 <td class="px-10 py-7 text-right">
-                                    <div class="flex items-center justify-end gap-2 text-slate-400">
-                                        <!-- Show Action -->
-                                        <a href="{{ route('admin.customers.show', $customer->id) }}" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm group/btn">
-                                            <i class="fas fa-eye text-[11px]"></i>
-                                        </a>
-                                        <!-- Delete Action -->
-                                        <form action="{{ route('admin.customers.destroy', $customer->id) }}" method="POST" id="delete-form-{{ $customer->id }}" class="inline">
+                                    <div class="relative" x-data="{ open: false }">
+                                        <button @click="open = !open" @click.away="open = false" class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-white hover:text-primary hover:border-primary/20 transition-all shadow-sm">
+                                            <i class="fas fa-ellipsis-v text-xs"></i>
+                                        </button>
+
+                                        <!-- Dropdown Menu -->
+                                        <div x-show="open"
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                            class="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-premium border border-slate-50 py-2 z-50 overflow-hidden text-left"
+                                            style="display: none;">
+                                            
+                                            <a href="{{ route('admin.customers.show', $customer->id) }}" class="flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group/item">
+                                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-eye"></i></div>
+                                                <span class="text-[10px] font-black uppercase tracking-widest">View Profile</span>
+                                            </a>
+
+                                            <button type="button" @click="confirmReset({{ $customer->id }}, '{{ $customer->name }}'); open = false" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group/item text-left">
+                                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-key"></i></div>
+                                                <span class="text-[10px] font-black uppercase tracking-widest">Change Password</span>
+                                            </button>
+
+                                            <div class="h-px bg-slate-50 my-1 mx-4"></div>
+
+                                            <button type="button" @click="confirmDelete('delete-form-{{ $customer->id }}', 'This customer\'s profile and data will be permanently archived.'); open = false" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-brand-red hover:bg-brand-red/5 transition-all group/item text-left">
+                                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-trash-alt"></i></div>
+                                                <span class="text-[10px] font-black uppercase tracking-widest">Delete User</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Hidden Forms -->
+                                        <form action="{{ route('admin.customers.destroy', $customer->id) }}" method="POST" id="delete-form-{{ $customer->id }}" class="hidden">
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        <button type="button" onclick="confirmDelete('delete-form-{{ $customer->id }}', 'This customer\'s profile and data will be permanently archived.')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center hover:bg-brand-red hover:text-white hover:border-brand-red transition-all shadow-sm group/btn">
-                                            <i class="fas fa-trash text-[11px]"></i>
-                                        </button>
-
-                                        <!-- Reset Password Form -->
                                         <form action="{{ route('admin.customers.reset-password', $customer->id) }}" method="POST" id="reset-form-{{ $customer->id }}" class="hidden">
                                             @csrf
                                             <input type="hidden" name="password" id="reset-password-input-{{ $customer->id }}">
                                         </form>
-                                        <!-- More Actions Dropdown -->
-                                        <div x-data="{ open: false }" class="relative">
-                                            <button @click="open = !open" @click.away="open = false" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center hover:bg-slate-200 transition-all">
-                                                <i class="fas fa-ellipsis-h text-[11px]"></i>
-                                            </button>
-                                            
-                                            <div x-show="open" 
-                                                 x-transition:enter="transition ease-out duration-100"
-                                                 x-transition:enter-start="transform opacity-0 scale-95"
-                                                 x-transition:enter-end="transform opacity-100 scale-100"
-                                                 x-transition:leave="transition ease-in duration-75"
-                                                 x-transition:leave-start="transform opacity-100 scale-100"
-                                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                                 class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-premium border border-slate-100 z-50 overflow-hidden"
-                                                 style="display: none;">
-                                                <div class="p-2">
-                                                    <a href="{{ route('admin.customers.show', $customer->id) }}" class="flex items-center gap-3 px-4 py-2.5 text-[11px] font-bold text-slate-600 hover:bg-slate-50 hover:text-primary rounded-lg transition-all">
-                                                        <i class="far fa-id-badge w-4"></i> View Profile
-                                                    </a>
-                                                    <a href="javascript:void(0)" onclick="confirmReset({{ $customer->id }}, '{{ $customer->name }}')" class="flex items-center gap-3 px-4 py-2.5 text-[11px] font-bold text-slate-600 hover:bg-slate-50 hover:text-primary rounded-lg transition-all">
-                                                        <i class="fas fa-key w-4 text-[10px]"></i> Change Password
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </td>
                             </tr>

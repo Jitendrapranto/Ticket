@@ -653,217 +653,225 @@
         <div class="absolute top-20 right-[10%] w-40 h-40 border-2 border-white/5 rounded-full animate-pulse"></div>
         <div class="absolute bottom-20 left-[10%] w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
     </section>
-@endsection
 
-@section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const slider = document.getElementById('hero-slider');
-    const dots = document.querySelectorAll('.hero-dot');
-    const nextBtn = document.getElementById('hero-next');
-    const prevBtn = document.getElementById('hero-prev');
+    <!-- Page Specific Scripts (Injected here for Swup Compatibility) -->
+    <script>
+        if (typeof heroAutoSlideInterval === 'undefined') {
+            window.heroAutoSlideInterval = null;
+            window.featuredAutoSlideInterval = null;
+        }
 
-    // Overview Elements
-    const overviewTitle = document.getElementById('overview-title');
-    const overviewDate = document.getElementById('overview-date');
-    const overviewLocation = document.getElementById('overview-location');
-    const bookBtn = document.getElementById('overview-book-btn');
+        function initHomePage() {
+            const slider = document.getElementById('hero-slider');
+            if (!slider) return;
 
-    let currentSlide = 0;
-    const slideCount = {{ $featuredEvents->count() }};
+            // Clear existing intervals if any (to prevent multiple intervals running)
+            if (window.heroAutoSlideInterval) clearInterval(window.heroAutoSlideInterval);
+            if (window.featuredAutoSlideInterval) clearInterval(window.featuredAutoSlideInterval);
 
-    if (slideCount <= 0) return;
+            const dots = document.querySelectorAll('.hero-dot');
+            const nextBtn = document.getElementById('hero-next');
+            const prevBtn = document.getElementById('hero-prev');
 
-    const slideData = @json($slideData);
-    const baseUrl = '{{ url("/events") }}';
+            // Overview Elements
+            const overviewTitle = document.getElementById('overview-title');
+            const overviewDate = document.getElementById('overview-date');
+            const overviewLocation = document.getElementById('overview-location');
+            const bookBtn = document.getElementById('overview-book-btn');
 
-    function updateSlider() {
-        if (!slider) return;
-        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            let currentSlide = 0;
+            const slideCount = {{ $featuredEvents->count() }};
 
-        // Update Swipe Dots
-        const dotInners = document.querySelectorAll('.hero-dot-inner');
-        dotInners.forEach((dot, index) => {
-            if (index === currentSlide) {
-                dot.classList.remove('bg-white/40', 'w-4');
-                dot.classList.add('bg-white', 'w-8');
-            } else {
-                dot.classList.remove('bg-white', 'w-8');
-                dot.classList.add('bg-white/40', 'w-4');
+            if (slideCount <= 0) return;
+
+            const slideData = @json($slideData);
+            const baseUrl = '{{ url("/events") }}';
+
+            function updateSlider() {
+                if (!slider) return;
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                // Update Swipe Dots
+                const dotInners = document.querySelectorAll('.hero-dot-inner');
+                dotInners.forEach((dot, index) => {
+                    const isActive = index === currentSlide;
+                    dot.classList.toggle('bg-white/40', !isActive);
+                    dot.classList.toggle('w-4', !isActive);
+                    dot.classList.toggle('bg-white', isActive);
+                    dot.classList.toggle('w-8', isActive);
+                });
+
+                // Update Overview Card with Fade Effect
+                if (overviewTitle && slideData[currentSlide]) {
+                    overviewTitle.style.opacity = '0';
+                    overviewTitle.style.transform = 'translateY(10px)';
+
+                    setTimeout(() => {
+                        overviewTitle.innerHTML = slideData[currentSlide].title;
+                        overviewDate.innerText = slideData[currentSlide].date;
+                        overviewLocation.innerText = slideData[currentSlide].location;
+
+                        // Update Book Your Seat button URL
+                        if (bookBtn && slideData[currentSlide].slug) {
+                            bookBtn.href = baseUrl + '/' + slideData[currentSlide].slug;
+                        }
+
+                        overviewTitle.style.opacity = '1';
+                        overviewTitle.style.transform = 'translateY(0)';
+                    }, 300);
+                }
             }
-        });
 
-        // Update Overview Card with Fade Effect
-        if (overviewTitle && slideData[currentSlide]) {
-            overviewTitle.style.opacity = '0';
-            overviewTitle.style.transform = 'translateY(10px)';
-
-            setTimeout(() => {
-                overviewTitle.innerHTML = slideData[currentSlide].title;
-                overviewDate.innerText = slideData[currentSlide].date;
-                overviewLocation.innerText = slideData[currentSlide].location;
-
-                // Update Book Your Seat button URL
-                if (bookBtn && slideData[currentSlide].slug) {
-                    bookBtn.href = baseUrl + '/' + slideData[currentSlide].slug;
-                }
-
-                overviewTitle.style.opacity = '1';
-                overviewTitle.style.transform = 'translateY(0)';
-            }, 300);
-        }
-    }
-
-    // Add click listeners to hero dots
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            currentSlide = index;
+            // Initialize Slider State Immediately
             updateSlider();
-        });
-    });
 
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % slideCount;
-            updateSlider();
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
-            updateSlider();
-        });
-    }
-
-    // Auto slide
-    if (slideCount > 1) {
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % slideCount;
-            updateSlider();
-        }, 6000);
-    }
-
-    // Featured Events Carousel - Auto Slide
-    const featuredCarousel = document.getElementById('featured-carousel');
-    const featuredCards = document.querySelectorAll('.featured-card');
-    const featuredDots = document.querySelectorAll('.featured-dot');
-
-    if (featuredCarousel && featuredCards.length > 0) {
-        let featuredIndex = 0;
-        const totalCards = featuredCards.length;
-        let autoSlideInterval;
-
-        // Get cards per view based on screen size
-        function getCardsPerView() {
-            if (window.innerWidth >= 1024) return 3; // lg
-            if (window.innerWidth >= 768) return 2;  // md
-            return 1; // mobile
-        }
-
-        let cardsPerView = getCardsPerView();
-
-        function getMaxIndex() {
-            return Math.max(0, totalCards - getCardsPerView());
-        }
-
-        function updateFeaturedCarousel() {
-            const cardWidth = featuredCards[0].offsetWidth;
-            const gap = 24; // 1.5rem gap
-            const offset = featuredIndex * (cardWidth + gap);
-            featuredCarousel.style.transform = `translateX(-${offset}px)`;
-
-            // Update dots for mobile
-            featuredDots.forEach((dot, i) => {
-                if (i === featuredIndex) {
-                    dot.classList.remove('bg-slate-300', 'w-2.5');
-                    dot.classList.add('bg-primary', 'w-6', 'ring-4', 'ring-primary/10');
-                } else {
-                    dot.classList.remove('bg-primary', 'w-6', 'ring-4', 'ring-primary/10');
-                    dot.classList.add('bg-slate-300', 'w-2.5');
-                }
+            // Add click listeners to hero dots
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateSlider();
+                });
             });
-        }
 
-        // Auto slide function
-        function autoSlide() {
-            const maxIndex = getMaxIndex();
-            if (featuredIndex < maxIndex) {
-                featuredIndex++;
-            } else {
-                featuredIndex = 0; // Loop back to start
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    currentSlide = (currentSlide + 1) % slideCount;
+                    updateSlider();
+                });
             }
-            updateFeaturedCarousel();
-        }
 
-        // Start auto sliding
-        function startAutoSlide() {
-            if (autoSlideInterval) clearInterval(autoSlideInterval);
-            if (totalCards > getCardsPerView()) {
-                autoSlideInterval = setInterval(autoSlide, 4000);
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+                    updateSlider();
+                });
             }
-        }
 
-        // Pause on hover
-        featuredCarousel.addEventListener('mouseenter', () => {
-            if (autoSlideInterval) clearInterval(autoSlideInterval);
-        });
+            // Auto slide
+            if (slideCount > 1) {
+                window.heroAutoSlideInterval = setInterval(() => {
+                    currentSlide = (currentSlide + 1) % slideCount;
+                    updateSlider();
+                }, 6000);
+            }
 
-        featuredCarousel.addEventListener('mouseleave', startAutoSlide);
+            // Featured Events Carousel - Auto Slide
+            const featuredCarousel = document.getElementById('featured-carousel');
+            const featuredCards = document.querySelectorAll('.featured-card');
+            const featuredDots = document.querySelectorAll('.featured-dot');
 
-        // Handle dot clicks on mobile
-        featuredDots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                featuredIndex = Math.min(i, getMaxIndex());
-                updateFeaturedCarousel();
-                startAutoSlide();
-            });
-        });
+            if (featuredCarousel && featuredCards.length > 0) {
+                let featuredIndex = 0;
+                const totalCards = featuredCards.length;
 
-        // Handle resize
-        window.addEventListener('resize', () => {
-            featuredIndex = Math.min(featuredIndex, getMaxIndex());
-            updateFeaturedCarousel();
-            startAutoSlide();
-        });
-
-        // Initialize after a small delay to ensure layout is ready
-        setTimeout(() => {
-            updateFeaturedCarousel();
-            startAutoSlide();
-        }, 800);
-
-        // Re-initialize once everything is fully loaded
-        window.addEventListener('load', () => {
-            updateFeaturedCarousel();
-            startAutoSlide();
-        });
-
-        // Touch/Swipe support for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        featuredCarousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-            if (autoSlideInterval) clearInterval(autoSlideInterval);
-        }, { passive: true });
-
-        featuredCarousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            const diff = touchStartX - touchEndX;
-            const maxIndex = getMaxIndex();
-
-            if (Math.abs(diff) > 50) {
-                if (diff > 0 && featuredIndex < maxIndex) {
-                    featuredIndex++;
-                } else if (diff < 0 && featuredIndex > 0) {
-                    featuredIndex--;
+                // Get cards per view based on screen size
+                function getCardsPerView() {
+                    if (window.innerWidth >= 1024) return 3; // lg
+                    if (window.innerWidth >= 768) return 2;  // md
+                    return 1; // mobile
                 }
-                updateFeaturedCarousel();
+
+                function getMaxIndex() {
+                    return Math.max(0, totalCards - getCardsPerView());
+                }
+
+                function updateFeaturedCarousel() {
+                    if (!featuredCards[0]) return;
+                    const cardWidth = featuredCards[0].offsetWidth;
+                    const gap = 24; // 1.5rem gap
+                    const offset = featuredIndex * (cardWidth + gap);
+                    featuredCarousel.style.transform = `translateX(-${offset}px)`;
+
+                    // Update dots for mobile
+                    featuredDots.forEach((dot, i) => {
+                        const isActive = i === featuredIndex;
+                        dot.classList.toggle('bg-slate-300', !isActive);
+                        dot.classList.toggle('w-2.5', !isActive);
+                        dot.classList.toggle('bg-primary', isActive);
+                        dot.classList.toggle('w-6', isActive);
+                        dot.classList.toggle('ring-4', isActive);
+                        dot.classList.toggle('ring-primary/10', isActive);
+                    });
+                }
+
+                // Auto slide function
+                function featuredAutoSlide() {
+                    const maxIndex = getMaxIndex();
+                    if (featuredIndex < maxIndex) {
+                        featuredIndex++;
+                    } else {
+                        featuredIndex = 0; // Loop back to start
+                    }
+                    updateFeaturedCarousel();
+                }
+
+                // Start auto sliding
+                function startFeaturedAutoSlide() {
+                    if (window.featuredAutoSlideInterval) clearInterval(window.featuredAutoSlideInterval);
+                    if (totalCards > getCardsPerView()) {
+                        window.featuredAutoSlideInterval = setInterval(featuredAutoSlide, 4000);
+                    }
+                }
+
+                // Pause on hover
+                featuredCarousel.addEventListener('mouseenter', () => {
+                    if (window.featuredAutoSlideInterval) clearInterval(window.featuredAutoSlideInterval);
+                });
+
+                featuredCarousel.addEventListener('mouseleave', startFeaturedAutoSlide);
+
+                // Handle dot clicks on mobile
+                featuredDots.forEach((dot, i) => {
+                    dot.addEventListener('click', () => {
+                        featuredIndex = Math.min(i, getMaxIndex());
+                        updateFeaturedCarousel();
+                        startFeaturedAutoSlide();
+                    });
+                });
+
+                // Handle resize
+                window.addEventListener('resize', () => {
+                    featuredIndex = Math.min(featuredIndex, getMaxIndex());
+                    updateFeaturedCarousel();
+                });
+
+                // Initialize after a small delay to ensure layout is ready
+                setTimeout(() => {
+                    updateFeaturedCarousel();
+                    startFeaturedAutoSlide();
+                }, 800);
+
+                // Touch/Swipe support for mobile
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                featuredCarousel.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    if (window.featuredAutoSlideInterval) clearInterval(window.featuredAutoSlideInterval);
+                }, { passive: true });
+
+                featuredCarousel.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diff = touchStartX - touchEndX;
+                    const maxIndex = getMaxIndex();
+
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0 && featuredIndex < maxIndex) {
+                            featuredIndex++;
+                        } else if (diff < 0 && featuredIndex > 0) {
+                            featuredIndex--;
+                        }
+                        updateFeaturedCarousel();
+                    }
+                    startFeaturedAutoSlide();
+                }, { passive: true });
             }
-            startAutoSlide();
-        }, { passive: true });
-    }
-});
-</script>
+        }
+
+        // Run immediately as it's part of the Swup replacement fragment
+        initHomePage();
+
+        // Additional hooks for safety
+        document.addEventListener('swup:animationInDone', initHomePage);
+    </script>
 @endsection

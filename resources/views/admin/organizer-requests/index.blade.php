@@ -159,28 +159,45 @@
                                 @endif
                             </td>
                             <td class="px-6 py-5">
-                                <div class="flex items-center gap-2">
-                                    @if($req->organizer_status === 'pending')
-                                    <button onclick="openApproveModal({{ $req->id }},'{{ addslashes($req->name) }}','{{ addslashes($req->institution_name ?? '') }}','{{ $req->email }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B2B46] text-[#FFE700] hover:bg-[#520C6B] transition-all text-xs" title="Approve">
-                                        <i class="fas fa-check"></i>
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" @click.away="open = false" class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-white hover:text-primary hover:border-primary/20 transition-all shadow-sm">
+                                        <i class="fas fa-ellipsis-v text-xs"></i>
                                     </button>
-                                    <button onclick="openRejectModal({{ $req->id }})"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs" title="Reject">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    @elseif($req->organizer_status === 'rejected')
-                                    <button onclick="openApproveModal({{ $req->id }},'{{ addslashes($req->name) }}','{{ addslashes($req->institution_name ?? '') }}','{{ $req->email }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B2B46] text-[#FFE700] hover:bg-[#520C6B] transition-all text-xs" title="Re-approve">
-                                        <i class="fas fa-redo"></i>
-                                    </button>
-                                    @else
-                                    <span class="text-slate-300 text-xs font-bold">-</span>
-                                    @endif
-                                    <button onclick="deleteRequest({{ $req->id }})"
-                                        class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all text-xs" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                        class="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-premium border border-slate-50 py-2 z-50 overflow-hidden text-left"
+                                        style="display: none;">
+                                        
+                                        @if($req->organizer_status === 'pending')
+                                        <button type="button" @click="openApproveModal({{ $req->id }},'{{ addslashes($req->name) }}','{{ addslashes($req->institution_name ?? '') }}','{{ $req->email }}'); open = false" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-check"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Approve Request</span>
+                                        </button>
+                                        <button type="button" @click="openRejectModal({{ $req->id }}); open = false" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-red-500 hover:bg-red-50 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-times"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Reject Request</span>
+                                        </button>
+                                        @elseif($req->organizer_status === 'rejected')
+                                        <button type="button" @click="openApproveModal({{ $req->id }},'{{ addslashes($req->name) }}','{{ addslashes($req->institution_name ?? '') }}','{{ $req->email }}'); open = false" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-[#520C6B] hover:bg-[#520C6B]/5 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-redo"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Re-approve</span>
+                                        </button>
+                                        @endif
+
+                                        <div class="h-px bg-slate-50 my-1 mx-4"></div>
+
+                                        <button type="button" @click="deleteRequest({{ $req->id }}); open = false" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-red-500 hover:bg-red-50 transition-all group/item text-left">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px] text-red-400 group-hover/item:text-red-500"><i class="fas fa-trash-alt"></i></div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest">Delete Application</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

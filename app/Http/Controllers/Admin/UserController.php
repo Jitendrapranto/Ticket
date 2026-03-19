@@ -98,27 +98,63 @@ class UserController extends Controller
     public function export()
     {
         $customers = User::where('role', 'user')->get();
-        $fileName = 'customers_export_' . date('Y-m-d') . '.csv';
+        
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $phpWord->getSettings()->setUpdateFields(true);
 
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        ];
+        $section = $phpWord->addSection([
+            'marginTop' => 800,
+            'marginBottom' => 800,
+            'marginLeft' => 800,
+            'marginRight' => 800,
+        ]);
 
-        $callback = function () use ($customers) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['ID', 'Name', 'Email', 'Joined Date']);
+        // Title
+        $section->addText(
+            'Platform Customer Database — ' . date('Y-m-d'),
+            ['bold' => true, 'size' => 16, 'color' => '1B2B46'],
+            ['spaceAfter' => 400, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
 
-            foreach ($customers as $customer) {
-                fputcsv($file, [$customer->id, $customer->name, $customer->email, $customer->created_at->format('Y-m-d')]);
-            }
-            fclose($file);
-        };
+        // Table style
+        $styleTable = ['borderSize' => 6, 'borderColor' => 'E2E8F0', 'cellMargin' => 80];
+        $styleFirstRow = ['bgColor' => '520C6B', 'bold' => true];
+        $phpWord->addTableStyle('CustomerTable', $styleTable, $styleFirstRow);
 
-        return response()->stream($callback, 200, $headers);
+        $table = $section->addTable('CustomerTable');
+
+        // Header row
+        $headers = ['ID', 'Customer Name', 'Email Address', 'Joined Date', 'Role'];
+        $colWidths = [1000, 3000, 3500, 2000, 1500];
+
+        $table->addRow(600);
+        foreach ($headers as $i => $hdr) {
+            $table->addCell($colWidths[$i])->addText($hdr, ['bold' => true, 'color' => 'FFFFFF', 'size' => 10]);
+        }
+
+        // Data rows
+        foreach ($customers as $customer) {
+            $table->addRow(500);
+            $cellStyle = ['valign' => 'center'];
+            $textStyle = ['size' => 9];
+
+            $table->addCell($colWidths[0], $cellStyle)->addText((string)$customer->id, $textStyle);
+            $table->addCell($colWidths[1], $cellStyle)->addText($customer->name, ['bold' => true, 'size' => 9]);
+            $table->addCell($colWidths[2], $cellStyle)->addText($customer->email, $textStyle);
+            $table->addCell($colWidths[3], $cellStyle)->addText($customer->created_at->format('M d, Y'), $textStyle);
+            $table->addCell($colWidths[4], $cellStyle)->addText(strtoupper($customer->role), $textStyle);
+        }
+
+        // Save to temp file and stream
+        $tmpFile = tempnam(sys_get_temp_dir(), 'cust_word_') . '.docx';
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $writer->save($tmpFile);
+
+        $fileName = 'customers_database_' . date('Y-m-d') . '.docx';
+
+        return response()->download($tmpFile, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ])->deleteFileAfterSend(true);
     }
 
     public function segmentation(Request $request)
@@ -144,10 +180,12 @@ class UserController extends Controller
                 $q->where('name', 'like', "%$search%")
                     ->orWhere('mobile', 'like', "%$search%")
                     ->orWhereHas('booking.user', function ($uq) use ($search) {
-                    $uq->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%");
-                }
-                );
+                        $uq->where('name', 'like', "%$search%")
+                            ->orWhere('email', 'like', "%$search%");
+                    })
+                    ->orWhereHas('booking', function ($bq) use ($search) {
+                        $bq->where('form_data', 'like', "%$search%");
+                    });
             });
         }
 
@@ -175,10 +213,12 @@ class UserController extends Controller
                 $q->where('name', 'like', "%$search%")
                     ->orWhere('mobile', 'like', "%$search%")
                     ->orWhereHas('booking.user', function ($uq) use ($search) {
-                    $uq->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%");
-                }
-                );
+                        $uq->where('name', 'like', "%$search%")
+                            ->orWhere('email', 'like', "%$search%");
+                    })
+                    ->orWhereHas('booking', function ($bq) use ($search) {
+                        $bq->where('form_data', 'like', "%$search%");
+                    });
             });
         }
 
@@ -219,8 +259,8 @@ class UserController extends Controller
         $table = $section->addTable('SegTable');
 
         // Header row
-        $headers = ['ID', 'Event', 'Attendee Name', 'Email', 'Mobile', 'Ticket Type', 'Status', 'Photo'];
-        $colWidths = [700, 2400, 2000, 2400, 1400, 1600, 1200, 1800];
+        $headers = ['ID', 'Event', 'Attendee Name', 'Email', 'Mobile', 'Ticket Type', 'Status', 'Registration Data', 'Photo'];
+        $colWidths = [700, 2400, 1800, 2400, 1200, 1600, 1000, 4800, 1200];
         $table->addRow(500);
         foreach ($headers as $i => $hdr) {
             $cell = $table->addCell($colWidths[$i], ['bgColor' => '4F0B67']);
@@ -252,7 +292,7 @@ class UserController extends Controller
 
             $table->addRow(1400);
             $cellStyle = ['valign' => 'center'];
-            $textStyle = ['size' => 9];
+            $textStyle = ['size' => 8];
 
             $table->addCell($colWidths[0], $cellStyle)->addText((string)$item->id, $textStyle);
             $table->addCell($colWidths[1], $cellStyle)->addText($item->booking->event->title ?? 'N/A', $textStyle);
@@ -262,7 +302,20 @@ class UserController extends Controller
             $table->addCell($colWidths[5], $cellStyle)->addText($item->ticketType->name ?? 'N/A', $textStyle);
             $table->addCell($colWidths[6], $cellStyle)->addText($item->booking->status ?? 'N/A', $textStyle);
 
-            $photoCell = $table->addCell($colWidths[7], $cellStyle);
+            // Registration Data
+            $formDataCell = $table->addCell($colWidths[7], $cellStyle);
+            if ($item->booking->form_data && $item->booking->event && $item->booking->event->formFields->count()) {
+                foreach ($item->booking->event->formFields as $field) {
+                    $val = $item->booking->form_data[$field->id] ?? null;
+                    if (!$val || $field->type === 'file') continue;
+                    $displayVal = is_array($val) ? implode(', ', $val) : $val;
+                    $formDataCell->addText($field->label . ': ' . $displayVal, ['size' => 7, 'color' => '555555']);
+                }
+            } else {
+                $formDataCell->addText('N/A', $textStyle);
+            }
+
+            $photoCell = $table->addCell($colWidths[8], $cellStyle);
             if ($storagePath) {
                 $absolutePath = \Storage::disk('public')->path($storagePath);
                 if (file_exists($absolutePath)) {

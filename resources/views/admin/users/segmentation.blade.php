@@ -181,6 +181,21 @@
                                                 <div class="px-2 py-0.5 rounded bg-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest">Mobile</div>
                                                 <span class="text-[11px] font-bold text-slate-500">{{ $attendee->mobile ?: 'N/A' }}</span>
                                             </div>
+
+                                            @if($attendee->booking->form_data && $attendee->booking->event && $attendee->booking->event->formFields->count())
+                                            <div class="flex flex-wrap gap-y-1.5 gap-x-2 mt-3 pt-3 border-t border-slate-50">
+                                                @foreach($attendee->booking->event->formFields as $field)
+                                                    @php 
+                                                        $val = $attendee->booking->form_data[$field->id] ?? null; 
+                                                        if (!$val || $field->type === 'file') continue;
+                                                    @endphp
+                                                    <div class="flex items-center gap-1.5 bg-slate-50/80 border border-slate-100/50 px-2.5 py-1 rounded-lg text-[9px] font-bold text-slate-500 hover:bg-white hover:border-primary/20 transition-all cursor-default group/tag" title="{{ $field->label }}">
+                                                        <span class="text-primary/60 font-black uppercase tracking-tighter group-hover/tag:text-primary transition-colors">{{ $field->label }}:</span>
+                                                        <span class="text-dark">{{ is_array($val) ? implode(', ', $val) : $val }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
@@ -216,19 +231,39 @@
                                             <p class="text-xs font-black text-dark tracking-tight">{{ $attendee->created_at->format('M d, Y') }}</p>
                                             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">at {{ $attendee->created_at->format('h:i A') }}</p>
                                         </div>
-                                        <div class="flex items-center justify-end gap-3">
-                                            <!-- Edit Action -->
-                                            <a href="{{ route('admin.customers.segmentation.edit', $attendee->id) }}" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm group/btn">
-                                                <i class="fas fa-edit text-[11px]"></i>
-                                            </a>
+                                        <div class="relative" x-data="{ open: false }">
+                                            <button @click="open = !open" @click.away="open = false" class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-white hover:text-primary hover:border-primary/20 transition-all shadow-sm">
+                                                <i class="fas fa-ellipsis-v text-xs"></i>
+                                            </button>
 
-                                            <!-- Delete Action -->
-                                            <form action="{{ route('admin.customers.segmentation.delete', $attendee->id) }}" method="POST" id="delete-attendee-{{ $attendee->id }}" class="inline">
+                                            <!-- Dropdown Menu -->
+                                            <div x-show="open"
+                                                x-transition:enter="transition ease-out duration-200"
+                                                x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                                x-transition:leave="transition ease-in duration-150"
+                                                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                                x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                                class="absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-premium border border-slate-50 py-2 z-50 overflow-hidden"
+                                                style="display: none;">
+                                                
+                                                <a href="{{ route('admin.customers.segmentation.edit', $attendee->id) }}" class="flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-primary hover:bg-primary/5 transition-all group/item">
+                                                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-edit"></i></div>
+                                                    <span class="text-[10px] font-black uppercase tracking-widest">Edit Entry</span>
+                                                </a>
+
+                                                <div class="h-px bg-slate-50 my-1 mx-4"></div>
+
+                                                <button type="button" onclick="confirmDeleteAttendee({{ $attendee->id }})" class="w-full flex items-center gap-3 px-5 py-3 text-slate-600 hover:text-brand-red hover:bg-brand-red/5 transition-all group/item text-left">
+                                                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/item:bg-white shadow-sm transition-all text-[10px]"><i class="fas fa-trash-alt"></i></div>
+                                                    <span class="text-[10px] font-black uppercase tracking-widest">Delete Record</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Hidden Delete Form -->
+                                            <form action="{{ route('admin.customers.segmentation.delete', $attendee->id) }}" method="POST" id="delete-attendee-{{ $attendee->id }}" class="hidden">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" onclick="confirmDeleteAttendee({{ $attendee->id }})" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all shadow-sm group/btn">
-                                                    <i class="fas fa-trash-alt text-[11px]"></i>
-                                                </button>
                                             </form>
                                         </div>
                                     </div>

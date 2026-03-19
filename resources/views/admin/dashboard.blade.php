@@ -29,7 +29,7 @@
     $isAuthPage = Request::routeIs('admin.login*');
 @endphp
 
-<body class="bg-[#F1F5F9] text-slate-800 antialiased" x-data="{ sidebarOpen: false }">
+<body class="bg-[#F1F5F9] text-slate-800 antialiased overflow-x-hidden" x-data="{ sidebarOpen: false }">
 
     @if(!$isAuthPage)
     <!-- Sidebar Inclusion -->
@@ -37,7 +37,7 @@
     @endif
 
     <!-- Main Content Wrapper -->
-    <div id="swup-container" class="swup-transition-fade {{ $isAuthPage ? 'min-h-screen flex flex-col items-center justify-center p-6' : 'lg:ml-72 min-h-screen flex flex-col transition-all duration-300' }}">
+    <div id="swup-container" class="swup-transition-fade {{ $isAuthPage ? 'min-h-screen flex flex-col items-center justify-center p-6' : 'lg:ml-72 min-h-screen flex flex-col transition-all duration-300 min-w-0' }}">
 
         @if(!$isAuthPage)
         <!-- Header / Topbar -->
