@@ -24,7 +24,7 @@
                 <h1 class="font-outfit text-4xl md:text-5xl font-black text-dark tracking-tight leading-tight">
                     {{ $event->title }}
                 </h1>
-                <button class="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-primary transition-all shadow-sm shrink-0">
+                <button id="shareEventBtn" class="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-primary transition-all shadow-sm shrink-0">
                     <i class="fas fa-share-alt text-lg"></i>
                 </button>
             </div>
@@ -436,7 +436,7 @@
             });
 
             // Book Now Redirect
-            const isRegistrationClosed = {{ ($event->registration_deadline && $event->registration_deadline->isPast()) ? 'true' : 'false' }};
+            const isRegistrationClosed = {{ (($event->registration_deadline && $event->registration_deadline->isPast()) || $event->date < now()) ? 'true' : 'false' }};
 
             if (isRegistrationClosed) {
                 bookNowBtn.innerText = 'Registration Closed';
@@ -491,6 +491,44 @@
 
             // Initial total calculation
             updateTotal();
+
+            // Share Button Logic
+            const shareBtn = document.getElementById('shareEventBtn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', async () => {
+                    const shareData = {
+                        title: '{{ addslashes($event->title) }}',
+                        text: 'Check out this amazing event on Ticket Kinun!',
+                        url: window.location.href
+                    };
+
+                    if (navigator.share) {
+                        try {
+                            await navigator.share(shareData);
+                        } catch (err) {
+                            console.error('Error sharing:', err);
+                        }
+                    } else {
+                        try {
+                            await navigator.clipboard.writeText(shareData.url);
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Link copied to clipboard!',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                            } else {
+                                alert('Link copied to clipboard!');
+                            }
+                        } catch (err) {
+                            console.error('Failed to copy: ', err);
+                        }
+                    }
+                });
+            }
         };
 
         // Run immediately as script is at the end of content

@@ -360,3 +360,15 @@ Here Hero banner of the home page is not sliding but when reload the page then i
 
 
 I want to here will exist three . then when clicked then it will open 
+
+
+When locallY run the project then it works perfectlY but when deploYed on the live server then here when clicked past events on home page then it shows 404 error page but here need to show the past events page with the past events list...
+
+
+When clicked actions button on organizer dashboard like edit , delete and others button then it showed 403 forbidden error but locallY it works perfectlY....
+
+
+When admin set the custom fee then it does not show on the checkout page ,here showed default fee but here need to show the custom fee on the checkout page when admin set the custom fee for the event...fix it...
+
+
+When download a file from admin dashboard then it downloaded but showed the following image ..but locallY it works perfectlY...fix it when deploYed on the live server then it will download the file perfectlY without showing the above image...

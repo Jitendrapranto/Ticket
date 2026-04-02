@@ -137,8 +137,8 @@ Route::get('/events/{slug}', function ($slug) {
         ->where('slug', $slug)
         ->firstOrFail();
 
-    $isActive = $event->is_approved && $event->date >= now();
-    $isOwner = \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::id() === $event->user_id;
+    $isActive = $event->is_approved && $event->status === 'Live';
+    $isOwner = \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::id() == $event->user_id;
     $isAdmin = \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->role === 'admin';
 
     if (!$isActive && !$isOwner && !$isAdmin) {

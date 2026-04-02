@@ -90,6 +90,10 @@ class TicketController extends Controller
             // Use stream for better compatibility on live servers
             $filename = 'Ticket-' . $booking->booking_id . '.pdf';
             
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
+
             return response($pdf->output(), 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',

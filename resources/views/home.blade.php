@@ -461,8 +461,6 @@
                         <h3 class="font-black text-dark text-xl mb-2">{{ $feature->title }}</h3>
                         <p class="text-slate-500 text-sm font-medium leading-relaxed">{{ $feature->description }}</p>
                     </div>
-                    <span class="font-black text-[10px] tracking-[0.2em] uppercase mt-auto"
-                          style="color: {{ $feature->accent_color }};">{{ $feature->action_label }} →</span>
                 </div>
                 @empty
                 <div class="col-span-3 text-center py-12 text-slate-400 font-semibold">No features configured yet.</div>

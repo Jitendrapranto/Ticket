@@ -352,9 +352,21 @@ class EventController extends Controller
 
         $fileName = 'platform_verified_events_' . date('Y_m_d_His') . '.docx';
 
-        return response()->download($tmpFile, $fileName, [
+        $fileContent = file_get_contents($tmpFile);
+        @unlink($tmpFile);
+
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        return response($fileContent, 200, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ])->deleteFileAfterSend(true);
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Content-Length' => strlen($fileContent),
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 
     public function destroy(Event $event)
